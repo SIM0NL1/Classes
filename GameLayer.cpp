@@ -3519,7 +3519,7 @@ Point GameLayer::calculateStartPoint(float edgeWidth,Size& winSize,float scaleFa
     int startX = kMatrixWidth-rightIndex-leftIndex-1;
     int startY = kMatrixWidth-upIndex-downIndex-1;
     
-    auto skillBG = Sprite::create("map01_00.png");
+    auto skillBG = Sprite::create("map01_003.png");
 //      (winSize.height-(winSize.width-edgeWidth*2))/2
     return Point(edgeWidth+startX*0.5*scaleFactor*kElementSize,skillBG->getBoundingBox().size.height/1.5+startY*0.5*scaleFactor*kElementSize);
 }
