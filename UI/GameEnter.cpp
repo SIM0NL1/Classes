@@ -148,11 +148,7 @@ void GameEnter :: loadArmature()
     ArmatureDataManager::getInstance()->addArmatureFileInfo("yellow_liang0.png" , "yellow_liang0.plist" , "yellow_liang.ExportJson");
     
     ArmatureDataManager::getInstance()->addArmatureFileInfo("hengxiao_effect0.png" , "hengxiao_effect0.plist" , "hengxiao_effect.ExportJson");
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("jiugong01_effect0.png" , "jiugong01_effect0.plist" , "jiugong01_effect.ExportJson");
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("jiugong02_effect0.png" , "jiugong02_effect0.plist" , "jiugong02_effect.ExportJson");
     
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("bushu_ui0.png" , "bushu_ui0.plist" , "bushu_ui.ExportJson");
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("guanqiamubiao_ui0.png" , "guanqiamubiao_ui0.plist" , "guanqiamubiao_ui.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("xialuojiantou0.png" , "xialuojiantou0.plist" , "xialuojiantou.ExportJson");
     
     ArmatureDataManager::getInstance()->addArmatureFileInfo("hudun_effect0.png" , "hudun_effect0.plist" , "hudun_effect.ExportJson");
@@ -161,9 +157,6 @@ void GameEnter :: loadArmature()
     ArmatureDataManager::getInstance()->addArmatureFileInfo("tsx_eff0.png" , "tsx_eff0.plist" , "tsx_eff.ExportJson");
     
     ArmatureDataManager::getInstance()->addArmatureFileInfo("jvqi_effect0.png" , "jvqi_effect0.plist" , "jvqi_effect.ExportJson");
-    
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("map01_line0.png" , "map01_line0.plist" , "map01_line.ExportJson");
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("map01_yun0.png" , "map01_yun0.plist" , "map01_yun.ExportJson");
     
     ArmatureDataManager::getInstance()->addArmatureFileInfo("ui_zanting0.png" , "ui_zanting0.plist" , "ui_zanting.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("ui_db10.png" , "ui_db10.plist" , "ui_db1.ExportJson");
