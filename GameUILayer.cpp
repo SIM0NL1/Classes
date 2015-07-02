@@ -392,17 +392,17 @@ void GameUILayer::initBG()
 //    light->setPosition(VisibleRect::top() - Vec2(300, sprCloud->getBoundingBox().size.height/2));
 //    this->addChild(light,3);
     
-    auto sprState3 = Sprite::create("map01_taizi.png");
-    sprState3->setPosition(sprGameBG->getPosition() + Vec2(-1.4*sprState3->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState3->getBoundingBox().size.height/3));
-    this->addChild(sprState3,4);
-    
-    auto sprState4 = Sprite::create("map01_taizi.png");
-    sprState4->setPosition(sprGameBG->getPosition() + Vec2(2.8*sprState4->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState4->getBoundingBox().size.height*0));
-    this->addChild(sprState4,4);
-    
-    auto sprState5 = Sprite::create("map01_taizi.png");
-    sprState5->setPosition(sprGameBG->getPosition() + Vec2(-2.8*sprState5->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState5->getBoundingBox().size.height*0));
-    this->addChild(sprState5,4);
+//    auto sprState3 = Sprite::create("map01_taizi.png");
+//    sprState3->setPosition(sprGameBG->getPosition() + Vec2(-1.4*sprState3->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState3->getBoundingBox().size.height/3));
+//    this->addChild(sprState3,4);
+//    
+//    auto sprState4 = Sprite::create("map01_taizi.png");
+//    sprState4->setPosition(sprGameBG->getPosition() + Vec2(2.8*sprState4->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState4->getBoundingBox().size.height*0));
+//    this->addChild(sprState4,4);
+//    
+//    auto sprState5 = Sprite::create("map01_taizi.png");
+//    sprState5->setPosition(sprGameBG->getPosition() + Vec2(-2.8*sprState5->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState5->getBoundingBox().size.height*0));
+//    this->addChild(sprState5,4);
 
     if (!DataCenter::getInstance()->getTimeLimit())
     {
