@@ -115,49 +115,37 @@ void GameEnter :: loadArmature()
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Hades0.png" , "Hades0.plist" , "Hades.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Hades_20.png" , "Hades_20.plist" , "Hades_2.ExportJson");
     
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("nice_effect0.png" , "nice_effect0.plist" , "nice_effect.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("excellent_effect0.png" , "excellent_effect0.plist" , "excellent_effect.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("unbelievable_effect0.png" , "unbelievable_effect0.plist" , "unbelievable_effect.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("effect_xuanzhong0.png" , "effect_xuanzhong0.plist" , "effect_xuanzhong.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("effect_chuizi0.png" , "effect_chuizi0.plist" , "effect_chuizi.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("chuizi_icon0.png" , "chuizi_icon0.plist" , "chuizi_icon.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("jiawu_icon0.png" , "jiawu_icon0.plist" , "jiawu_icon.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("lingxing_icon0.png" , "lingxing_icon0.plist" , "lingxing_icon.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("mobang_icon0.png" , "mobang_icon0.plist" , "mobang_icon.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("nuqi_icon0.png" , "nuqi_icon0.plist" , "nuqi_icon.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("shizi_icon0.png" , "shizi_icon0.plist" , "shizi_icon.ExportJson");
-    
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("effect_suilie0.png" , "effect_suilie0.plist" , "effect_suilie.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("effect_suilie1.png" , "effect_suilie1.plist" , "effect_suilie.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("effect_bingkuaisui0.png" , "effect_bingkuaisui0.plist" , "effect_bingkuaisui.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("effect_bingkuaisui1.png" , "effect_bingkuaisui1.plist" , "effect_bingkuaisui.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("effect_tiechuangsui0.png" , "effect_tiechuangsui0.plist" , "effect_tiechuangsui.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("tongsexiao0.png" , "tongsexiao0.plist" , "tongsexiao.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("blue_liang0.png" , "blue_liang0.plist" , "blue_liang.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("green_liang0.png" , "green_liang0.plist" , "green_liang.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("purple_liang0.png" , "purple_liang0.plist" , "purple_liang.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("red_liang0.png" , "red_liang0.plist" , "red_liang.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("white_liang0.png" , "white_liang0.plist" , "white_liang.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("yellow_liang0.png" , "yellow_liang0.plist" , "yellow_liang.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("hengxiao_effect0.png" , "hengxiao_effect0.plist" , "hengxiao_effect.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("xialuojiantou0.png" , "xialuojiantou0.plist" , "xialuojiantou.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("hudun_effect0.png" , "hudun_effect0.plist" , "hudun_effect.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("buju_effect0.png" , "buju_effect0.plist" , "buju_effect.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("xialuojiantou0.png" , "xialuojiantou0.plist" , "xialuojiantou.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("tsx_eff0.png" , "tsx_eff0.plist" , "tsx_eff.ExportJson");
     
     ArmatureDataManager::getInstance()->addArmatureFileInfo("jvqi_effect0.png" , "jvqi_effect0.plist" , "jvqi_effect.ExportJson");
-    
     ArmatureDataManager::getInstance()->addArmatureFileInfo("ui_zanting0.png" , "ui_zanting0.plist" , "ui_zanting.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("ui_db10.png" , "ui_db10.plist" , "ui_db1.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("jiafen0.png" , "jiafen0.plist" , "jiafen.ExportJson");

@@ -27,7 +27,9 @@ public:
 	const char* readResourcesPath(string fileName);
 	string g_sChineseName;
     CC_SYNTHESIZE(float,verticalOffset,VerticalOffset);
-
+	string soldierTypeName[5][5];
+	//初始化不同角色和等级的士兵UI;
+	void initSoldierType();
     template<typename T>
     void vertexZ(T** pSender,bool flag=true)
     {

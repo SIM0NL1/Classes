@@ -18,7 +18,7 @@ TDStageLayer::TDStageLayer()
 	m_nBossAdd = 0;
 	m_nSoldierAdd = 0;
 	m_nBossId = 0;
-	m_nSoldierId = 0;
+	m_nSoldierId = -1;
 	m_AllBossDead = false;
 	target_file.clear();
 	target_num.clear();
@@ -347,6 +347,8 @@ void TDStageLayer::targetFinish()
     //干掉Boss,我就是老大,Boss死亡动画;
     vec_boss.at(m_nBossId)->death();
     this->schedule(CC_SCHEDULE_SELECTOR(TDStageLayer::killBoss));
-    vec_soldier.at(m_nSoldierId)->victory();
-    
+    if (vec_soldier.size()>0 && vec_soldier.at(m_nSoldierId)->state!=TD_SoldierState::Death)
+    {
+        vec_soldier.at(m_nSoldierId)->victory();
+    }
 }
