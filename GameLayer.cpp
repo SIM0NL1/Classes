@@ -2693,6 +2693,11 @@ void GameLayer::beforeMatch()
         }
         
         afterMatch();
+        if (!DataCenter::getInstance()->getWinnerMode())
+        {
+            _mapLayer->afterMatch();
+        }
+        
         return;
     }
     else
@@ -2707,7 +2712,6 @@ void GameLayer::beforeMatch()
         }
 //        _mapLayer->matchAllGem(&_animationWraperVector,_continueMatchTimes);
         
-        _mapLayer->afterMatch();
         
         playContinueMatchMusic(_continueMatchTimes);
         

@@ -353,7 +353,7 @@ typedef enum
     all=7,
     extend1=8,//扩展
     extend2=9,//扩展
-    extend3=10,//扩展
+    fog=10,
     ice=11,
     ice1=12,
     shield=13,
@@ -398,7 +398,8 @@ typedef enum
     whitebottle2=57,
     whitebottle3=58,
     whitebottle4=59,
-    maxgem=60,
+    wizard = 60,
+    maxgem=61,
 }GemType;
 
 typedef enum

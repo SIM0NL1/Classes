@@ -475,6 +475,42 @@ public:
  	void                        selected(){};
  };
 
+class Fog : public Gem
+{
+public:
+    Fog();
+    bool                        createGemSprite( Node *layer,  Point point,bool visible);
+    bool                        canMove();
+    bool                        equal(Gem* Gem);
+    void                        setSick(bool s){}
+    void                        highLight(){};
+    void                        addScore(int count,bool isAffect){}
+    void                        idle();
+    void                        beforeMatch(int i,int j);
+    void                        affected(int count);
+    void                        changeState(int state);
+    void                        selected(){};
+};
+
+class Wizard : public Gem
+{
+public:
+    Wizard();
+    bool                        createGemSprite( Node *layer,  Point point,bool visible);
+    bool                        canMove();
+    bool                        equal(Gem* Gem);
+    void                        setSick(bool s){}
+    void                        highLight(){};
+    void                        addScore(int count,bool isAffect){}
+    void                        idle();
+    void                        beforeMatch(int i,int j);
+    void                        afterMatch(int i,int j);
+    void                        affected(int count);
+    void                        changeState(int state);
+    void                        selected(){};
+    void                        createFog(int i ,int j , int distance);
+};
+
 //
  class DragonTooth : public Gem
  {

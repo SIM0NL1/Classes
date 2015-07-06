@@ -97,7 +97,7 @@ void Ice::affected(int count)
         aw1.state = 5;
         
         
-        changeState(5);
+        changeState(5);    //  有Bug 多调用了要优化
     }
     else if(_state==0)
     {
