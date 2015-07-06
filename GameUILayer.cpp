@@ -1410,6 +1410,7 @@ void GameUILayer::onExit()
 void GameUILayer::addBoss()
 {
     TDStageLayer::getInstance()->bossFactory(1);
+    TDStageLayer::getInstance()->addSoldierBirthland();
 }
 
 void GameUILayer::bossDied(Ref *obj)

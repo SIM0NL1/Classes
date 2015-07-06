@@ -33,6 +33,8 @@ public:
     static TDStageLayer* getInstance();
     void destroyInstance();
     void showUI();
+    //士兵出生点;
+    void addSoldierBirthland();
     //根据过关条件初始化BOSS;
     void bossFactory(int type);
     //根据每次消除得分生产士兵;
