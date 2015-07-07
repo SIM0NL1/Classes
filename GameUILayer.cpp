@@ -1091,7 +1091,7 @@ void GameUILayer::matchOver(Ref *obj)
 
 void GameUILayer::limitOperatiomNum()
 {
-    if (m_bWinGame && m_bWinGame)
+    if (m_bWinGame && m_bBossDie)
     {
         if (m_iOperationNum == 0)
         {
