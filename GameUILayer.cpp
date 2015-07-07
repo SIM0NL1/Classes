@@ -1091,7 +1091,7 @@ void GameUILayer::matchOver(Ref *obj)
 
 void GameUILayer::limitOperatiomNum()
 {
-    if (m_bWinGame && m_bWinGame)
+    if (m_bWinGame && m_bBossDie)
     {
         if (m_iOperationNum == 0)
         {
@@ -1362,6 +1362,12 @@ void GameUILayer::updateCollect(Ref *obj)
                 m_bWinGame = false;
             }
         }
+        
+        if (m_bWinGame)
+        {
+            //过关条件达成,完成搜集目标;
+            TDStageLayer::getInstance()->targetFinish();
+        }
 
     }
     else
@@ -1420,9 +1426,6 @@ void GameUILayer::bossDied(Ref *obj)
     if (!DataCenter::getInstance()->getWinnerMode())
     {
         m_bBossDie = true;
-        //过关条件达成,Boss去屎;
-        TDStageLayer::getInstance()->targetFinish();
-        
         m_pGameLayer->setTouchDisable();
         DataCenter::getInstance()->setWinnerMode(true);
         auto BG = Armature::create("ui_db1");

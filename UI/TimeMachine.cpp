@@ -254,7 +254,7 @@ void TDBossLCA::diedDelay(float t)
 void TDBossLCA::diedEnd()
 {
 	((TDBoss*)(this->getParent()))->removeFromParentAndCleanup(true);
-	this->removeFromParentAndCleanup(true);
+	//this->removeFromParentAndCleanup(true);
 }
 
 //-Boss-End-
@@ -356,6 +356,11 @@ void TDSoldierLCA::attack()
 	{
 		return;
 	}
+    if (TDStageLayer::getInstance()->m_AllBossDead)
+    {
+        ((TDSoldier*)(this->getParent()))->victory();
+        return;
+    }
 	//更新士兵状态;
 	setSoldierState(TD_SoldierState::Attack);
 	//播放攻击动画;

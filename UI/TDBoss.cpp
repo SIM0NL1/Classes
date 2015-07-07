@@ -37,7 +37,7 @@ void TDBoss::initAttributeWithIndex(int type,int id)
 	m_nType = type;
 	m_birthPosition = Point(GLB_SIZE.width-120,100);
 	m_nId = id;
-	m_nHP = 10000;
+	m_nHP = 100;
 	m_nAttackRate = 1;
 	m_nDPS = 200;
 	//初始化Boss类型;

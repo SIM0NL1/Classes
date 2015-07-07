@@ -164,24 +164,27 @@ void TDStageLayer::bossGetHit(int i)
 	switch (vec_boss.at(i)->m_nType)
 	{
 	case 1:
-		//普通Boss;
+		//有防护盾的Boss;
 		{
-			//生命值损耗为士兵的攻击力,需要读表;
-			vec_boss.at(i)->m_nHP -= 10;
-			//CCLOG("TD-----Boss Hp  =  %d  ",vec_boss.at(i)->m_nHP);
-			if (vec_boss.at(i)->m_nHP-10 <= 0)
-			{
-				//干掉Boss,我就是老大,Boss死亡动画;
-				vec_boss.at(i)->m_bossLCA->died();
-				//干掉最后一个Boss,GameOver;
-				if (i+1==vec_boss.size())
-				{
-					//游戏胜利,接口;
-					m_AllBossDead = true;
-					NotificationCenter::getInstance()->postNotification(csMSG_BOSSDIED,NULL);
-
-				}
-			}
+            if(!vec_boss.at(i)->boss_shield->isVisible())
+            {
+                //生命值损耗为士兵的攻击力,需要读表;
+                vec_boss.at(i)->m_nHP -= 10;
+                //CCLOG("TD-----Boss Hp  =  %d  ",vec_boss.at(i)->m_nHP);
+                if (vec_boss.at(i)->m_nHP-10 <= 0)
+                {
+                    //干掉Boss,我就是老大,Boss死亡动画;
+                    vec_boss.at(i)->m_bossLCA->died();
+                    //干掉最后一个Boss,GameOver;
+                    if (i+1==vec_boss.size())
+                    {
+                        //游戏胜利,接口;
+                        m_AllBossDead = true;
+                        NotificationCenter::getInstance()->postNotification(csMSG_BOSSDIED,NULL);
+                        
+                    }
+                }
+            }
 		}
 		break;
 	case 2:
@@ -201,6 +204,7 @@ void TDStageLayer::bossAttackBack()
 	//范围攻击;
 	for(auto it=vec_soldier.begin();it!=vec_soldier.end();)
 	{
+        float posX = (*it)->getPosition().x;
 		if ((*it)->getPosition().x>=360)
 		{
 			(*it)->m_nHP -= 200;
@@ -261,7 +265,7 @@ void TDStageLayer::getTarget(string& file,int& num,int& index,int id)
 
 int TDStageLayer::getTargetNum()
 {
-	return target_file.size();
+	return static_cast<int>(target_file.size());
 }
 
 void TDStageLayer::updateBossTag(int num,int index)
@@ -271,12 +275,17 @@ void TDStageLayer::updateBossTag(int num,int index)
 
 void TDStageLayer::targetFinish()
 {
-    //干掉Boss,我就是老大,Boss死亡动画;
-    vec_boss.at(m_nBossId)->m_bossLCA->died();
-	if (vec_soldier.size())
-	{
-		vec_soldier.at(0)->victory();
-	}    
+    if (vec_boss.at(m_nBossId)->boss_shield->isVisible())
+    {
+        vec_boss.at(m_nBossId)->boss_shield->setVisible(false);
+        //    //干掉Boss,我就是老大,Boss死亡动画;
+        //    vec_boss.at(m_nBossId)->m_bossLCA->died();
+        //	if (vec_soldier.size())
+        //	{
+        //		vec_soldier.at(0)->victory();
+        //	}
+    }
+    
 }
 
 void TDStageLayer::addSoldierBirthland()

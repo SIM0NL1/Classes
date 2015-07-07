@@ -46,6 +46,12 @@ void TDSoldier::initAttributeWithIndex(int level,int id)
 
 void TDSoldier::victory()
 {
-    m_Armature->getAnimation()->play("hephaestus_win");
+    m_Armature->getAnimation()->stop();
+    m_soldierLCA->setSoldierState(TD_SoldierState::None);
+    if (m_soldierLCA->isScheduled(CC_SCHEDULE_SELECTOR(TDSoldierLCA::soldierUpdate)))
+    {
+        m_soldierLCA->unschedule(CC_SCHEDULE_SELECTOR(TDSoldierLCA::soldierUpdate));
+    }
+    m_Armature->getAnimation()->play("hephaestus_win",-1,1);
 }
 
