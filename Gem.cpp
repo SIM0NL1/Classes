@@ -470,6 +470,7 @@ void Gem::beforeExplode()
     if (_skill)
     {
         removeSkillSpr();
+        dealWithSkill();
         dealWithGem();
         dealWithSkill();
         
