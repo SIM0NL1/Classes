@@ -352,3 +352,28 @@ void TDStageLayer::targetFinish()
         vec_soldier.at(m_nSoldierId)->victory();
     }
 }
+
+void TDStageLayer::addSoldierBirthland()
+{
+    //出兵点动画;
+    Sprite* pSpr = Sprite::create();
+    pSpr->setAnchorPoint(Vec2(0.5f,0.5f));
+    pSpr->setPosition(Vec2(50.f,80.f));
+    this->addChild(pSpr,Z_First);
+    //-创建动作-;
+    Animation* pAniamtion = Animation :: create();
+    char strPic[50] = {0};
+    //-加载帧-;
+    for (int i=1;i<8;i++)
+    {
+        sprintf(strPic,"animature/chubingdian/chubing_tx0%d.png",i);
+        pAniamtion->addSpriteFrameWithFile(RESOURCE(strPic));
+    }
+    //-加载动作-;
+    pAniamtion->setDelayPerUnit(0.2f);
+    pAniamtion->setRestoreOriginalFrame(true);
+    pAniamtion->setLoops(-1);
+    //-创建动画-;
+    Animate* pAction = Animate :: create(pAniamtion);
+    pSpr->runAction(pAction);
+}
