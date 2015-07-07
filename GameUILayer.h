@@ -122,6 +122,7 @@ private:
     GameLayer *m_pGameLayer;
     
     bool m_bWinGame;
+    bool m_bBossDie;
     
     int m_iOperationNum;
     int m_iScoreNum;

@@ -290,6 +290,7 @@ void GameUILayer::initData()
 //    m_pGameLayer->initPropSprite();
 
     m_bWinGame = false;
+    m_bBossDie = false;
     m_iScoreNum = 0;
     m_iOneScore = 0;
     m_labelScore->setString("0");
@@ -921,7 +922,7 @@ void GameUILayer::updateOperationNum(Ref *obj)
     if (!DataCenter::getInstance()->getTimeLimit())
     {
         float time = 0;
-        if (m_bWinGame)
+        if (m_bWinGame && m_bBossDie)
         {
             time = 0.2;
         }
@@ -1090,7 +1091,7 @@ void GameUILayer::matchOver(Ref *obj)
 
 void GameUILayer::limitOperatiomNum()
 {
-    if (m_bWinGame)
+    if (m_bWinGame && m_bWinGame)
     {
         if (m_iOperationNum == 0)
         {
@@ -1112,24 +1113,24 @@ void GameUILayer::limitOperatiomNum()
         }
         else
         {
-            if (!DataCenter::getInstance()->getWinnerMode())
-            {
-                //过关条件达成,Boss去屎;
-                TDStageLayer::getInstance()->targetFinish();
-                
-                m_pGameLayer->setTouchDisable();
-                DataCenter::getInstance()->setWinnerMode(true);
-                auto BG = Armature::create("ui_db1");
-                BG->getAnimation()->playWithIndex(1);
-                BG->setPosition(VisibleRect::center());
-                this->addChild(BG,11);
-                BG->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(GameUILayer::completeWords, this) );
-            }
-            else
-            {
+//            if (!DataCenter::getInstance()->getWinnerMode())
+//            {
+//                //过关条件达成,Boss去屎;
+//                TDStageLayer::getInstance()->targetFinish();
+//                
+//                m_pGameLayer->setTouchDisable();
+//                DataCenter::getInstance()->setWinnerMode(true);
+//                auto BG = Armature::create("ui_db1");
+//                BG->getAnimation()->playWithIndex(1);
+//                BG->setPosition(VisibleRect::center());
+//                this->addChild(BG,11);
+//                BG->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(GameUILayer::completeWords, this) );
+//            }
+//            else
+//            {
                 __String *str = __String::createWithFormat("%d",m_iOperationNum);
                 NotificationCenter::getInstance()->postNotification(kMSG_WinnerModeStart, str);
-            }
+//            }
         }
     }
     else
@@ -1416,5 +1417,20 @@ void GameUILayer::addBoss()
 void GameUILayer::bossDied(Ref *obj)
 {
     //当前所有Boss都已干掉;
+    if (!DataCenter::getInstance()->getWinnerMode())
+    {
+        m_bBossDie = true;
+        //过关条件达成,Boss去屎;
+        TDStageLayer::getInstance()->targetFinish();
+        
+        m_pGameLayer->setTouchDisable();
+        DataCenter::getInstance()->setWinnerMode(true);
+        auto BG = Armature::create("ui_db1");
+        BG->getAnimation()->playWithIndex(1);
+        BG->setPosition(VisibleRect::center());
+        this->addChild(BG,11);
+        BG->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(GameUILayer::completeWords, this) );
+    }
+
     CCLOG("All Bosses are Deaded..............");
 }
