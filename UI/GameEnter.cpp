@@ -111,7 +111,6 @@ void GameEnter :: loadArmature()
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Doris0.png" , "Doris0.plist" , "Doris.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Gaea0.png" , "Gaea0.plist" , "Gaea.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Hecate0.png" , "Hecate0.plist" , "Hecate.ExportJson");
-    ArmatureDataManager::getInstance()->addArmatureFileInfo("hephaestus0.png" , "hephaestus0.plist" , "hephaestus.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Hades0.png" , "Hades0.plist" , "Hades.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("Hades_20.png" , "Hades_20.plist" , "Hades_2.ExportJson");
     
@@ -179,5 +178,14 @@ void GameEnter::loadMyArmature()
     //ArmatureDataManager::getInstance()->addArmatureFileInfo(RESOURCE("animature/xinlong01/xinlong010.png"),RESOURCE("animature/xinlong01/xinlong010.plist"),RESOURCE("animature/xinlong01/xinlong01.ExportJson"));
     
     ArmatureDataManager::getInstance()->addArmatureFileInfo(RESOURCE("animature/shield/shield0.png"),RESOURCE("animature/shield/shield0.plist"),RESOURCE("animature/shield/shield.ExportJson"));
+    
+    //加载士兵;
+    ArmatureDataManager::getInstance()->addArmatureFileInfo(RESOURCE("animature/soldier/soldier_Type1_Level1.ExportJson"));
+    SpriteFrameCacheHelper::getInstance()->addSpriteFrameFromFile(RESOURCE("animature/soldier/soldier.plist"), RESOURCE("animature/soldier/soldier.png"));
+    ArmatureDataManager::getInstance()->addArmatureFileInfo(RESOURCE("animature/soldier/soldier_Type1_Level2.ExportJson"));
+    ArmatureDataManager::getInstance()->addArmatureFileInfo(RESOURCE("animature/soldier/soldier_Type1_Level3.ExportJson"));
+    ArmatureDataManager::getInstance()->addArmatureFileInfo(RESOURCE("animature/soldier/soldier_Type1_Level4.ExportJson"));
+    ArmatureDataManager::getInstance()->addArmatureFileInfo(RESOURCE("animature/soldier/soldier_Type1_Level5.ExportJson"));
+    GameFunctions::getInstance()->initSoldierType();
 }
 

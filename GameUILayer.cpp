@@ -1092,9 +1092,6 @@ void GameUILayer::limitOperatiomNum()
 {
     if (m_bWinGame)
     {
-        //过关条件达成;
-        TDStageLayer::getInstance()->targetFinish();
-        
         if (m_iOperationNum == 0)
         {
             if (!m_pGameLayer->beforeWinnerMode())
@@ -1117,6 +1114,9 @@ void GameUILayer::limitOperatiomNum()
         {
             if (!DataCenter::getInstance()->getWinnerMode())
             {
+                //过关条件达成,Boss去屎;
+                TDStageLayer::getInstance()->targetFinish();
+                
                 m_pGameLayer->setTouchDisable();
                 DataCenter::getInstance()->setWinnerMode(true);
                 auto BG = Armature::create("ui_db1");

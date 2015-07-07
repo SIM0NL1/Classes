@@ -22,7 +22,6 @@ public:
 	float m_fwakeTime;	//BOSS受到攻击后，多长时间进行反击;
 	int m_nShieldType;	//BOSS盾牌类型;
 	int m_nShieldNum;	//BOSS盾牌值;
-	TD_BossState state;	//BOSS状态;
 	Armature* m_Armature;	//BOSS动画;
 	Armature* boss_shield;	//盾;
 	TDBossLCA* m_bossLCA;	//Boss生命周期;
@@ -34,10 +33,10 @@ public:
 	virtual ~TDBoss();
 	//初始化Boss的类型,Boss的vector的ID;
 	void initAttributeWithIndex(int type,int id);
-	virtual void attack();
-	void death();
-	void defence();
-	void angry();
+	void wake();
+	void wakeDelay(float t);
+	void wakeEnd();
+	void initType();
 	void initTarget();
 	void updateTarget(int num,int index);
 };

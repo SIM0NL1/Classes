@@ -16,7 +16,7 @@ class TDRoleBase : public Layout
 public:
 	int m_nId;		//士兵ID，BOSS ID;
 	int m_nHP;		//生命值;
-	float m_fInterval;	//攻击间隔;
+	int m_nAttackRate;	//攻击间隔;
 	int m_nDPS;		//单次攻击伤害值;
 	Sprite* m_self;	//形象;
 	Point m_birthPosition;	//出生地;
@@ -25,7 +25,6 @@ public:
 	TDRoleBase();
 	virtual ~TDRoleBase();
 	virtual bool init();
-	virtual void attack();
 };
 
 #endif

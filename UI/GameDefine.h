@@ -38,8 +38,6 @@ const Size GLB_SIZE = Size(640.f,1136.f);
 
 //观察者模式焦点事件;
 const string csMSG_BOSSDIED = "BossDied";
-const string csMSG_BOSSACTRATE = "BossAttackRate";
-const string csMSG_SOLDIERACTRATE = "SoldierAttackRate";
 
 //ZOrder
 enum GameZOrder
@@ -108,6 +106,7 @@ enum class TD_BossState
     Birth,
     Sleep,
     Wake,
+	Wait,
     Death,
 };
 

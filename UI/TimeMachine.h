@@ -24,8 +24,6 @@ public:
 	static TimeMachine* getInstance();
 	void destroyMachine();
 	
-	//我现在的思绪就像一团乱麻,需要捋成一股绳.像很多块拼图,需要拼成一张大图;
-	//一条无穷无尽的大河,很多分支河道,每一道都有自己的闸门,水够开闸条件才开闸;
 	//开启总闸模式;
 	void startTimer();
 	void update(float t);
@@ -39,14 +37,16 @@ public:
 
 	//关闭生命周期,需要指定关闭哪一个,谁的生命周期;
 };
-
+//BOSS;
 class TDBossLCA : public Node
 {
 public:
 	TDBossLCA();
 	~TDBossLCA();
-	long bossAttackTimer;		//生命计时器,记录每一个时间点,随时更新;
+	long bossAttackTimer;	//生命计时器,记录每一个时间点,随时更新;
 	time_t bossLongTime;
+	//BOSS状态;
+	CC_SYNTHESIZE(TD_BossState,bossState,BossState);
 	CC_SYNTHESIZE(int,bossAttackRate,BossAttackRate);
 
 public:
@@ -54,9 +54,15 @@ public:
 	bool init(int& attackRate);
 	void initBossLCA();
 	void bossUpdate(float t);
-	void bossDied();
+	void sleeP();
+	void attack();
+	void attackDelay(float t);
+	void attackEnd();
+	void died();
+	void diedDelay(float t);
+	void diedEnd();
 };
-
+//SOLDIER;
 class TDSoldierLCA : public Node
 {
 public:
@@ -64,6 +70,8 @@ public:
 	~TDSoldierLCA();
 	long soldierAttackTimer;	//生命计时器,记录每一个时间点,随时更新;
 	time_t soldierLongTime;
+	//士兵状态;
+	CC_SYNTHESIZE(TD_SoldierState,soldierState,SoldierState);
 	CC_SYNTHESIZE(int,soldierAttackRate,SoldierAttackRate);
 
 public:
@@ -71,7 +79,14 @@ public:
 	bool init(int& attackRate);
 	void initSoldierLCA();
 	void soldierUpdate(float t);
-	void soldierDied();
+	void run();
+	//攻击;
+	void attack();
+	void attackDelay(float t);
+	void attackEnd();
+	void died();
+	void diedDelay(float t);
+	void diedEnd();
 
 };
 

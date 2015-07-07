@@ -10,16 +10,14 @@
 #include "TDStageLayer.h"
 #include "GameMusicControl.h"
 
-TDBoss::TDBoss()
+TDBoss::TDBoss():m_bossLCA(nullptr)
 {
 	m_nType = 0;
 	m_sName = "";
 	m_fwakeTime = 0;
 	m_nShieldType = 0;
 	m_nShieldNum = 0;
-	state = TD_BossState::Birth;
 	m_Armature = nullptr;
-	m_bossLCA = nullptr;
 	boss_shield = nullptr;
 	m_labTarget1 = nullptr;
 	m_labTarget2 = nullptr;
@@ -37,50 +35,52 @@ TDBoss::~TDBoss()
 void TDBoss::initAttributeWithIndex(int type,int id)
 {
 	m_nType = type;
-	state = TD_BossState::Sleep;
 	m_birthPosition = Point(GLB_SIZE.width-120,100);
 	m_nId = id;
 	m_nHP = 10000;
-	m_fInterval = 2;
+	m_nAttackRate = 1;
 	m_nDPS = 200;
-
-	m_Armature = Armature::create("banrenma");
-	m_Armature->setAnchorPoint(Vec2(0.5f,0.5f));
-	m_Armature->getAnimation()->play("nomal");
-	this->addChild(m_Armature);
-    //护盾;
-    boss_shield = Armature::create("shield");
-    boss_shield->setAnchorPoint(Vec2(0.5f,0.5f));
-    boss_shield->setPosition(Vec2::ZERO);
-    this->addChild(boss_shield,Z_Second);
-    boss_shield->getAnimation()->play("defence");
-	
-	//过关目标;
-	initTarget();
+	//初始化Boss类型;
+	initType();
+	m_bossLCA = TDBossLCA :: create(m_nAttackRate);
+	this->addChild(m_bossLCA);
 }
 
-void TDBoss::attack()
+void TDBoss::initType()
 {
-	//播放攻击动画;
-	m_Armature->getAnimation()->play("attack");
-}
-
-void TDBoss::death()
-{
-	//播放死亡动画;
-	m_Armature->getAnimation()->play("dead");
-}
-
-void TDBoss::defence()
-{
-	//播放防御动画;
-	m_Armature->getAnimation()->play("defence");
-}
-
-void TDBoss::angry()
-{
-	//播放暴怒动画;
-	m_Armature->getAnimation()->play("angry");
+	switch (m_nType)
+	{
+	case 1://带护盾的Boss;
+		{
+			m_Armature = Armature::create("banrenma");
+			m_Armature->setAnchorPoint(Vec2(0.5f,0.5f));
+			this->addChild(m_Armature);
+			//护盾;
+			boss_shield = Armature::create("shield");
+			boss_shield->setAnchorPoint(Vec2(0.5f,0.5f));
+			boss_shield->setPosition(Vec2::ZERO);
+			this->addChild(boss_shield,Z_Second);
+			boss_shield->getAnimation()->play("defence");
+			//过关目标;
+			initTarget();
+		}
+		break;
+	case 2://不带护盾的Boss;
+		{
+			m_Armature = Armature::create("banrenma");
+			m_Armature->setAnchorPoint(Vec2(0.5f,0.5f));
+			this->addChild(m_Armature);
+		}
+		break;
+	case 3://
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	default:
+		break;
+	}
 }
 
 void TDBoss::initTarget()
@@ -182,3 +182,30 @@ void TDBoss::updateTarget(int num,int index)
 		break;
 	}
 }
+
+void TDBoss::wake()
+{
+	//播放暴怒动画;
+	m_Armature->getAnimation()->play("angry",-1,-1);
+	this->schedule(CC_SCHEDULE_SELECTOR(TDBoss::wakeDelay));
+}
+
+void TDBoss::wakeDelay(float t)
+{
+	if (m_Armature->getAnimation()->isComplete())
+	{
+		this->unschedule(CC_SCHEDULE_SELECTOR(TDBoss::wakeDelay));
+		wakeEnd();
+	}
+}
+
+void TDBoss::wakeEnd()
+{
+	if (m_bossLCA)
+	{
+		m_bossLCA->attack();
+	}
+}
+
+
+

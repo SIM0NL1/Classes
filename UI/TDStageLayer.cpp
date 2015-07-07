@@ -35,11 +35,6 @@ bool TDStageLayer::init()
 	do 
 	{
 		CC_BREAK_IF(!LayerColor::init());
-		vec_boss.clear();
-		vec_soldier.clear();
-		target_file.clear();
-		target_num.clear();
-		target_index.clear();
 		return true;
 	} while (false);
 	return false;
@@ -48,15 +43,10 @@ bool TDStageLayer::init()
 void TDStageLayer::onEnter()
 {
 	LayerColor::onEnter();
-	//NotificationCenter::getInstance()->addObserver(this,CC_CALLFUNCO_SELECTOR(), csMSG_BOSSACTRATE, nullptr);
-	NotificationCenter::getInstance()->addObserver(this,CC_CALLFUNCO_SELECTOR(TDStageLayer::soldierAttackAgain), csMSG_SOLDIERACTRATE, nullptr);
-	
 }
 
 void TDStageLayer::onExit()
 {
-	//NotificationCenter::getInstance()->removeObserver(this, csMSG_BOSSACTRATE);
-	NotificationCenter::getInstance()->removeObserver(this, csMSG_SOLDIERACTRATE);
 	LayerColor::onExit();
 }
 
@@ -108,10 +98,27 @@ void TDStageLayer::soldierFactory(int score)
 	{
 		return;
 	}
-	TDSoldier* soldier = new TDSoldier();	
-	if (score>=60)//&
+	TDSoldier* soldier = new TDSoldier();
+	soldier->setRoleType(1);
+	if (score<180 && score>=60)
 	{
 		soldier->initAttributeWithIndex(1,m_nSoldierAdd);
+	}
+	else if (score<600 && score>=180)
+	{
+		soldier->initAttributeWithIndex(2,m_nSoldierAdd);
+	}
+	else if (score<2000 && score>=600)
+	{
+		soldier->initAttributeWithIndex(3,m_nSoldierAdd);
+	}
+	else if (score<5000 && score>=2000)
+	{
+		soldier->initAttributeWithIndex(4,m_nSoldierAdd);
+	}
+	else if (score>=5000)
+	{
+		soldier->initAttributeWithIndex(5,m_nSoldierAdd);
 	}
 	m_nSoldierAdd++;
 	this->addChild(soldier,Z_First);
@@ -125,38 +132,30 @@ void TDStageLayer::wakeOrAttack(int soldierId)
 	{
 		m_nBossId = i;
 		m_nSoldierId = soldierId;
-		switch (vec_boss.at(i)->state)
+		switch (vec_boss.at(i)->m_bossLCA->getBossState())
 		{
 		case TD_BossState::Sleep:
 			{
 				//Boss被唤醒,开始受到伤害,延时几秒后开始攻击士兵;
-				vec_boss.at(m_nBossId)->state = TD_BossState::Wake;
 				//生命值减少;
+				vec_boss.at(i)->m_bossLCA->setBossState(TD_BossState::Wake);
 				bossGetHit(m_nBossId);
-				//延时时间需要读表,每次Boss唤醒延时,自此Boss开始反击;
-				this->runAction(Sequence::create(DelayTime::create(1.f),CallFunc::create(CC_CALLBACK_0(TDStageLayer::bossAttackAnimation,this)),nullptr));
-				this->schedule(CC_SCHEDULE_SELECTOR(TDStageLayer::bossTimerPerFrame));
+				vec_boss.at(m_nBossId)->wake();
 				return;
 			}
 		case TD_BossState::Wake:
 			{
 				//生命值减少;
 				bossGetHit(m_nBossId);
-				//Boss按照自己的攻击频率攻击;
-				this->runAction(Sequence::create(DelayTime::create(2.f),CallFunc::create(CC_CALLBACK_0(TDStageLayer::bossAttackAnimation,this)),nullptr));
-				break;
+				return;
 			}
 		case TD_BossState::Death:
+			//vec_boss.at(i)->m_bossLCA->removeFromParentAndCleanup(true);
 			break;
 		default:
 			break;
 		}
 	}
-}
-
-void TDStageLayer::wakeOrAttack()
-{
-
 }
 
 void TDStageLayer::bossGetHit(int i)
@@ -167,25 +166,19 @@ void TDStageLayer::bossGetHit(int i)
 	case 1:
 		//普通Boss;
 		{
-			if (vec_boss.at(i)->m_nHP-10>0)
+			//生命值损耗为士兵的攻击力,需要读表;
+			vec_boss.at(i)->m_nHP -= 10;
+			//CCLOG("TD-----Boss Hp  =  %d  ",vec_boss.at(i)->m_nHP);
+			if (vec_boss.at(i)->m_nHP-10 <= 0)
 			{
-				//生命值损耗为士兵的攻击力,需要读表;
-				vec_boss.at(i)->m_nHP -= 10;
-				CCLOG("TD-----Boss Hp  =  %d  ",vec_boss.at(i)->m_nHP);
-			}
-			else
-			{
-				vec_boss.at(i)->m_nHP -= 10;
-				vec_boss.at(i)->state = TD_BossState::Death;
 				//干掉Boss,我就是老大,Boss死亡动画;
-				vec_boss.at(i)->death();
-				this->schedule(CC_SCHEDULE_SELECTOR(TDStageLayer::killBoss));
+				vec_boss.at(i)->m_bossLCA->died();
 				//干掉最后一个Boss,GameOver;
 				if (i+1==vec_boss.size())
 				{
 					//游戏胜利,接口;
 					m_AllBossDead = true;
- 					NotificationCenter::getInstance()->postNotification(csMSG_BOSSDIED,NULL);
+					NotificationCenter::getInstance()->postNotification(csMSG_BOSSDIED,NULL);
 
 				}
 			}
@@ -203,112 +196,47 @@ void TDStageLayer::bossGetHit(int i)
 	}
 }
 
-void TDStageLayer::bossAttackAnimation()
+void TDStageLayer::bossAttackBack()
 {
-	if (vec_boss.at(m_nBossId)->state == TD_BossState::Death)
+	//范围攻击;
+	for(auto it=vec_soldier.begin();it!=vec_soldier.end();)
 	{
-		//移除Boss;
-		vec_boss.at(m_nBossId)->removeFromParentAndCleanup(true);
-		return;
-	}
-	else if (vec_soldier.at(m_nSoldierId)->m_nHP<0)
-	{
-		//移除士兵;
-		//vec_soldier.at(m_nSoldierId)->died();
-		return;
-	}
-	else 
-	{
-		//Boss攻击动画;
-		vec_boss.at(m_nBossId)->attack();
-		GameMusicControl::getInstance()->soundControl(TDBOSS_ATTACK,false);
-		this->schedule(schedule_selector(TDStageLayer::bossAttackBack));
-	}
-}
-
-void TDStageLayer::bossAttackBack(float t)
-{
-	//Boss反击;
-	if (vec_boss.at(m_nBossId)->m_Armature->getAnimation()->isComplete())
-	{
-		this->unschedule(CC_SCHEDULE_SELECTOR(TDStageLayer::bossAttackBack));
-		vec_soldier.at(m_nSoldierId)->m_nHP -= 200;
-		if (vec_soldier.at(m_nSoldierId)->m_nHP<0)
+		if ((*it)->getPosition().x>=360)
 		{
-			vec_soldier.at(m_nSoldierId)->state = TD_SoldierState::Death;
-			//播放士兵死亡动画;
-			vec_soldier.at(m_nSoldierId)->m_Armature->getAnimation()->play("hephaestus_dead");
-			//移除士兵;
-			this->schedule(CC_SCHEDULE_SELECTOR(TDStageLayer::killSoldier));
+			(*it)->m_nHP -= 200;
+			if ((*it)->m_nHP<0)
+			{
+				(*it)->m_soldierLCA->died();
+				it = vec_soldier.erase(it);
+			}
+		}
+		else
+		{
+			it++;
 		}
 	}
 }
 
-void TDStageLayer::soldierAttackAgain(Ref* pSender)
+bool TDStageLayer::isHaveSoldier()
 {
-	if (vec_soldier.at(m_nSoldierId)->state == TD_SoldierState::Death)
+	//缺少一个强有力的判断条件，目的是区分此时此刻是否有士兵正在攻击状态;
+	//目前容易使人误解的是，士兵死了，Boss还要补一刀，或者士兵刚出现Boss就在挥舞大刀;
+	//无外乎两种判断，一种是判断状态，另一种是你判断位置，总之都需要遍历;
+	//遍历就会延时;
+	bool flag = false;
+	if (vec_soldier.size())
 	{
-		//vec_soldier.at(m_nSoldierId)->m_soldierLCA->soldierDied();
-		//移除士兵;
-		//vec_soldier.at(m_nSoldierId)->died();
-		return;
+		flag = true;
 	}
-	else if(vec_boss.at(m_nBossId)->state == TD_BossState::Death)
-	{
-		return;
-	}
-	else
-	{
-		vec_soldier.at(m_nSoldierId)->continueAttack();
-	}
-}
-
-void TDStageLayer::bossTimerPerFrame(float t)
-{
-	time_t long_time;;
-	time(&long_time);
-	static long sleepTimer = long_time;
-
-	for (int i=0;i<vec_soldier.size();i++)
-	{
-		if (vec_soldier.at(i)->state == TD_SoldierState::Attack)
-		{
-			sleepTimer = long_time;
-			return;
-		}
-	}
-	//2秒内Boss睡眠;
-	if (long_time-2>=sleepTimer)
-	{
-		vec_boss.at(m_nBossId)->state = TD_BossState::Sleep;
-		//Boss保持初始动作;
-		vec_boss.at(m_nBossId)->m_Armature->getAnimation()->play("nomal");
-		this->unschedule(CC_SCHEDULE_SELECTOR(TDStageLayer::bossTimerPerFrame));
-	}
-}
-
-void TDStageLayer::killBoss(float t)
-{
-	if (vec_boss.at(m_nBossId)->m_Armature->getAnimation()->isComplete())
-	{
-		//移除Boss;
-		vec_boss.at(m_nBossId)->removeFromParentAndCleanup(true);
-		this->unschedule(schedule_selector(TDStageLayer::killBoss));
-	}
-}
-
-void TDStageLayer::killSoldier(float t)
-{
-	if (vec_soldier.at(m_nSoldierId)->m_Armature->getAnimation()->isComplete())
-	{
-		this->unschedule(schedule_selector(TDStageLayer::killSoldier));
-		//移除士兵;
-		vec_soldier.at(m_nSoldierId)->died();
-		for (int i=m_nSoldierId;i>=0;i--)
-		{
-			vec_soldier.at(i)->removeFromParentAndCleanup(true);
-		}
-	}
+	return flag;
+// 	for (unsigned int i=0;i<vec_soldier.size();i++)
+// 	{
+// 		if (vec_soldier.at(i)->getPosition().y>=360)
+// 		{
+// 			return true;
+// 		}
+// 	}
+// 	return false;
 }
 
 //原设想在时光鸡中每次传递焦点事件;
@@ -343,37 +271,35 @@ void TDStageLayer::updateBossTag(int num,int index)
 
 void TDStageLayer::targetFinish()
 {
-    vec_boss.at(m_nBossId)->state = TD_BossState::Death;
     //干掉Boss,我就是老大,Boss死亡动画;
-    vec_boss.at(m_nBossId)->death();
-    this->schedule(CC_SCHEDULE_SELECTOR(TDStageLayer::killBoss));
-    if (vec_soldier.size()>0 && vec_soldier.at(m_nSoldierId)->state!=TD_SoldierState::Death)
-    {
-        vec_soldier.at(m_nSoldierId)->victory();
-    }
+    vec_boss.at(m_nBossId)->m_bossLCA->died();
+	if (vec_soldier.size())
+	{
+		vec_soldier.at(0)->victory();
+	}    
 }
 
 void TDStageLayer::addSoldierBirthland()
 {
-    //出兵点动画;
-    Sprite* pSpr = Sprite::create();
-    pSpr->setAnchorPoint(Vec2(0.5f,0.5f));
-    pSpr->setPosition(Vec2(50.f,80.f));
-    this->addChild(pSpr,Z_First);
-    //-创建动作-;
-    Animation* pAniamtion = Animation :: create();
-    char strPic[50] = {0};
-    //-加载帧-;
-    for (int i=1;i<8;i++)
-    {
-        sprintf(strPic,"animature/chubingdian/chubing_tx0%d.png",i);
-        pAniamtion->addSpriteFrameWithFile(RESOURCE(strPic));
-    }
-    //-加载动作-;
-    pAniamtion->setDelayPerUnit(0.2f);
-    pAniamtion->setRestoreOriginalFrame(true);
-    pAniamtion->setLoops(-1);
-    //-创建动画-;
-    Animate* pAction = Animate :: create(pAniamtion);
-    pSpr->runAction(pAction);
+	//出兵点动画;
+	Sprite* pSpr = Sprite::create();
+	pSpr->setAnchorPoint(Vec2(0.5f,0.5f));
+	pSpr->setPosition(Vec2(50.f,80.f));
+	this->addChild(pSpr,Z_First);
+	//-创建动作-;
+	Animation* pAniamtion = Animation :: create();
+	char strPic[50] = {0};
+	//-加载帧-;
+	for (int i=1;i<8;i++)
+	{
+		sprintf(strPic,"animature/chubingdian/chubing_tx0%d.png",i);
+		pAniamtion->addSpriteFrameWithFile(RESOURCE(strPic));
+	}
+	//-加载动作-;
+	pAniamtion->setDelayPerUnit(0.2f);
+	pAniamtion->setRestoreOriginalFrame(true);
+	pAniamtion->setLoops(-1);
+	//-创建动画-;
+	Animate* pAction = Animate :: create(pAniamtion);
+	pSpr->runAction(pAction);
 }

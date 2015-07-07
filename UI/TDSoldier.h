@@ -19,24 +19,16 @@ class TDSoldier : public TDRoleBase
 public:
 	int m_nLevel;	//士兵等级;
 	int m_nSummon;	//召唤所需分数;
-	TD_SoldierState state;	//士兵状态;
 	Armature* m_Armature;	//士兵动画;
 	TDSoldierLCA* m_soldierLCA;
+	CC_SYNTHESIZE(int,roletype,RoleType);
 
 public:
 	TDSoldier();
 	virtual ~TDSoldier();
 	//初始化士兵的等级和vector的ID;
 	void initAttributeWithIndex(int level,int id);
-	//攻击;
-	virtual void attack();
-
-	void delayStand();
-
-	void continueAttack();
-	void stand(float t);
-	void died();
-    void victory();
+	void victory();
 };
 
 #endif

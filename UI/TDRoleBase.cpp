@@ -13,7 +13,7 @@ TDRoleBase::TDRoleBase()
 {
 	m_nId = 0;
 	m_nHP = 0;
-	m_fInterval = 0;
+	m_nAttackRate = 0;
 	m_nDPS = 0;
 	m_self = nullptr;
 }
@@ -31,9 +31,4 @@ bool TDRoleBase::init()
 	}
 
 	return true;
-}
-
-void TDRoleBase::attack()
-{
-
 }
