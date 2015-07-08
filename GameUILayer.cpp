@@ -1,4 +1,4 @@
-//
+﻿//
 //  GameUILayer.cpp
 //  Dragon
 //
@@ -19,9 +19,8 @@ using namespace CocosDenshion;
 #include "UI/TDStageLayer.h"
 
 GameUILayer::GameUILayer()
-:m_pGameLayer(NULL)
+:m_pGameLayer(NULL),m_pCloud1(nullptr),m_pCloud2(nullptr),sprTree(nullptr)
 {
-    
 }
 
 GameUILayer::~GameUILayer()  
@@ -348,11 +347,13 @@ void GameUILayer::initBG()
     sprGameBG->setPosition(VisibleRect::bottom() + Vec2(0, sprGameBG->getBoundingBox().size.height/2));
     this->addChild(sprGameBG,5);
     
-    auto sprTree = Sprite::create("map01_002.png");
+    sprTree = Sprite::create("map01_002.png");
     sprTree->setPosition(Vec2(0, sprGameBG->getPositionY()) + Vec2(0, sprGameBG->getBoundingBox().size.height/2));
     sprTree->setAnchorPoint(Vec2::ZERO);
     this->addChild(sprTree,8);
-    
+
+    cloudScroll();
+
     auto sprTree_1 = Sprite::create("map01_002.png");
     sprTree_1->setPosition(Vec2(sprTree->getContentSize().width,0));
     sprTree_1->setAnchorPoint(Vec2::ZERO);
@@ -377,12 +378,7 @@ void GameUILayer::initBG()
     sprState1->setPosition(sprTree->getPosition());
     sprState1->setAnchorPoint(Vec2::ZERO);
     this->addChild(sprState1,4);
-    
-    auto sprState2 = Sprite::create("map01_004.png");
-    sprState2->setPosition(sprTree->getPosition());
-    sprState2->setAnchorPoint(Vec2::ZERO);
-    this->addChild(sprState2,3);
-    
+
     auto cloud = Armature::create("xmap01_stone");
     cloud->getAnimation()->playWithIndex(0);
     cloud->setPosition(VisibleRect::top() - Vec2(0 , 160));
@@ -1436,4 +1432,35 @@ void GameUILayer::bossDied(Ref *obj)
     }
 
     CCLOG("All Bosses are Deaded..............");
+}
+
+void GameUILayer::undateCloud(float t)
+{
+	m_pCloud1->setPositionX(m_pCloud1->getPositionX()-1);
+	m_pCloud2->setPositionX(m_pCloud2->getPositionX()-1);
+	if (m_pCloud1->getBoundingBox().getMaxX()<=0)
+	{
+		m_pCloud1->setPositionX(m_pCloud1->getContentSize().width);
+	}
+	if (m_pCloud2->getBoundingBox().getMaxX()<=0)
+	{
+		m_pCloud2->setPositionX(m_pCloud2->getContentSize().width);
+	}
+}
+
+void GameUILayer::cloudScroll()
+{
+	m_pCloud1 = Sprite::create("map01_004.png");
+	m_pCloud1->setPosition(sprTree->getPosition());
+	m_pCloud1->setAnchorPoint(Vec2::ZERO);
+	this->addChild(m_pCloud1,3);
+
+	if (!DataCenter::getInstance()->getTimeLimit())
+	{
+		m_pCloud2 = Sprite::create("map01_004.png");
+		m_pCloud2->setPosition(Vec2(m_pCloud2->getContentSize().width,m_pCloud1->getPositionY()));
+		m_pCloud2->setAnchorPoint(Vec2::ZERO);
+		this->addChild(m_pCloud2,3);
+		this->schedule(CC_SCHEDULE_SELECTOR(GameUILayer::undateCloud));
+	}
 }

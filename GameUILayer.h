@@ -1,4 +1,4 @@
-//
+﻿//
 //  GameUILayer.h
 //  Dragon
 //
@@ -42,7 +42,10 @@ public:
     virtual void onExit();
     
     void initBG();
-    
+
+	void cloudScroll();
+
+
     void initTop();
     
     void initData();
@@ -117,6 +120,11 @@ public:
     void beforeStarLimit(Node *pSender , int times);
     
     CREATE_FUNC(GameUILayer);
+
+public:
+	Sprite *m_pCloud1,*m_pCloud2;
+	Sprite* sprTree;
+	void undateCloud(float t);
     
 private:
     GameLayer *m_pGameLayer;
