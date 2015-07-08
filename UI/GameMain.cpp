@@ -99,7 +99,7 @@ void GameMain :: showUI()
     loadProgress->setAnchorPoint(Vec2(0.5,0.5));
     loadProgress->setBarChangeRate(Point(0,1));//设置进程条的变化速率;
     loadProgress->setType(ProgressTimer::Type::BAR);//设置进程条的类型;
-    loadProgress->setMidpoint(Point(0,0));//设置进度的运动方向;
+    loadProgress->setMidpoint(Point(0.5,0));//设置进度的运动方向;
     loadProgress->setPosition(Vec2(tSize.width*0.5,tSize.height*0.5));
     float percent = static_cast<float>(35+(30.f/60)*40);
     loadProgress->setPercentage(percent);//设置初始值为35;

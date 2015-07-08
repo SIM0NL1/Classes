@@ -13,6 +13,7 @@
 #include "TDRoleBase.h"
 #include "TimeMachine.h"
 
+class Progress;
 class TDBossLCA;
 class TDBoss : public TDRoleBase
 {
@@ -27,6 +28,8 @@ public:
 	TDBossLCA* m_bossLCA;	//Boss生命周期;
 	LabelAtlas *m_labTarget1,*m_labTarget2,*m_labTarget3;
 	Sprite *m_ImgTag1,*m_ImgTag2,*m_ImgTag3;
+	float m_fHpBackUp;
+	ProgressTimer* m_BossHpProgress;
 
 public:
 	TDBoss();
@@ -39,6 +42,7 @@ public:
 	void initType();
 	void initTarget();
 	void updateTarget(int num,int index);
+	void updateHpProgress(int& hp);
 };
 
 #endif

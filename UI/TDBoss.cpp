@@ -10,7 +10,7 @@
 #include "TDStageLayer.h"
 #include "GameMusicControl.h"
 
-TDBoss::TDBoss():m_bossLCA(nullptr)
+TDBoss::TDBoss():m_bossLCA(nullptr),m_BossHpProgress(nullptr)
 {
 	m_nType = 0;
 	m_sName = "";
@@ -25,6 +25,7 @@ TDBoss::TDBoss():m_bossLCA(nullptr)
 	m_ImgTag1 = nullptr;
 	m_ImgTag2 = nullptr;
 	m_ImgTag3 = nullptr;
+	m_fHpBackUp = 0;
 }
 
 TDBoss::~TDBoss()
@@ -38,8 +39,22 @@ void TDBoss::initAttributeWithIndex(int type,int id)
 	m_birthPosition = Point(GLB_SIZE.width-120,100);
 	m_nId = id;
 	m_nHP = 100;
+	m_fHpBackUp = static_cast<float>(m_nHP);
 	m_nAttackRate = 1;
 	m_nDPS = 200;
+	//初始化BossHp;
+	Sprite* bg = Sprite::create(RESOURCE("td/ui_hpboss01.png"));
+	bg->setPosition(Vec2(0,100.f));
+	this->addChild(bg,Z_First);
+	m_BossHpProgress = ProgressTimer::create(Sprite::create(RESOURCE("td/ui_hpboss02.png")));//创建一个进程条;
+	m_BossHpProgress->setAnchorPoint(Vec2::ZERO);
+	m_BossHpProgress->setBarChangeRate(Point(1,0));//设置进程条的变化速率;
+	m_BossHpProgress->setType(ProgressTimer::Type::BAR);//设置进程条的类型;
+	m_BossHpProgress->setMidpoint(Point(0,0.5));//设置进度的运动方向;
+	m_BossHpProgress->setPosition(Vec2::ZERO);
+	bg->addChild(m_BossHpProgress,Z_First);
+	m_BossHpProgress->setPercentage(100);
+
 	//初始化Boss类型;
 	initType();
 	m_bossLCA = TDBossLCA :: create(m_nAttackRate);
@@ -205,6 +220,11 @@ void TDBoss::wakeEnd()
 	{
 		m_bossLCA->attack();
 	}
+}
+
+void TDBoss::updateHpProgress(int& hp)
+{
+	m_BossHpProgress->setPercentage(hp*100.f/m_fHpBackUp);
 }
 
 
