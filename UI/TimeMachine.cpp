@@ -233,6 +233,7 @@ void TDBossLCA::attackEnd()
 void TDBossLCA::died()
 {
 	setBossState(TD_BossState::Death);
+    ((TDBoss*)this->getParent())->m_Armature->getAnimation()->stop();
 	if( isScheduled(CC_SCHEDULE_SELECTOR(TDBossLCA::bossUpdate)) )
 	{
 		this->unschedule(CC_SCHEDULE_SELECTOR(TDBossLCA::bossUpdate));
@@ -413,7 +414,7 @@ void TDSoldierLCA::diedDelay(float t)
 void TDSoldierLCA::diedEnd()
 {
 	((TDSoldier*)(this->getParent()))->removeFromParentAndCleanup(true);
-	
+    this->removeFromParentAndCleanup(true);
 }
 
 

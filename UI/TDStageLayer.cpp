@@ -170,6 +170,7 @@ void TDStageLayer::bossGetHit(int i)
             {
                 //生命值损耗为士兵的攻击力,需要读表;
                 vec_boss.at(i)->m_nHP -= 10;
+                vec_boss.at(i)->updateHpProgress(vec_boss.at(i)->m_nHP);
                 //CCLOG("TD-----Boss Hp  =  %d  ",vec_boss.at(i)->m_nHP);
                 if (vec_boss.at(i)->m_nHP-10 <= 0)
                 {
