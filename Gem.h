@@ -158,8 +158,6 @@ public:
     
     void                        breakIceFloor(int i,int j);
     
-    void                        setSkillAnimation(bool b);
-    
     bool                        getSkillAnimation(){return _skillAnimation;}
     
     void                        showSkillAnimation(Node *pSender);
@@ -171,8 +169,6 @@ public:
     void                        setSameAndSkill(bool b  ){_sameAndSkill = b ;}
     
     bool                        getSameAndSkill(){return _sameAndSkill ;}
-    
-    void                        showSkAnimaByID();
     
     int                        getEndGem(){return _endGem;}
     
@@ -363,10 +359,6 @@ public:
     void                        hideSelf();
     
     void                        removeSelf(Node *pSender);
-    
-    void                        removeSameAndSkill();
-    
-    void                        removeSkillNode(Node *pSender);
     
     void                        starBright(Node *pSender);
     

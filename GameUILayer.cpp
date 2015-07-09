@@ -562,7 +562,7 @@ void GameUILayer::initTop()
     Progress *pro7 = Progress::create("ui_jindu01.png", "ui_jindu02.png",false);
     this->addChild(pro7, 8);
     pro7->setPosition(pro7->getBoundingBox().size.width/2,1075);
-    pro7->setProgress(40);
+    pro7->setProgress(80);
     
     if (DataCenter::getInstance()->getTimeLimit())
     {
