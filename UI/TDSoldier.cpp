@@ -9,6 +9,7 @@
 #include "TDSoldier.h"
 #include "TDStageLayer.h"
 #include "GameMusicControl.h"
+#include "GameUIData.h"
 
 TDSoldier::TDSoldier():m_soldierLCA(nullptr)
 {
@@ -25,12 +26,13 @@ TDSoldier::~TDSoldier()
 
 void TDSoldier::initAttributeWithIndex(int level,int id)
 {
+	SoldierData temp =GameUIData::getInstance()->getSoldierData(1,level);
     m_nLevel = level;
     m_birthPosition = Point(20,0);
     m_nId = id;
-    m_nHP = 100;
-    m_nAttackRate = 2;
-    m_nDPS = 20;
+    m_nHP = temp.hp;
+    m_nAttackRate = temp.rate;
+    m_nDPS = temp.dps;
 
 	int type = getRoleType();
 	//根据不同的角色,分配不同的士兵形态,后期需要统一处理;

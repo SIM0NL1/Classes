@@ -120,13 +120,17 @@ void TDStageLayer::soldierFactory(int score)
 	{
 		soldier->initAttributeWithIndex(5,m_nSoldierAdd);
 	}
+	else
+	{
+		CCLOG("(O)--+_·_+--(O) score = %d",score);
+	}
 	m_nSoldierAdd++;
 	this->addChild(soldier,Z_First);
 	soldier->setPosition(soldier->m_birthPosition);
 	vec_soldier.push_back(soldier);
 }
 
-void TDStageLayer::wakeOrAttack(int soldierId)
+void TDStageLayer::wakeOrAttack(int& soldierId,int& hit)
 {
 	for (int i=0;i<vec_boss.size();i++)
 	{
@@ -139,14 +143,14 @@ void TDStageLayer::wakeOrAttack(int soldierId)
 				//Boss被唤醒,开始受到伤害,延时几秒后开始攻击士兵;
 				//生命值减少;
 				vec_boss.at(i)->m_bossLCA->setBossState(TD_BossState::Wake);
-				bossGetHit(m_nBossId);
+				bossGetHit(m_nBossId,hit);
 				vec_boss.at(m_nBossId)->wake();
 				return;
 			}
 		case TD_BossState::Wake:
 			{
 				//生命值减少;
-				bossGetHit(m_nBossId);
+				bossGetHit(m_nBossId,hit);
 				return;
 			}
 		case TD_BossState::Death:
@@ -158,26 +162,26 @@ void TDStageLayer::wakeOrAttack(int soldierId)
 	}
 }
 
-void TDStageLayer::bossGetHit(int i)
+void TDStageLayer::bossGetHit(int& id,int& hit)
 {
 	//Boss HP减少;
-	switch (vec_boss.at(i)->m_nType)
+	switch (vec_boss.at(id)->m_nType)
 	{
 	case 1:
 		//有防护盾的Boss;
 		{
-            if(!vec_boss.at(i)->boss_shield->isVisible())
+            if(!vec_boss.at(id)->boss_shield->isVisible())
             {
                 //生命值损耗为士兵的攻击力,需要读表;
-                vec_boss.at(i)->m_nHP -= 10;
-                vec_boss.at(i)->updateHpProgress(vec_boss.at(i)->m_nHP);
-                //CCLOG("TD-----Boss Hp  =  %d  ",vec_boss.at(i)->m_nHP);
-                if (vec_boss.at(i)->m_nHP-10 <= 0)
+                vec_boss.at(id)->m_nHP -= hit;
+				vec_boss.at(id)->updateHpProgress(vec_boss.at(id)->m_nHP);
+                CCLOG("TD--damage = %d  ---Boss Hp  =  %d  ",hit,vec_boss.at(id)->m_nHP);
+                if (vec_boss.at(id)->m_nHP <= 0)
                 {
                     //干掉Boss,我就是老大,Boss死亡动画;
-                    vec_boss.at(i)->m_bossLCA->died();
+                    vec_boss.at(id)->m_bossLCA->died();
                     //干掉最后一个Boss,GameOver;
-                    if (i+1==vec_boss.size())
+                    if (id+1==vec_boss.size())
                     {
                         //游戏胜利,接口;
                         m_AllBossDead = true;

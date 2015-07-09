@@ -233,7 +233,7 @@ void TDBossLCA::attackEnd()
 void TDBossLCA::died()
 {
 	setBossState(TD_BossState::Death);
-    ((TDBoss*)this->getParent())->m_Armature->getAnimation()->stop();
+	((TDBoss*)this->getParent())->m_Armature->getAnimation()->stop();
 	if( isScheduled(CC_SCHEDULE_SELECTOR(TDBossLCA::bossUpdate)) )
 	{
 		this->unschedule(CC_SCHEDULE_SELECTOR(TDBossLCA::bossUpdate));
@@ -387,8 +387,9 @@ void TDSoldierLCA::attackEnd()
 	}
 	((TDSoldier*)(this->getParent()))->m_Armature->getAnimation()->play("hephaestus_nomal",-1,1);
 	int id = ((TDSoldier*)(this->getParent()))->m_nId;
+	int hit = ((TDSoldier*)(this->getParent()))->m_nDPS;
 	//唤醒Boss或者继续攻击Boss;
-	TDStageLayer::getInstance()->wakeOrAttack(id);
+	TDStageLayer::getInstance()->wakeOrAttack(id,hit);
 	time(&soldierLongTime);
 	soldierAttackTimer = soldierLongTime;
 	this->schedule(CC_SCHEDULE_SELECTOR(TDSoldierLCA::soldierUpdate));
@@ -414,7 +415,7 @@ void TDSoldierLCA::diedDelay(float t)
 void TDSoldierLCA::diedEnd()
 {
 	((TDSoldier*)(this->getParent()))->removeFromParentAndCleanup(true);
-    this->removeFromParentAndCleanup(true);
+	this->removeFromParentAndCleanup(true);
 }
 
 

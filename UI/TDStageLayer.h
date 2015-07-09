@@ -40,9 +40,9 @@ public:
     //根据每次消除得分生产士兵;
     void soldierFactory(int score);
     //唤醒Boss,Boss单体伤害;
-    void wakeOrAttack(int soldierId);
+    void wakeOrAttack(int& soldierId,int& hit);
     //Boss受到攻击,生命值减少;
-    void bossGetHit(int i);
+    void bossGetHit(int& id,int& hit);
     //Boss反击;
 	void bossAttackBack();
 	//是否有士兵存在,影响Boss是否沉睡;
