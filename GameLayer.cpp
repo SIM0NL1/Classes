@@ -2239,17 +2239,6 @@ void GameLayer::magicAnimation(Node* pSender)
 
 void GameLayer::skillAnimation(CallFuncN *callback)
 {
-//    for(int i=0;i<kMatrixWidth;i++)
-//    {
-//        for(int j=0;j<kMatrixWidth;j++)
-//        {
-//            if(_gemMatrix[i][j]/*&&_gemMatrix[i][j]->getState()==-1*/&&_gemMatrix[i][j]->canMove()&&_gemMatrix[i][j]->getGemKind()==NormalGem)
-//            {
-//                _gemMatrix[i][j]->showSkAnimaByID();
-//            }
-//        }
-//    }
-
     this->runAction(Sequence::create(DelayTime::create(2.3),callback,NULL));
 }
 
@@ -3107,7 +3096,6 @@ void GameLayer::runOneKindofAnimation(AnimationWraper aw,CallFuncN* callback)
         {
             if(aw.node!=NULL)
             {
-                aw.node->showSkAnimaByID();
             }
             if (callback)
             {
@@ -3958,59 +3946,6 @@ void GameLayer::skillGemChange()
             
             beforeMatch();
             return;
-//            if (_selectPoint.x == _nextPoint.x)
-//            {
-//                for(int i=0;i<kMatrixWidth;i++)
-//                {
-//                    if (_gemMatrix[i][_nextPoint.y] )
-//                    {
-//                        MyPoint mp(i , _nextPoint.y);
-//                        _gemMatrix[i][_nextPoint.y]->setSkillAnimation(true);
-//                        _gemMatrix[i][_nextPoint.y]->explode(mp, mp, 0, 0);
-//                        
-//                    }
-//                }
-//                
-//                for(int j=0;j<kMatrixWidth;j++)
-//                {
-//                    if (_gemMatrix[_nextPoint.x][j] )
-//                    {
-//                        MyPoint mp(_nextPoint.x , j);
-//                        _gemMatrix[_nextPoint.x][j]->setSkillAnimation(true);
-//                        _gemMatrix[_nextPoint.x][j]->explode(mp, mp, 0, 0);
-//                        
-//                    }
-//                }
-//            }
-//            if (_selectPoint.y == _nextPoint.y)
-//            {
-//                for (int j = 0; j<kMatrixWidth; j++)
-//                {
-//                    if (_gemMatrix[_nextPoint.x][j] )
-//                    {
-//                        MyPoint mp(_nextPoint.x ,j);
-//                        _gemMatrix[_nextPoint.x][j]->setSkillAnimation(true);
-//                        _gemMatrix[_nextPoint.x][j]->explode(mp, mp, 0, 0);
-//                        
-//                    }
-//                }
-//                
-//                for (int i = 0; i<kMatrixWidth; i++)
-//                {
-//                    if (_gemMatrix[i][_nextPoint.y] )
-//                    {
-//                        MyPoint mp(i ,_nextPoint.y);
-//                        _gemMatrix[i][_nextPoint.y]->setSkillAnimation(true);
-//                        _gemMatrix[i][_nextPoint.y]->explode(mp, mp, 0, 0);
-//                        
-//                    }
-//                }
-//            }
-//            _gemMatrix[_nextPoint.x][_nextPoint.y]->setSkAnimaByID(4);
-//            
-//            AnimationWraper aw(_gemMatrix[_nextPoint.x][_nextPoint.y],e_aid_skill,e_priority_skill);
-//            
-//            _animationWraperVector.push_back(aw);
         }
         
         if((firstSkill < SkillAround1 && secondSkill == SkillAround2) || (firstSkill == SkillAround2 && secondSkill < SkillAround1))
@@ -4020,74 +3955,6 @@ void GameLayer::skillGemChange()
             
             beforeMatch();
             return;
-
-//            MyPoint centerPos ;
-//            if (firstSkill == SkillAround2)
-//            {
-//                centerPos = _selectPoint;
-//            }
-//            if (secondSkill == SkillAround2)
-//            {
-//                centerPos = _nextPoint;
-//            }
-//            
-//            int x = centerPos.x ;
-//            int y = centerPos.y ;
-//            
-//            _gemMatrix[x][y]->setSkAnimaByID(5);
-//            
-//            AnimationWraper aw(_gemMatrix[x][y],e_aid_skill,e_priority_skill);
-//
-//            _animationWraperVector.push_back(aw);
-//            
-//            for (int i = 0; i < kMatrixWidth;  i++)
-//            {
-//                if (y - 1 >= 0 && _gemMatrix[i][y-1] )
-//                {
-//                    MyPoint mp(i,y-1);
-//                    _gemMatrix[i][y-1]->setSkillAnimation(true);
-//                    _gemMatrix[i][y-1]->explode(mp, mp, 0, 0);
-//                    
-//                }
-//                if (_gemMatrix[i][y] && _gemMatrix[i][y]->canMove())
-//                {
-//                    MyPoint mp(i,y);
-//                    _gemMatrix[i][y]->setSkillAnimation(true);
-//                    _gemMatrix[i][y]->explode(mp, mp, 0, 0);
-//                    
-//                }
-//                if (y + 1 < kMatrixWidth && _gemMatrix[i][y+1] )
-//                {
-//                    MyPoint mp(i,y+1);
-//                    _gemMatrix[i][y+1]->setSkillAnimation(true);
-//                    _gemMatrix[i][y+1]->explode(mp, mp, 0, 0);
-//                    
-//                }
-//            }
-//            for (int j = 0; j < kMatrixWidth;  j++)
-//            {
-//                if (x - 1 >= 0 && _gemMatrix[x-1][j] )
-//                {
-//                    MyPoint mp(x-1,j);
-//                    _gemMatrix[x-1][j]->setSkillAnimation(true);
-//                    _gemMatrix[x-1][j]->explode(mp, mp, 0, 0);
-//                    
-//                }
-//                if (_gemMatrix[x][j] && _gemMatrix[x][j]->canMove())
-//                {
-//                    MyPoint mp(x,j);
-//                    _gemMatrix[x][j]->setSkillAnimation(true);
-//                    _gemMatrix[x][j]->explode(mp, mp, 0, 0);
-//                    
-//                }
-//                if (x + 1 < kMatrixWidth && _gemMatrix[x+1][j] )
-//                {
-//                    MyPoint mp(x+1,j);
-//                    _gemMatrix[x+1][j]->setSkillAnimation(true);
-//                    _gemMatrix[x+1][j]->explode(mp, mp, 0, 0);
-//                   
-//                }
-//            }
         }
         
         if (firstSkill == SkillAround2 && secondSkill == SkillAround2)
@@ -4097,33 +3964,6 @@ void GameLayer::skillGemChange()
             
             beforeMatch();
             return;
-
-            
-//            _gemMatrix[_selectPoint.x][_selectPoint.y]->setGemSkill(SkillNull);
-//            _gemMatrix[_nextPoint.x][_nextPoint.y]->setGemSkill(SkillAround1);
-//            _gemMatrix[_nextPoint.x][_nextPoint.y]->setSkillSpr();
-//            
-//            int x = _nextPoint.x ;
-//            int y = _nextPoint.y ;
-//            
-//            _gemMatrix[x][y]->setSkAnimaByID(3);
-//            
-//            for(int i=0;i<kMatrixWidth;i++)
-//            {
-//                for (int j=0;j<kMatrixWidth; j++)
-//                {
-//                    if ((i >= x-2)&&(i <= x+2)&&(j >= y-2)&&(j <= y+2)&&_gemMatrix[i][j])
-//                    {
-//                        MyPoint mp(i,j);
-//                        _gemMatrix[i][j]->setSkillAnimation(true);
-//                        _gemMatrix[i][j]->explode(mp, mp, 0, 0);
-//                        
-//                    }
-//                }
-//            }
-//            AnimationWraper aw(_gemMatrix[x][y],e_aid_skill,e_priority_skill);
-//
-//            _animationWraperVector.push_back(aw);
         }
         
     }
