@@ -26,6 +26,11 @@ GameUIData::GameUIData()
     verticalIndex = 0;
     _vecNormalPro.clear();
     _vecChallengePro.clear();
+	_mapSingleSoldier.clear();
+	_mapAllSoldier.clear();
+	_vecSingleBoss.clear();
+	_mapAllBoss.clear();
+	_mapShield.clear();
 }
 
 GameUIData::~GameUIData()
@@ -389,5 +394,150 @@ MissionPro GameUIData::getMissionProgress(int id,JsonFileType fileType)
     }
 }
 
+void GameUIData::readTDSoldierData()
+{
+	string filename = RESOURCE("uidata/td_soldier.json");
+	rapidjson::Document tdDoc;
+	//判断文件是否存在;
+	if (!FileUtils::getInstance()->isFileExist(filename))
+	{
+		CCLOG("soldierdata json file is not find [%s]",filename.c_str());
+		return;
+	}
+	string data = FileUtils::getInstance()->getStringFromFile(filename);
+	tdDoc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+	//
+	if (tdDoc.HasParseError() || !tdDoc.IsArray())
+	{
+		CCLOG("GetParseError%s\n",tdDoc.GetParseError());
+		return;
+	}
+	_mapSingleSoldier.clear();
+	_mapAllSoldier.clear();
+	for (unsigned int i=1;i<tdDoc.Size();++i)
+	{
+		rapidjson::Value &temp = tdDoc[i];
+		int j = 0;
+		SoldierData dataTemp;
+		int type = temp[j].GetInt();
+		int level = temp[++j].GetInt();
+		dataTemp.spend = temp[++j].GetInt();
+		dataTemp.hp = temp[++j].GetInt();
+		dataTemp.dps = temp[++j].GetInt();
+		dataTemp.rate = temp[++j].GetInt();
+		_mapSingleSoldier[level] = dataTemp;
+		if (level==5)
+		{
+			_mapAllSoldier[type] = _mapSingleSoldier;
+		}
+	}
+	for (int i=1;i<6;i++)
+	{
+		for(int j=1;j<6;j++)
+		{
+			CCLOG("type = %d, level = %d, spend = %d, hp = %d, dps = %d, rate = %d",i,j,_mapAllSoldier.at(i).at(j).spend,_mapAllSoldier.at(i).at(j).hp,_mapAllSoldier.at(i).at(j).dps,_mapAllSoldier.at(i).at(j).rate);
+		}
+	}
+}
 
+void GameUIData::readTDBossData()
+{
+	string filename = RESOURCE("uidata/td_boss.json");
+	rapidjson::Document tdDoc;
+	//判断文件是否存在;
+	if (!FileUtils::getInstance()->isFileExist(filename))
+	{
+		CCLOG("Bossdata json file is not find [%s]",filename.c_str());
+		return;
+	}
+	string data = FileUtils::getInstance()->getStringFromFile(filename);
+	tdDoc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+	//
+	if (tdDoc.HasParseError() || !tdDoc.IsArray())
+	{
+		CCLOG("GetParseError%s\n",tdDoc.GetParseError());
+		return;
+	}
+	_vecSingleBoss.clear();
+	_mapAllBoss.clear();
+	for (unsigned int i=1;i<tdDoc.Size();++i)
+	{
+		rapidjson::Value &temp = tdDoc[i];
+		int j = 0;
+		BossData dataTemp;
+		int missionId = temp[j].GetInt();
+		dataTemp.type = temp[++j].GetInt();
+		dataTemp.shield_1 = temp[++j].GetInt();
+		dataTemp.shield_2 = temp[++j].GetInt();
+		dataTemp.shield_3 = temp[++j].GetInt();
+		dataTemp.hp = temp[++j].GetInt();
+		dataTemp.rate = temp[++j].GetInt();
+		dataTemp.dps = temp[++j].GetInt();
+		dataTemp.range = temp[++j].GetInt();
+		dataTemp.ai = temp[++j].GetString();
+		dataTemp.animation = temp[++j].GetString();
+		dataTemp.reward = temp[++j].GetInt();
 
+		_mapAllBoss[missionId].push_back(dataTemp);
+
+	}
+	for (int i=1;i<=_mapAllBoss.size();i++)
+	{
+		for(int j=0;j<_mapAllBoss.at(i).size();j++)////
+		{
+			CCLOG("missionId=%d,type=%d,shield1=%d,shield2=%d,shield3=%d,hp=%d,rate=%d,dps=%d,range=%d,ai=%s,animation=%s,reward=%d",
+				i,_mapAllBoss.at(i).at(j).type,_mapAllBoss.at(i).at(j).shield_1,_mapAllBoss.at(i).at(j).shield_2,_mapAllBoss.at(i).at(j).shield_3,_mapAllBoss.at(i).at(j).hp,_mapAllBoss.at(i).at(j).rate,_mapAllBoss.at(i).at(j).dps,_mapAllBoss.at(i).at(j).range,_mapAllBoss.at(i).at(j).ai.c_str(),_mapAllBoss.at(i).at(j).animation.c_str(),_mapAllBoss.at(i).at(j).reward);
+		}
+	}
+}
+
+void GameUIData::readTDShieldData()
+{
+	string filename = RESOURCE("uidata/td_shield.json");
+	rapidjson::Document tdDoc;
+	//判断文件是否存在;
+	if (!FileUtils::getInstance()->isFileExist(filename))
+	{
+		CCLOG("ShieldData json file is not find [%s]",filename.c_str());
+		return;
+	}
+	string data = FileUtils::getInstance()->getStringFromFile(filename);
+	tdDoc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+	//
+	if (tdDoc.HasParseError() || !tdDoc.IsArray())
+	{
+		CCLOG("GetParseError%s\n",tdDoc.GetParseError());
+		return;
+	}
+	_mapShield.clear();
+	for (unsigned int i=1;i<tdDoc.Size();++i)
+	{
+		rapidjson::Value &temp = tdDoc[i];
+		int j = 0;
+		ShieldData dataTemp;
+		dataTemp.id = temp[j].GetInt();
+		dataTemp.type = temp[++j].GetInt();
+		dataTemp.elementId = temp[++j].GetInt();
+		dataTemp.num = temp[++j].GetInt();
+		_mapShield[i] = dataTemp;
+	}
+	for (int i=1;i<=_mapShield.size();i++)
+	{
+		CCLOG("Shield situationId = %d, type = %d, elementId = %d, num = %d",_mapShield.at(i).id,_mapShield.at(i).type,_mapShield.at(i).elementId,_mapShield.at(i).num);
+	}
+}
+
+SoldierData GameUIData::getSoldierData(int type,int level)
+{
+	 return _mapAllSoldier.at(type).at(level);
+}
+
+vector<BossData> GameUIData::getBossData(int missionId)
+{
+	return _mapAllBoss.at(missionId);
+}
+
+ShieldData GameUIData::getShieldData(int id)
+{
+	return _mapShield.at(id);
+}

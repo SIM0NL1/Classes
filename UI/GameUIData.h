@@ -31,6 +31,42 @@ struct MissionPro
     int state;
 };
 
+//soldierData;
+struct SoldierData
+{
+	int spend;
+	int hp;
+	int dps;
+	int rate;
+};
+
+//bossData;
+struct BossData
+{
+	//id,name,w_time,boss_image没什么用,不读;
+	int type;
+	int shield_1;
+	int shield_2;
+	int shield_3;
+	int hp;
+	int rate;
+	int dps;
+	int range;
+	string ai;
+	string animation;
+	int reward;
+
+};
+
+//
+struct ShieldData
+{
+	int id;		//情况Id;
+	int type;	//元素,障碍物;
+	int elementId;	//元素Id;
+	int num;	//数量;
+};
+
 class GameDragonBase;
 class GameUIData
 {
@@ -50,6 +86,13 @@ public:
     void writeMissionProgressData(JsonFileType fileType);
     //读取角色数据;
     void readRoleData();
+	//读取塔防士兵表;
+	void readTDSoldierData();
+	//读取塔防Boss表;
+	void readTDBossData();
+	//读取塔防盾表;
+	void readTDShieldData();
+
     void setIntegerForKey(string key,int data);
     void setBooleanForKey(string key,bool data);
     void setStringForKey(string key,string data);
@@ -70,11 +113,21 @@ public:
     void initGPS();
     float getNormalMissionHeight();
     float getChallengeMissionHeight();
+	SoldierData getSoldierData(int type,int level);
+	vector<BossData> getBossData(int missionId);
+	ShieldData getShieldData(int id);
+
 private:
     vector<Vec2> missionpos;	//普通关卡坐标;
     vector<Vec2> challengepos;	//挑战关卡坐标;
     vector<MissionPro> _vecNormalPro;	//普通关卡进度;
     vector<MissionPro> _vecChallengePro;	//挑战关卡进度;
+	//map<int,map<int,SoldierData>> _mapSoldier;	//每种,每级的士兵数据;
+	map<int,SoldierData> _mapSingleSoldier;	//每种,每级的士兵数据;
+	map<int,map<int,SoldierData>> _mapAllSoldier;
+	vector<BossData> _vecSingleBoss;	//没关的Boss,数量不固定;
+	map<int,vector<BossData>> _mapAllBoss;	//所有关卡Boss;
+	map<int,ShieldData> _mapShield;		//盾数据;		
 };
 
 #endif

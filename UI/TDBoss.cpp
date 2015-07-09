@@ -53,7 +53,7 @@ void TDBoss::initAttributeWithIndex(int type,int id)
 	m_BossHpProgress->setMidpoint(Point(0,0.5));//设置进度的运动方向;
 	m_BossHpProgress->setPosition(Vec2::ZERO);
 	bg->addChild(m_BossHpProgress,Z_First);
-	m_BossHpProgress->setPercentage(100);
+	m_BossHpProgress->setPercentage(90);
 
 	//初始化Boss类型;
 	initType();
@@ -200,6 +200,10 @@ void TDBoss::updateTarget(int num,int index)
 
 void TDBoss::wake()
 {
+    if (m_bossLCA->getBossState() == TD_BossState::Death)
+    {
+        return;
+    }
 	//播放暴怒动画;
 	m_Armature->getAnimation()->play("angry",-1,-1);
 	this->schedule(CC_SCHEDULE_SELECTOR(TDBoss::wakeDelay));
@@ -224,7 +228,7 @@ void TDBoss::wakeEnd()
 
 void TDBoss::updateHpProgress(int& hp)
 {
-	m_BossHpProgress->setPercentage(hp*100.f/m_fHpBackUp);
+	m_BossHpProgress->setPercentage(hp*90/m_fHpBackUp);
 }
 
 

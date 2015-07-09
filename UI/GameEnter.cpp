@@ -82,6 +82,9 @@ void GameEnter::loadJsonData()
     GameUIData::getInstance()->readPosData(JsonFileType::CHALLENGEMISSION);
     GameUIData::getInstance()->readMissionProgressData(JsonFileType::NORMALMISSION);
     GameUIData::getInstance()->readMissionProgressData(JsonFileType::CHALLENGEMISSION);
+    GameUIData::getInstance()->readTDSoldierData();
+    GameUIData::getInstance()->readTDBossData();
+    GameUIData::getInstance()->readTDShieldData();
     //向Json写入数据，亲测好用;
     //GameUIData::getInstance()->writeMissionProgressData(JsonFileType::NORMALMISSION);
     
