@@ -31,14 +31,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-    {
-        glview->setFrameSize(640*0.8f,1136*0.8f);
-        AllocConsole();
-        freopen("CONIN$", "r", stdin);
-        freopen("CONOUT$", "w", stdout);
-        freopen("CONOUT$", "w", stderr);
-        //FreeConsole();
-    }
+    glview->setFrameSize(640*0.8f,1136*0.8f);
+    AllocConsole();
+    freopen("CONIN$", "r", stdin);
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+    //FreeConsole();
 #endif
 	glview->setDesignResolutionSize(640, 1136, ResolutionPolicy::SHOW_ALL);
     // turn on display FPS

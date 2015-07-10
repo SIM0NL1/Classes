@@ -74,6 +74,10 @@ void GameEnter :: enterGame()
 void GameEnter::loadJsonData()
 {
     GameUIData::getInstance()->writeData();
+    
+    GameUIData::getInstance()->getStringForKey("asdf", "dd");
+    GameUIData::getInstance()->removeDataForKey("asdf");
+    
     GameUIData::getInstance()->setNormalMissionProgress(20);
     GameUIData::getInstance()->setChallengeMissionProgress(12);
     GameUIData::getInstance()->setCurNormalMission(1);

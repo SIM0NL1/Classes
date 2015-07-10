@@ -39,6 +39,15 @@ const Size GLB_SIZE = Size(640.f,1136.f);
 //观察者模式焦点事件;
 const string csMSG_BOSSDIED = "BossDied";
 
+//安全路径;
+#define _JSON_PATH_  FileUtils::getInstance()->getWritablePath().append("userdata.json")
+
+//#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+//const string _JSON_PATH_ = "UI/uidata/userdata.json";
+//#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//const string _JSON_PATH_ = "/Users/5agame/Documents/Projects/DND/Resources/UI/uidata/userdata.json";
+//#endif
+
 //ZOrder
 enum GameZOrder
 {

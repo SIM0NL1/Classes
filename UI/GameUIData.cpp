@@ -55,58 +55,6 @@ void GameUIData::deleteInstance()
     m_self = nullptr;
 }
 
-void GameUIData::writeData()
-{
-    //安全路径;
-    auto path = FileUtils::getInstance()->getWritablePath();
-    path.append("uidata.json");
-    //const char* path  = RESOURCE("uidata/uidata.json");
-    if(FileUtils::getInstance()->isFileExist(path))
-    {
-        rapidjson::Document readdoc;
-        string data = FileUtils::getInstance()->getStringFromFile(path);
-        readdoc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
-        if(readdoc.HasParseError()||!readdoc.IsObject())
-        {
-            CCLOG("GetParseError%s\n",readdoc.GetParseError());
-        }
-        
-        rapidjson::Value &var = readdoc;
-        int normalPro = var["CurNormalMissionProgress"].GetInt();
-        int challengePro = var["CurChallengeMissionProgress"].GetInt();
-        int normalPlay = var["CurNormalMissionPlay"].GetInt();
-        int challengePlay = var["CurChallengeMissionPlay"].GetInt();
-        int longbiNum = var["CurLongBiNum"].GetInt();
-        int diamondsNum = var["CurDiamondsNum"].GetInt();
-        log("%d,%d,%d,%d,%d,%d",normalPro,challengePro,normalPlay,challengePlay,longbiNum,diamondsNum);
-    }
-    else
-    {
-        //生成Json文件，存储在getWriteablePath文件夹下;
-        rapidjson::Document writedoc;
-        writedoc.SetObject();
-        rapidjson::Document::AllocatorType& allocator = writedoc.GetAllocator();
-        //json object  格式添加键值对;
-        writedoc.AddMember("CurNormalMissionProgress",1,allocator);		//普通关卡当前进度;
-        writedoc.AddMember("CurChallengeMissionProgress",0,allocator);	//挑战关卡当前进度;
-        writedoc.AddMember("CurNormalMissionPlay",1,allocator);			//正在游戏的普通关卡;
-        writedoc.AddMember("CurChallengeMissionPlay",0,allocator);		//正在游戏的副本关卡;
-        writedoc.AddMember("CurLongBiNum",100,allocator);		//当前龙币数值;
-        writedoc.AddMember("CurDiamondsNum",100,allocator);		//当前钻石数值;
-        
-        StringBuffer buffer;
-        rapidjson::Writer<StringBuffer> writer(buffer);  
-        writedoc.Accept(writer);
-        FILE* file = fopen(path.c_str(), "wb");
-        if (file)
-        {
-            fputs(buffer.GetString(), file);  
-            fclose(file);
-        }
-        CCLOG("%s",buffer.GetString());
-    }
-}
-
 void GameUIData::readPosData(JsonFileType fileType)
 {
     rapidjson::Document readdoc;
@@ -234,26 +182,6 @@ void GameUIData::writeMissionProgressData(JsonFileType fileType)
     CCLOG("%s",buffer.GetString()); 
     
     return;
-}
-
-void GameUIData::setIntegerForKey(string key,int data)
-{
-    
-}
-
-void GameUIData::setBooleanForKey(string key,bool data)
-{
-    
-}
-
-void GameUIData::setStringForKey(string key,string data)
-{
-    
-}
-
-void GameUIData::setFloatForKey(string key,float data)
-{
-    
 }
 
 cocos2d::Vec2 GameUIData::getNormalMissionPos(int id)
@@ -390,7 +318,7 @@ MissionPro GameUIData::getMissionProgress(int id,JsonFileType fileType)
     {
         case JsonFileType::NORMALMISSION:return _vecNormalPro.at(id);break;
         case JsonFileType::CHALLENGEMISSION:return _vecChallengePro.at(id);break;
-        default:break;
+        default:return _vecNormalPro.at(id);break;	//只是为了消除警告;
     }
 }
 
@@ -540,4 +468,437 @@ vector<BossData> GameUIData::getBossData(int missionId)
 ShieldData GameUIData::getShieldData(int id)
 {
 	return _mapShield.at(id);
+}
+
+void GameUIData::writeData()
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document readdoc;
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		readdoc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(readdoc.HasParseError()||!readdoc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",readdoc.GetParseError());
+		}
+
+		rapidjson::Value &var = readdoc;
+		int normalPro = Json_Check_int32(var,"CurNormalMissionProgress");
+		int challengePro = Json_Check_int32(var,"CurChallengeMissionProgress");
+		int normalPlay = Json_Check_int32(var,"CurNormalMissionPlay");
+		int challengePlay = Json_Check_int32(var,"CurChallengeMissionPlay");
+		int longbiNum = Json_Check_int32(var,"CurLongBiNum");
+		int diamondsNum = Json_Check_int32(var,"CurDiamondsNum");
+		log("%d,%d,%d,%d,%d,%d",normalPro,challengePro,normalPlay,challengePlay,longbiNum,diamondsNum);
+	}
+	else
+	{
+		//生成Json文件，存储在getWriteablePath文件夹下;
+		rapidjson::Document writedoc;
+		rapidjson::Document::AllocatorType& allocator = writedoc.GetAllocator();
+
+		writedoc.SetObject();
+		//json object  格式添加键值对;
+		writedoc.AddMember("CurNormalMissionProgress",1,allocator);		//普通关卡当前进度;
+		writedoc.AddMember("CurChallengeMissionProgress",0,allocator);	//挑战关卡当前进度;
+		writedoc.AddMember("CurNormalMissionPlay",1,allocator);			//正在游戏的普通关卡;
+		writedoc.AddMember("CurChallengeMissionPlay",0,allocator);		//正在游戏的副本关卡;
+		writedoc.AddMember("CurLongBiNum",100,allocator);		//当前龙币数值;
+		writedoc.AddMember("CurDiamondsNum",100,allocator);		//当前钻石数值;
+		//数组里面包着对象;
+//		rapidjson::Value array(rapidjson::kArrayType);
+//		rapidjson::Value object(rapidjson::kObjectType);                
+// 		object.AddMember("CurNormalMissionProgress",1,allocator);		//普通关卡当前进度;
+// 		object.AddMember("CurChallengeMissionProgress",0,allocator);	//挑战关卡当前进度;
+// 		object.AddMember("CurNormalMissionPlay",1,allocator);			//正在游戏的普通关卡;
+// 		object.AddMember("CurChallengeMissionPlay",0,allocator);		//正在游戏的副本关卡;
+// 		object.AddMember("CurLongBiNum",100,allocator);		//当前龙币数值;
+// 		object.AddMember("CurDiamondsNum",100,allocator);		//当前钻石数值;
+// 		array.PushBack(object,allocator);
+// 		writedoc.AddMember("user",array,allocator);
+		StringBuffer buffer;
+		rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+		writedoc.Accept(writer);
+		//system("delE:/Project/DND_Win/Resources/UI/uidata/userdata.json");
+		FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+		if (file)
+		{
+			fputs(buffer.GetString(), file);
+			fclose(file);
+		}
+		CCLOG("%s",buffer.GetString());
+	}
+}
+
+void GameUIData::setIntegerForKey(const char* key,int value)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+
+		rapidjson::Value &var = doc;
+		if (json_check_is_int32(var,key))
+		{
+			var[key] = value;
+		}
+		else
+		{
+			doc.AddMember(key,value,allocator);
+		}
+
+		StringBuffer buffer;
+		rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+		if (file)
+		{
+			fputs(buffer.GetString(), file);
+			fclose(file);
+		}
+
+	}
+	else
+	{
+		MessageBox("ERROR Not Exist uidata.json ! setIntegerForKey","JsonError");
+		CCLOG("ERROR Not Exist uidata.json ! setIntegerForKey");
+		return;
+	}
+}
+
+void GameUIData::setBooleanForKey(const char* key,bool value)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+
+		rapidjson::Value &var = doc;
+		if (json_check_is_bool(var,key))
+		{
+			var[key] = value;
+		}
+		else
+		{
+			doc.AddMember(key,value,allocator);
+		}
+
+		StringBuffer buffer;
+		rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+		if (file)
+		{
+			fputs(buffer.GetString(), file);
+			fclose(file);
+		}
+	}
+	else
+	{
+		MessageBox("ERROR Not Exist uidata.json ! setBooleanForKey","JsonError");
+		CCLOG("ERROR Not Exist uidata.json ! setBooleanForKey");
+		return;
+	}
+}
+
+void GameUIData::setStringForKey(const char* key,string value)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+
+		rapidjson::Value &var = doc;
+		if (json_check_is_string(var,key))
+		{
+			var[key] = value.c_str();
+		}
+		else
+		{
+			doc.AddMember(key,value.c_str(),allocator);
+		}
+
+		StringBuffer buffer;
+		rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+		if (file)
+		{
+			fputs(buffer.GetString(), file);
+			fclose(file);
+		}
+	}
+	else
+	{
+		MessageBox("ERROR Not Exist uidata.json ! setStringForKey","JsonError");
+		CCLOG("ERROR Not Exist uidata.json ! setStringForKey");
+		return;
+	}
+}
+
+void GameUIData::setFloatForKey(const char* key,float value)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+
+		rapidjson::Value &var = doc;
+		if (json_check_is_double(var,key))
+		{
+			var[key] = value;
+		}
+		else
+		{
+			doc.AddMember(key,value,allocator);
+		}
+
+		StringBuffer buffer;
+		rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+		if (file)
+		{
+			fputs(buffer.GetString(), file);
+			fclose(file);
+		}
+	}
+	else
+	{
+		MessageBox("ERROR Not Exist uidata.json ! setFloatForKey","JsonError");
+		CCLOG("ERROR Not Exist uidata.json ! setFloatForKey");
+		return;
+	}
+}
+
+int GameUIData::getIntegerForKey(const char* key)
+{
+	return getIntegerForKey(key,0);
+}
+
+int GameUIData::getIntegerForKey(const char* key,int defaultValue)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+
+		rapidjson::Value &var = doc;
+		if (json_check_is_int32(var,key))
+		{
+			return Json_Check_int32(var,key);
+		}
+		else
+		{
+			doc.AddMember(key,defaultValue,allocator);
+			StringBuffer buffer;
+			rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+			doc.Accept(writer);
+			FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+			if (file)
+			{
+				fputs(buffer.GetString(), file);
+				fclose(file);
+			}
+			return defaultValue;
+		}
+	}
+	else
+	{
+		CCLOG("ERROR Not Exist uidata.json ! getIntegerForKey");
+		return 0;
+	}
+}
+
+bool GameUIData::getBooleanForKey(const char* key)
+{
+	return getBooleanForKey(key,false);
+}
+
+bool GameUIData::getBooleanForKey(const char* key,bool defaultValue)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+		rapidjson::Value &var = doc;
+		if (json_check_is_bool(var,key))
+		{
+			return Json_Check_bool(var,key);
+		}
+		else
+		{
+			doc.AddMember(key,defaultValue,allocator);
+			StringBuffer buffer;
+			rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+			doc.Accept(writer);
+			FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+			if (file)
+			{
+				fputs(buffer.GetString(), file);
+				fclose(file);
+			}
+			return defaultValue;
+		}
+	}
+	else
+	{
+		CCLOG("ERROR Not Exist uidata.json ! getBooleanForKey");
+		return false;
+	}
+}
+
+std::string GameUIData::getStringForKey(const char* key)
+{
+	return getStringForKey(key,"");
+}
+
+std::string GameUIData::getStringForKey(const char* key,string defaultValue)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+		rapidjson::Value &var = doc;
+		if (json_check_is_string(var,key))
+		{
+			return Json_Check_string(var,key);
+		} 
+		else
+		{
+			doc.AddMember(key,defaultValue.c_str(),allocator);
+			StringBuffer buffer;
+			rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+			doc.Accept(writer);
+			FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+			if (file)
+			{
+				fputs(buffer.GetString(), file);
+				fclose(file);
+			}
+			return defaultValue;
+		}
+	}
+	else
+	{
+		CCLOG("ERROR Not Exist uidata.json ! getStringForKey");
+		return "";
+	}
+}
+
+float GameUIData::getFloatForKey(const char* key)
+{
+	return getFloatForKey(key,0);
+}
+
+float GameUIData::getFloatForKey(const char* key,float defaultValue)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+		rapidjson::Value &var = doc;
+		if (json_check_is_double(var,key))
+		{
+			return Json_Check_double(var,key);
+		} 
+		else
+		{
+			doc.AddMember(key,defaultValue,allocator);
+			StringBuffer buffer;
+			rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+			doc.Accept(writer);
+			FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+			if (file)
+			{
+				fputs(buffer.GetString(), file);
+				fclose(file);
+			}
+			return defaultValue;
+		}
+	}
+	else
+	{
+		CCLOG("ERROR Not Exist uidata.json ! getFloatForKey");
+		return 0;
+	}
+}
+
+void GameUIData::removeDataForKey(const char* key)
+{
+    if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+    {
+        rapidjson::Document doc;
+        rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+        string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+        doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+        if(doc.HasParseError()||!doc.IsObject())
+        {
+            CCLOG("GetParseError%s\n",doc.GetParseError());
+        }
+        rapidjson::Value &var = doc;
+        doc.RemoveMember(key);
+        StringBuffer buffer;
+        rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+        doc.Accept(writer);
+        FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+        if (file)
+        {
+            fputs(buffer.GetString(), file);
+            fclose(file);
+        }
+    }
+    else
+    {
+        CCLOG("ERROR Not Exist uidata.json ! removeDataForKey");
+        return;
+    }
 }

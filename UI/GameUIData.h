@@ -16,10 +16,35 @@
 #include "json/document.h"
 #include "json/writer.h"
 #include "json/stringbuffer.h"
+#include "json/prettywriter.h"
 #include "GameDragonBase.h"
 using namespace std;
 using namespace rapidjson;
 USING_NS_CC;
+
+//基础变量的校验;
+#define json_check_is_bool(value, strKey) (value.HasMember(strKey) && value[strKey].IsBool())
+#define json_check_is_string(value, strKey) (value.HasMember(strKey) && value[strKey].IsString())
+#define json_check_is_int32(value, strKey) (value.HasMember(strKey) && value[strKey].IsInt())
+#define json_check_is_uint32(value, strKey) (value.HasMember(strKey) && value[strKey].IsUint())
+#define json_check_is_int64(value, strKey) (value.HasMember(strKey) && value[strKey].IsInt64())
+#define json_check_is_uint64(value, strKey) (value.HasMember(strKey) && value[strKey].IsUint64())
+#define json_check_is_float(value, strKey) (value.HasMember(strKey) && value[strKey].IsFloat())
+#define json_check_is_double(value, strKey) (value.HasMember(strKey) && value[strKey].IsDouble())
+#define json_check_is_number(value, strKey) (value.HasMember(strKey) && value[strKey].IsNumber())
+#define json_check_is_array(value, strKey) (value.HasMember(strKey) && value[strKey].IsArray())
+
+//得到对应类型的数据，如果数据不存在则得到一个默认值;
+#define Json_Check_bool(value, strKey) (json_check_is_bool(value, strKey) && value[strKey].GetBool())
+#define Json_Check_string(value, strKey) (json_check_is_string(value, strKey) ? value[strKey].GetString() : "")
+#define Json_Check_int32(value, strKey) (json_check_is_int32(value, strKey) ? value[strKey].GetInt() : 0)
+#define Json_Check_uint32(value, strKey) (json_check_is_uint32(value, strKey) ? value[strKey].GetUint() : 0)
+#define Json_Check_int64(value, strKey) (json_check_is_int64(value, strKey) ? ((value)[strKey]).GetInt64() : 0)
+#define Json_Check_uint64(value, strKey) (json_check_is_uint64(value, strKey) ? ((value)[strKey]).GetUint64() : 0)
+#define Json_Check_float(value, strKey) (json_check_is_float(value, strKey) ? ((value)[strKey]).GetFloat() : 0)
+#define Json_Check_double(value, strKey) (json_check_is_double(value, strKey) ? ((value)[strKey]).GetDouble() : 0)
+//得到Value指针;
+#define Json_Check_value_ptr(value, strKey) (((value).HasMember(strKey)) ? &((value)[strKey]) : nullptr)
 
 #include "GameDefine.h"
 
@@ -77,7 +102,7 @@ public:
     static GameUIData* m_self;
     static GameUIData* getInstance();
     void deleteInstance();
-    void writeData();
+   
     //读取关卡坐标;
     void readPosData(JsonFileType fileType);
     //读取关卡进度;
@@ -93,10 +118,21 @@ public:
 	//读取塔防盾表;
 	void readTDShieldData();
 
-    void setIntegerForKey(string key,int data);
-    void setBooleanForKey(string key,bool data);
-    void setStringForKey(string key,string data);
-    void setFloatForKey(string key,float data);
+	void writeData();
+    void setIntegerForKey(const char* key,int value);
+    void setBooleanForKey(const char* key,bool value);
+    void setStringForKey(const char* key,string value);
+    void setFloatForKey(const char* key,float value);
+	int getIntegerForKey(const char* key);
+	int getIntegerForKey(const char* key,int defaultValue);
+	bool getBooleanForKey(const char* key);
+	bool getBooleanForKey(const char* key,bool defaultValue);
+	string getStringForKey(const char* key);
+	string getStringForKey(const char* key,string defaultValue);
+	float getFloatForKey(const char* key);
+	float getFloatForKey(const char* key,float defaultValue);
+    void removeDataForKey(const char* key);
+
     Vec2 getNormalMissionPos(int id);
     Vec2 getChallengeMissionPos(int id);
     //获取当前关卡进度;
