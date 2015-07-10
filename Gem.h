@@ -399,6 +399,10 @@ public:
     void                        sameSkillOver(Node *pSender ,GemType type);
     
     void                        aroundAnimation(Node *pSender);
+    
+    void                        gemMoveCenter(Point pos);
+    
+    void                        gemMoveOver();
 };
 
 class RedGem : public Gem

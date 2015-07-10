@@ -320,18 +320,172 @@ void Gem::removeNoCollect(bool playMusic)
 
 void Gem::createSkill()
 {
-    for(int i=0;i<kMatrixWidth;i++)
+    //直接形成。。。
+//    for(int i=0;i<kMatrixWidth;i++)
+//    {
+//        for (int j=0;j<kMatrixWidth; j++)
+//        {
+//            if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+//            {
+//                _gemStoneMatrix[i][j]->setSkillSpr();
+//                
+//            }
+//        }
+//    }
+    
+    vector<ConnectionArea>::iterator it;
+    
+    int i,j;
+    for( it =_connectionAreaVector->begin();it!=_connectionAreaVector->end();it++)
     {
-        for (int j=0;j<kMatrixWidth; j++)
+        j = it->startPoint.y;
+        i = it->startPoint.x;
+        
+        if (it->direction == Up)
         {
-            if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+            if (it->isInCross)
             {
-                _gemStoneMatrix[i][j]->setSkillSpr();
+                for ( ;j < it->startPoint.y + it->count; j++)
+                {
+                    if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+                    {
+                        _gemStoneMatrix[i][j]->setSkillSpr();
+                        _gemStoneMatrix[i][j]->setZOrder(2);
+                        continue;
+                    }
+                    
+                    if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
+                    {
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                        continue;
+                    }
+
+
+                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                }
+                continue;
+            }
+            if (it->count == 4)
+            {
+                for ( ;j < it->startPoint.y + it->count; j++)
+                {
+                    if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+                    {
+                        _gemStoneMatrix[i][j]->setSkillSpr();
+                        _gemStoneMatrix[i][j]->setZOrder(2);
+                        continue;
+                    }
+                    if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
+                    {
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                        continue;
+                    }
+
+                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                }
+            }
+            if (it->count >= 5)
+            {
+                for ( ;j < it->startPoint.y + it->count; j++)
+                {
+                    if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+                    {
+                        _gemStoneMatrix[i][j]->setSkillSpr();
+                        _gemStoneMatrix[i][j]->setZOrder(2);
+                        continue;
+                    }
+                    if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
+                    {
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                        continue;
+                    }
+
+                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                }
             }
         }
+        else
+        {
+            
+            if (it->isInCross)
+            {
+                for ( ;i < it->startPoint.x + it->count; i++)
+                {
+                    if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+                    {
+                        _gemStoneMatrix[i][j]->setSkillSpr();
+                        _gemStoneMatrix[i][j]->setZOrder(2);
+                        continue;
+                    }
+                    if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
+                    {
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                        continue;
+                    }
+
+                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                }
+                continue;
+            }
+            if (it->count == 4)
+            {
+                for ( ;i < it->startPoint.x + it->count; i++)
+                {
+                    if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+                    {
+                        _gemStoneMatrix[i][j]->setSkillSpr();
+                        _gemStoneMatrix[i][j]->setZOrder(2);
+                        continue;
+                    }
+                    if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
+                    {
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                        continue;
+                    }
+
+                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                }
+            }
+            if (it->count >= 5)
+            {
+                for ( ;i < it->startPoint.x + it->count; i++)
+                {
+                    if (_gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->canMove()  && _gemStoneMatrix[i][j]->getNextSkill())
+                    {
+                        _gemStoneMatrix[i][j]->setSkillSpr();
+                        _gemStoneMatrix[i][j]->setZOrder(2);
+                        continue;
+                    }
+                    if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
+                    {
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                        continue;
+                    }
+
+                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                }
+            }
+            
+        }
+
+            
     }
     
-    this->runAction(Sequence::create(DelayTime::create(1.1),CallFunc::create(CC_CALLBACK_0(Gem::triggerSkill, this)), NULL));
+    
+    this->runAction(Sequence::create(DelayTime::create(0),CallFunc::create(CC_CALLBACK_0(Gem::matchAll, this)), NULL));
+}
+
+void Gem::gemMoveCenter(Point pos)
+{
+    pos = pos - this->getPosition() ;
+    _state = -1;
+    _spr->runAction(Sequence::create(MoveTo::create(0.3, pos),DelayTime::create(0.5),CallFunc::create(CC_CALLBACK_0(Gem::gemMoveOver, this)),NULL));
+    
+}
+
+void Gem::gemMoveOver()
+{
+    removeNoCollect(false);
 }
 
 void Gem::triggerSkill()
@@ -397,6 +551,11 @@ void Gem::matchAll()
     {
         j = it->startPoint.y;
         i = it->startPoint.x;
+        
+        if (it->isInCross || it->count > 3)
+        {
+            continue;
+        }
         
         if (it->direction == Up)
         {
@@ -1270,7 +1429,7 @@ void Gem::fallDownStart()
 }
 void Gem::fallDownEnd(Node *pSende , bool playMusic)
 {
-    clearAllAction();
+//    clearAllAction();
     Sequence *seq = NULL;
     
     seq = Sequence::create(/*ScaleTo::create(0.1, 1.5 ,0.7),ScaleTo::create(0.1,0.8,1.3),ScaleTo::create(0.1 , 1.2 ,0.9),ScaleTo::create(0.1 ,1)JumpBy::create(0.1, Point(0,0), kElementSize/8, 1),*/JumpBy::create(0.15, Point(0,0), kElementSize/9, 1),JumpBy::create(0.09, Point(0,0), kElementSize/15, 1),CallFunc::create(CC_CALLBACK_0(Gem::sendFallDownEndMSG, this)),NULL);
@@ -1280,7 +1439,7 @@ void Gem::fallDownEnd(Node *pSende , bool playMusic)
 void Gem::sendFallDownEndMSG()
 {
     NotificationCenter::getInstance()->postNotification(kMSG_GemFallDown);
-    clearAllAction();
+//    clearAllAction();
 }
 void Gem::bright()
 {

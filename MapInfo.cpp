@@ -41,7 +41,7 @@ MapInfo::~MapInfo(void)
 
 bool MapInfo::getJsonData(int iLev)
 {
-    string filename="MapInfoTest.json";
+    string filename="MapInfo.json";
     rapidjson::Document doc;
     //判断文件是否存在
     if(!FileUtils::getInstance()->isFileExist(filename))
