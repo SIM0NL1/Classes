@@ -877,14 +877,12 @@ void GameUIData::removeDataForKey(const char* key)
     if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
     {
         rapidjson::Document doc;
-        rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
         string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
         doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
         if(doc.HasParseError()||!doc.IsObject())
         {
             CCLOG("GetParseError%s\n",doc.GetParseError());
         }
-        rapidjson::Value &var = doc;
         doc.RemoveMember(key);
         StringBuffer buffer;
         rapidjson::PrettyWriter<StringBuffer> writer(buffer);
