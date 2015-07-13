@@ -1777,7 +1777,7 @@ void Gem::gemBright(Node *pSender)
             {
                 if (_gemStoneMatrix[mp.x - i][mp.y] /*&& _gemStoneMatrix[mp.x - i][mp.y]->getState() == -1  && !_gemStoneMatrix[mp.x - i][mp.y]->getSameAndSkill()*/)
                 {
-                    _gemStoneMatrix[mp.x - i][mp.y]->runAction(Sequence::create(DelayTime::create(0),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x - i][mp.y])), NULL));
+                    _gemStoneMatrix[mp.x - i][mp.y]->runAction(Sequence::create(DelayTime::create(0.1 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x - i][mp.y])), NULL));
                 }
             }
             
@@ -1785,7 +1785,7 @@ void Gem::gemBright(Node *pSender)
             {
                 if (_gemStoneMatrix[mp.x + i][mp.y] /*&& _gemStoneMatrix[mp.x + i][mp.y]->getState() == -1 && !_gemStoneMatrix[mp.x + i][mp.y]->getSameAndSkill()*/)
                 {
-                    _gemStoneMatrix[mp.x + i][mp.y]->runAction(Sequence::create(DelayTime::create(0),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x + i][mp.y])), NULL));
+                    _gemStoneMatrix[mp.x + i][mp.y]->runAction(Sequence::create(DelayTime::create(0.1 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x + i][mp.y])), NULL));
                 }
             }
         }
@@ -1800,7 +1800,7 @@ void Gem::gemBright(Node *pSender)
             {
                 if (_gemStoneMatrix[mp.x][mp.y - i] /*&& _gemStoneMatrix[mp.x][mp.y - i]->getState() == -1 && !_gemStoneMatrix[mp.x][mp.y - i]->getSameAndSkill()*/)
                 {
-                    _gemStoneMatrix[mp.x][mp.y - i]->runAction(Sequence::create(DelayTime::create(0),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x][mp.y - i])), NULL));
+                    _gemStoneMatrix[mp.x][mp.y - i]->runAction(Sequence::create(DelayTime::create(0.1 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x][mp.y - i])), NULL));
                 }
             }
             
@@ -1809,7 +1809,7 @@ void Gem::gemBright(Node *pSender)
                 
                 if (_gemStoneMatrix[mp.x][mp.y + i] /*&& _gemStoneMatrix[mp.x][mp.y + i]->getState() == -1 && !_gemStoneMatrix[mp.x][mp.y + i]->getSameAndSkill()*/)
                 {
-                    _gemStoneMatrix[mp.x][mp.y + i]->runAction(Sequence::create(DelayTime::create(0),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x][mp.y + i])), NULL));
+                    _gemStoneMatrix[mp.x][mp.y + i]->runAction(Sequence::create(DelayTime::create(0.1 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x][mp.y + i])), NULL));
                 }
             }
         }
