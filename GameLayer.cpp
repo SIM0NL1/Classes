@@ -962,10 +962,30 @@ void GameLayer::onTouchCancelled(Touch *pTouch, Event *pEvent)
 
 void GameLayer::changeGem(Direction direction)
 {
+    PotentialArea potentialArea;
+    bool canChange = false,grassguyMatch=false;
+    
+    for(int i=0;i<_mapLayer->potentialAreaVector.size();i++)
+    {
+        potentialArea = _mapLayer->potentialAreaVector[i];
+        
+        bool selectRight =potentialArea.movePoint.x == _selectPoint.x&&potentialArea.movePoint.y == _selectPoint.y&&direction==potentialArea.diretion;
+        
+        
+        bool nextRight = potentialArea.movePoint.x == _nextPoint.x&&potentialArea.movePoint.y == _nextPoint.y&&Direction(Down-direction) == potentialArea.diretion;
+        
+        if(selectRight||nextRight)
+        {
+            canChange = true;
+            break;
+        }
+    }
+    
+    
+    _continueMatchTimes = 0;
+    
     if(_propkind == PropChange)
     {
-        _matchDownMSGSwitch = true;
-        
         Gem *tempGem = _gemMatrix[_selectPoint.x][_selectPoint.y];
         
         _gemMatrix[_selectPoint.x][_selectPoint.y] = _gemMatrix[_nextPoint.x][_nextPoint.y];
@@ -979,74 +999,15 @@ void GameLayer::changeGem(Direction direction)
         
         _gemMatrix[_selectPoint.x][_selectPoint.y]->swap(Direction(Down-direction),false, true, NULL);
         
-        _isStartMove = true;
+        if (canChange)
+        {
+            _matchDownMSGSwitch = true;
+            _isStartMove = true;
+        }
+        
         
         return;
     }
-    PotentialArea potentialArea;
-    
-    /*	Grassguy* gg = NULL;*/
-    
-    bool canChange = false,grassguyMatch=false;
-    
-    _continueMatchTimes = 0;
-    
-    // 	if(_gemMatrix[_selectPoint.x][_selectPoint.y]->getGemType()==grassguy)
-    // 	{
-    // 		gg = (Grassguy*)_gemMatrix[_selectPoint.x][_selectPoint.y];
-    //
-    // 		grassguyMatch = gg->grassguyMatchParrot(_gemMatrix[_nextPoint.x][_nextPoint.y],_nextPoint,_selectPoint);
-    // 	}
-    // 	else if(_gemMatrix[_nextPoint.x][_nextPoint.y]->getGemType()==grassguy)
-    // 	{
-    // 		gg = (Grassguy*)_gemMatrix[_nextPoint.x][_nextPoint.y];
-    //
-    // 		grassguyMatch = gg->grassguyMatchParrot(_gemMatrix[_selectPoint.x][_selectPoint.y],_selectPoint,_nextPoint);
-    // 	}
-    
-//    if (_gemMatrix[_selectPoint.x][_selectPoint.y]->getGemSkill() && _gemMatrix[_nextPoint.x][_nextPoint.y]->getGemSkill())  // 技能交换
-//    {
-//        Gem *tempGem = _gemMatrix[_selectPoint.x][_selectPoint.y];
-//        
-//        _gemMatrix[_selectPoint.x][_selectPoint.y] = _gemMatrix[_nextPoint.x][_nextPoint.y];
-//        
-//        _gemMatrix[_nextPoint.x][_nextPoint.y] = tempGem;
-//
-//        
-//        CallFunc* callbackAction = CallFunc::create(CC_CALLBACK_0(GameLayer::beforeMatch, this));
-//        
-//        _gemMatrix[_nextPoint.x][_nextPoint.y]->swap(_moveDirection, false, false,callbackAction);
-//        
-//        _gemMatrix[_selectPoint.x][_selectPoint.y]->swap(Direction(Down-_moveDirection),false, true, NULL);
-//        
-//        _isStartMove = true;
-//
-//        
-//        return;
-//
-//    }
-    
-//    if (_gemMatrix[_selectPoint.x][_selectPoint.y]->getGemSkill() == SkillAllSame || _gemMatrix[_nextPoint.x][_nextPoint.y]->getGemSkill()== SkillAllSame)  // 技能交换
-//    {
-//        Gem *tempGem = _gemMatrix[_selectPoint.x][_selectPoint.y];
-//        
-//        _gemMatrix[_selectPoint.x][_selectPoint.y] = _gemMatrix[_nextPoint.x][_nextPoint.y];
-//        
-//        _gemMatrix[_nextPoint.x][_nextPoint.y] = tempGem;
-//        
-//        
-//        CallFunc* callbackAction = CallFunc::create(CC_CALLBACK_0(GameLayer::skillGemChange, this));
-//        
-//        _gemMatrix[_nextPoint.x][_nextPoint.y]->swap(_moveDirection, false, false,callbackAction);
-//        
-//        _gemMatrix[_selectPoint.x][_selectPoint.y]->swap(Direction(Down-_moveDirection),false, true, NULL);
-//        
-//        _isStartMove = true;
-//        
-//        
-//        return;
-//        
-//    }
     
     if ((_gemMatrix[_nextPoint.x][_nextPoint.y]->getGemType() <= all && _gemMatrix[_selectPoint.x][_selectPoint.y]->getGemType() <= all) && (_gemMatrix[_selectPoint.x][_selectPoint.y]->hasSkill(_gemMatrix[_nextPoint.x][_nextPoint.y]) || _gemMatrix[_nextPoint.x][_nextPoint.y]->hasSkill(_gemMatrix[_selectPoint.x][_selectPoint.y])))
     {
@@ -1074,21 +1035,21 @@ void GameLayer::changeGem(Direction direction)
     
 //    if(_gemMatrix[_selectPoint.x][_selectPoint.y])
     
-    for(int i=0;i<_mapLayer->potentialAreaVector.size();i++)
-    {
-        potentialArea = _mapLayer->potentialAreaVector[i];
-        
-        bool selectRight =potentialArea.movePoint.x == _selectPoint.x&&potentialArea.movePoint.y == _selectPoint.y&&direction==potentialArea.diretion;
-
-        
-        bool nextRight = potentialArea.movePoint.x == _nextPoint.x&&potentialArea.movePoint.y == _nextPoint.y&&Direction(Down-direction) == potentialArea.diretion;
-        
-        if(selectRight||nextRight)
-        {
-            canChange = true;
-            break;
-        }
-    }
+//    for(int i=0;i<_mapLayer->potentialAreaVector.size();i++)
+//    {
+//        potentialArea = _mapLayer->potentialAreaVector[i];
+//        
+//        bool selectRight =potentialArea.movePoint.x == _selectPoint.x&&potentialArea.movePoint.y == _selectPoint.y&&direction==potentialArea.diretion;
+//
+//        
+//        bool nextRight = potentialArea.movePoint.x == _nextPoint.x&&potentialArea.movePoint.y == _nextPoint.y&&Direction(Down-direction) == potentialArea.diretion;
+//        
+//        if(selectRight||nextRight)
+//        {
+//            canChange = true;
+//            break;
+//        }
+//    }
     
     if(grassguyMatch)
     {
@@ -2303,7 +2264,7 @@ void GameLayer::propAnimation(MyPoint mp)
     }
     else if (_propkind == PropCross)
     {
-        prop->runAction(Sequence::create(DelayTime::create(0.8),CallFunc::create(CC_CALLBACK_0(GameLayer::crossAnimation, this)), NULL));
+        prop->runAction(Sequence::create(DelayTime::create(0.6),CallFunc::create(CC_CALLBACK_0(GameLayer::crossAnimation, this)), NULL));
         prop->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(GameLayer::removeNodeFromParent, this) );
     }
     else
@@ -2357,7 +2318,6 @@ void GameLayer::crossAnimation()
         if (_gemMatrix[i][_propPosition.y])
         {
             _gemMatrix[i][_propPosition.y]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[i][_propPosition.y]->beforeExplode();
         }
     }
     
@@ -2370,12 +2330,37 @@ void GameLayer::crossAnimation()
         if (_gemMatrix[_propPosition.x][j])
         {
             _gemMatrix[_propPosition.x][j]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[_propPosition.x][j]->beforeExplode();
         }
     }
     
-    
     _gemMatrix[_propPosition.x][_propPosition.y]->explode(_propPosition, _propPosition, 0, 0);
+    
+    for (int i = 0; i < kMatrixWidth; i++)
+    {
+        if (i == _propPosition.x)
+        {
+            continue;
+        }
+        if (_gemMatrix[i][_propPosition.y])
+        {
+            _gemMatrix[i][_propPosition.y]->beforeExplode();
+        }
+    }
+    
+    for (int j = 0; j < kMatrixWidth; j++)
+    {
+        if (j == _propPosition.y)
+        {
+            continue;
+        }
+        if (_gemMatrix[_propPosition.x][j])
+        {
+            _gemMatrix[_propPosition.x][j]->beforeExplode();
+        }
+    }
+
+    
+    
     _gemMatrix[_propPosition.x][_propPosition.y]->beforeExplode();
     
     _propkind = PropNone;
@@ -2398,8 +2383,6 @@ void GameLayer::aroundAnimation(Node* pSender)
 {
     _aroundSprite->setOpacity(255);
     
-    
-//    GemAction::getInstance().playEffectMusic(NULL,"bigboom.mp3");
     int i = _propPosition.x;
     int j = _propPosition.y;
     if(i - 1 >= 0)
@@ -2407,17 +2390,14 @@ void GameLayer::aroundAnimation(Node* pSender)
         if (j + 1 < kMatrixWidth && _gemMatrix[i-1][j+1])
         {
             _gemMatrix[i-1][j+1]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[i-1][j+1]->beforeExplode();
         }
         if (_gemMatrix[i-1][j])
         {
             _gemMatrix[i-1][j]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[i-1][j]->beforeExplode();
         }
         if (j - 1 >= 0 && _gemMatrix[i-1][j-1])
         {
             _gemMatrix[i-1][j-1]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[i-1][j-1]->beforeExplode();
         }
     }
     if (i + 1 < kMatrixWidth)
@@ -2425,51 +2405,98 @@ void GameLayer::aroundAnimation(Node* pSender)
         if (j + 1 < kMatrixWidth && _gemMatrix[i+1][j+1])
         {
             _gemMatrix[i+1][j+1]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[i+1][j+1]->beforeExplode();
         }
         if (_gemMatrix[i+1][j])
         {
             _gemMatrix[i+1][j]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[i+1][j]->beforeExplode();
         }
         if (j - 1 >= 0 && _gemMatrix[i+1][j-1])
         {
             _gemMatrix[i+1][j-1]->explode(_propPosition, _propPosition, 0, 0);
-            _gemMatrix[i+1][j-1]->beforeExplode();
         }
     }
     if (j - 1 >=0 && _gemMatrix[i][j-1])
     {
         _gemMatrix[i][j-1]->explode(_propPosition, _propPosition, 0, 0);
-        _gemMatrix[i][j-1]->beforeExplode();
     }
     if (j + 1 < kMatrixWidth && _gemMatrix[i][j+1])
     {
         _gemMatrix[i][j+1]->explode(_propPosition, _propPosition, 0, 0);
-        _gemMatrix[i][j+1]->beforeExplode();
     }
     if (i-2 >= 0 && _gemMatrix[i-2][j])
     {
         _gemMatrix[i-2][j]->explode(_propPosition, _propPosition, 0, 0);
-        _gemMatrix[i-2][j]->beforeExplode();
     }
     if (i+2 < kMatrixWidth && _gemMatrix[i+2][j])
     {
         _gemMatrix[i+2][j]->explode(_propPosition, _propPosition, 0, 0);
-        _gemMatrix[i+2][j]->beforeExplode();
     }
     if (j-2 >= 0 && _gemMatrix[i][j-2])
     {
         _gemMatrix[i][j-2]->explode(_propPosition, _propPosition, 0, 0);
-        _gemMatrix[i][j-2]->beforeExplode();
     }
     if (j+2 < kMatrixWidth && _gemMatrix[i][j+2])
     {
         _gemMatrix[i][j+2]->explode(_propPosition, _propPosition, 0, 0);
-        _gemMatrix[i][j+2]->beforeExplode();
     }
     
     _gemMatrix[i][j]->explode(_propPosition, _propPosition, 0, 0);
+    
+    if(i - 1 >= 0)
+    {
+        if (j + 1 < kMatrixWidth && _gemMatrix[i-1][j+1])
+        {
+            _gemMatrix[i-1][j+1]->beforeExplode();
+        }
+        if (_gemMatrix[i-1][j])
+        {
+            _gemMatrix[i-1][j]->beforeExplode();
+        }
+        if (j - 1 >= 0 && _gemMatrix[i-1][j-1])
+        {
+            _gemMatrix[i-1][j-1]->beforeExplode();
+        }
+    }
+    if (i + 1 < kMatrixWidth)
+    {
+        if (j + 1 < kMatrixWidth && _gemMatrix[i+1][j+1])
+        {
+            _gemMatrix[i+1][j+1]->beforeExplode();
+        }
+        if (_gemMatrix[i+1][j])
+        {
+            _gemMatrix[i+1][j]->beforeExplode();
+        }
+        if (j - 1 >= 0 && _gemMatrix[i+1][j-1])
+        {
+            _gemMatrix[i+1][j-1]->beforeExplode();
+        }
+    }
+    if (j - 1 >=0 && _gemMatrix[i][j-1])
+    {
+        _gemMatrix[i][j-1]->beforeExplode();
+    }
+    if (j + 1 < kMatrixWidth && _gemMatrix[i][j+1])
+    {
+        _gemMatrix[i][j+1]->beforeExplode();
+    }
+    if (i-2 >= 0 && _gemMatrix[i-2][j])
+    {
+        _gemMatrix[i-2][j]->beforeExplode();
+    }
+    if (i+2 < kMatrixWidth && _gemMatrix[i+2][j])
+    {
+        _gemMatrix[i+2][j]->beforeExplode();
+    }
+    if (j-2 >= 0 && _gemMatrix[i][j-2])
+    {
+        _gemMatrix[i][j-2]->beforeExplode();
+    }
+    if (j+2 < kMatrixWidth && _gemMatrix[i][j+2])
+    {
+        _gemMatrix[i][j+2]->beforeExplode();
+    }
+    
     _gemMatrix[i][j]->beforeExplode();
     
     
