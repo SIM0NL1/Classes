@@ -50,6 +50,8 @@ public:
     
     void initData();
     
+    void initProp();
+    
     void targetNumAndDisplay(int index,GemType type , int num);
     
     void pauseMenu(Ref* pSender);

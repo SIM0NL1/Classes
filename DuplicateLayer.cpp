@@ -3779,11 +3779,6 @@ void DuplicateLayer::resetAnimation()
     _add5stepSprite->getAnimation()->play("Animation1");
 }
 
-void DuplicateLayer::roleRunAnimation(Armature *arm)
-{
-    arm->getAnimation()->play("nomal");
-}
-
 void DuplicateLayer::explodeAllGem(Gem *gem)
 {
     int i,j;

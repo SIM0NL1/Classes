@@ -1679,25 +1679,25 @@ void Gem::explosionParticle()
     }
     else
     {
-        ParticleSystemQuad *partic1 = ParticleSystemQuad::create(str->getCString());
-        _particleNode->addChild(partic1,11);
-        partic1->setPosition(this->getPosition());
-        partic1->setAutoRemoveOnFinish(true);
-        
-        ParticleSystemQuad *partic2 = ParticleSystemQuad::create("suilie2.plist");
-        _particleNode->addChild(partic2,10);
-        partic2->setPosition(this->getPosition());
-        partic2->setAutoRemoveOnFinish(true);
+//        ParticleSystemQuad *partic1 = ParticleSystemQuad::create(str->getCString());
+//        _particleNode->addChild(partic1,11);
+//        partic1->setPosition(this->getPosition());
+//        partic1->setAutoRemoveOnFinish(true);
+//        
+//        ParticleSystemQuad *partic2 = ParticleSystemQuad::create("suilie2.plist");
+//        _particleNode->addChild(partic2,10);
+//        partic2->setPosition(this->getPosition());
+//        partic2->setAutoRemoveOnFinish(true);
         
 //        partic2->setStartColor(Color4F(_particleColor1));
 //        partic2->setEndColor(Color4F(_particleColor1));
         
         
-//        Armature *armature1 = Armature::create( "effect_suilie");
-//        _particleNode->addChild(armature1);
-//        armature1->getAnimation()->playWithIndex(0);
-//        armature1->setPosition(this->getPosition());
-//        armature1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::removeSelf, this) );
+        Armature *armature1 = Armature::create( "effect_suilie");
+        _particleNode->addChild(armature1);
+        armature1->getAnimation()->playWithIndex(0);
+        armature1->setPosition(this->getPosition());
+        armature1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::removeSelf, this) );
         
     }
     this->setZOrder(1);
