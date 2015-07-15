@@ -10,6 +10,7 @@
 #define __GameUIData_H__
 
 #include <iostream>
+#include "cocos2d.h"
 #include "cocos/platform/CCStdC.h"
 #include "json/rapidjson.h"
 #include "json/document.h"

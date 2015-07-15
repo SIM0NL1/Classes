@@ -172,8 +172,8 @@ void GameMissionSet::startHpTimer()
 {
 	time_t t;
 	time(&t);
-	long now = t;	//本次系统时间;
-	long previous =  GameUIData::getInstance()->getLongIntegerForKey(cs_PreHpTimer.c_str(),now);	//上次系统时间;
+	unsigned int now = t;	//本次系统时间;
+	unsigned int previous =  GameUIData::getInstance()->getLongIntegerForKey(cs_PreHpTimer.c_str(),now);	//上次系统时间;
 	m_nHp = (m_nHp+(now-previous)/ci_HpSecond)>60 ? 60 : (m_nHp+(now-previous)/ci_HpSecond);
 	GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_nHp);
 	m_labHpCoin->setString(__String::createWithFormat("%d:60",m_nHp)->getCString());
