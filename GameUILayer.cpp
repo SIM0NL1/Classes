@@ -12,6 +12,7 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 #include "Progress.h"
+#include "PropNode.h"
 #include "UI/GameUIData.h"
 using namespace CocosDenshion;
 
@@ -52,6 +53,8 @@ bool GameUILayer::init()
     
     initBG();
 
+    
+    
     if (DataCenter::getInstance()->getTimeLimit())
     {
         initTimeLimit();
@@ -65,7 +68,7 @@ bool GameUILayer::init()
         
         m_pGameLayer = GameLayer::create();
         this->addChild(m_pGameLayer,10);
-        m_pGameLayer->initPropSprite();
+//        m_pGameLayer->initPropSprite();
         
         //TD接口,无尽模式没有Boss;
         Layer* pTDLayer = TDStageLayer::getInstance();
@@ -74,8 +77,9 @@ bool GameUILayer::init()
         this->runAction(Sequence::create(DelayTime::create(0.5), CallFunc::create(CC_CALLBACK_0(GameUILayer::showTarget, this)), NULL)) ;
     }
     
-    
     SimpleAudioEngine::getInstance()->playBackgroundMusic("battle.mp3",true);
+    
+    initProp();
     
     return true;
 }
@@ -89,7 +93,7 @@ void GameUILayer::initTimeLimit()
     
     m_pGameLayer = GameLayer::create();
     this->addChild(m_pGameLayer,10);
-    m_pGameLayer->initPropSprite();
+//    m_pGameLayer->initPropSprite();
     
     m_pGameLayer->runAction(Sequence::create(DelayTime::create(0.2), CallFunc::create(CC_CALLBACK_0(GameLayer::appear, m_pGameLayer)), NULL));
     
@@ -279,15 +283,6 @@ void GameUILayer::removeTargetLayer(Node *pSender, Node *pLayer)
 
 void GameUILayer::initData()
 {
-//    if (m_pGameLayer)
-//    {
-//        m_pGameLayer->removeFromParentAndCleanup(true);
-//    }
-//    
-//    m_pGameLayer = GameLayer::create();
-//    this->addChild(m_pGameLayer,10);
-//    m_pGameLayer->initPropSprite();
-
     m_bWinGame = false;
     m_bBossDie = false;
     m_iScoreNum = 0;
@@ -572,6 +567,16 @@ void GameUILayer::initTop()
         m_labelScoreTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
         m_labelScoreTarget->setScale(1.2);
 
+    }
+}
+
+void GameUILayer::initProp()
+{
+    for (int i = 1; i < 7; i++)
+    {
+        PropNode *prop = PropNode::create((PROP_TYPE) i ,m_pGameLayer);
+        this->addChild(prop ,11);
+        prop->setPosition(Vec2(70 + (i - 1) * 100, 50));
     }
 }
 

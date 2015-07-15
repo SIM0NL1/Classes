@@ -33,6 +33,8 @@ private:
     
     PropKind            _propkind;
     
+    PROP_TYPE           _propType;
+    
     MyPoint             highLightMovePoint;
     MyPoint             highLightPoint1;
     MyPoint             highLightPoint2;
@@ -124,8 +126,6 @@ public:
     virtual void onTouchEnded(Touch *pTouch, Event *pEvent);
     virtual void onTouchCancelled(Touch *pTouch, Event *pEvent);
     
-    void initPropSprite();
-    
     void changeGem(Direction direction);
     void runIdleAnimation(float dt);
     
@@ -142,7 +142,6 @@ public:
     void renewAnimation(Node *pSender);
     
     //空闲状态随机播放动画
-    void runAllAnimationAndAction(Node* sender,AnimationPriority priority);
     
     void skillAnimation(CallFuncN* callback);
     
@@ -159,8 +158,6 @@ public:
     void beforeMatch();
     
     void afterMatch();
-    
-    void runOneKindofAnimation(AnimationWraper aw,CallFuncN* callback);
     
     void gemFallCallback();//下落回调更新计数
     
@@ -190,10 +187,6 @@ public:
     
     void winnerModeExplode(Node*pSender , AnimationWraper aw);
     
-    void outStage(Ref* object);
-    
-    void sendOutStageMessage();
-    
     void matchRepeatCallback();
     
     CREATE_FUNC(GameLayer);
@@ -207,12 +200,6 @@ public:
     void addOneToCollect();//收集的加1
     
     void cureSick();//生病的变好
-    
-    void propUseStart(Ref* object);
-    
-    void propUseCancel();
-    
-    void propUseOver();
     
     bool propUse(MyPoint& point);
     
@@ -244,28 +231,22 @@ public:
     void showSparkle(Node* sender);
     
     void fallDownToEnd(Node* sender,int data);
-        
-    void bossAppear();
-    
-    void bossAppearCallback();
     
     void skillGemChange();
     
     void appear();
     
-    void showPropRange(int i , int j);
+    void showPropRange(int a , int b);
     
     void hidePropRange();
+    
+    bool useProp(int a , int b);
     
     void removeNodeFromParent(Node *pSender);
     
     void matrixBright();
     
     void resetAnimation();
-    
-    void test();
-    
-    void roleRunAnimation(Armature* arm);
     
     bool sameGemVector();
     
@@ -277,7 +258,7 @@ public:
     
     void flyToSame(MyPoint allPos , MyPoint samePos ,GemSkill skill);
     
-    void propAnimation(MyPoint mp);
+    void propAnimation(Armature* prop);
     
     void dealGemBeforeExplode();
     
@@ -290,6 +271,10 @@ public:
     void fallDownEndColumn(Node* sender,int data ,int row);
     
     void beforeFallDown(Node* sender,int data ,int row);
+    
+    void setPropType(PROP_TYPE type){_propType = type;}
+    
+    PROP_TYPE getPropType(){return _propType;}
 };
 
 #endif	//__DRAGONEGGTRIPLE_GAMELAYER_H__

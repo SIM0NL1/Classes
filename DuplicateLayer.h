@@ -270,10 +270,6 @@ public:
     
     void resetAnimation();
     
-    void test();
-    
-    void roleRunAnimation(Armature* arm);
-    
     bool sameGemVector();
     
     void explodeAllGem(Gem *gem);

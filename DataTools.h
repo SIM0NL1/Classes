@@ -614,17 +614,6 @@ typedef enum
     BuyDimond5=4,
 }BuyDimondMessage;
 
-// static const int  MAP_TEST[kMatrixWidth][kMatrixWidth] = 
-// {
-// 	{-1, -1, -1, -1, -1, -1, -1, -1},
-// 	{-1, -1, -1, -1, -1, -1, -1, -1},
-// 	{-1, -1, -1, -1, -1, -1, -1, -1},
-// 	{-1, -1, -1, -1, -1, -1, -1, -1},
-// 	{-1, -1, -1, -1, -1, -1, -1, -1},
-// 	{-1, -1, -1, -1, -1, -1, -1, -1},
-// 	{-1, -1, -1, -1, -1, -1, -1, -1},
-// 	{-1, -1, -1, -1, -1, -1, -1, -1}
-// };
 
 static const int  MAP_TEST[kMatrixWidth][kMatrixWidth] =
 {
@@ -638,16 +627,15 @@ static const int  MAP_TEST[kMatrixWidth][kMatrixWidth] =
     {-1, -1, -1, -1, -1, -1, -1, -1}
 };
 
-//static const int  MAP_TEST[kMatrixWidth][kMatrixWidth] = 
-//{
-//    {0, 0, 0,  -1, -1, 0, 0, 0},
-//    {0, 0, -1, -1, -1, -1, 0, 0},
-//    {0,-1, -1, -1, -1, -1,-1, 0},
-//    {-1,-1,-1, -1, -1, -1,-1,-1},
-//    {-1,-1,-1, -1, -1, -1,-1,-1},
-//    {0, -1,-1, -1, -1, -1,-1, 0},
-//    {0, 0, -1, -1, -1, -1, 0, 0},
-//    {0, 0, 0,  -1, -1, 0, 0, 0}
-//};
+typedef enum
+{
+    Prop_Null,
+    Prop_Hammer,
+    Prop_Cross,
+    Prop_TNT,
+    Prop_Magic,
+    Prop_Change,
+    Prop_Add5,
+}PROP_TYPE;
 
 #endif   //__DRAGONEGGTRIPLE_DATATOOLS_H__
