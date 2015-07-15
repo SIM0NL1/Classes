@@ -125,9 +125,8 @@ void GameMissionSet::onBtnStart()
 		GameMusicControl::getInstance()->btnPlay();
 		reduceHp();
 		int id = GameUIData::getInstance()->getCurNormalMission();
-		//DataCenter::getInstance()->initMapInfo(id);
-		//m_timeMachine->removeFromParentAndCleanup(true);
-		//SCENE_CHANGE_NORMAL(SceneState::DDGameUILayer);
+		DataCenter::getInstance()->initMapInfo(id);
+		SCENE_CHANGE_NORMAL(SceneState::DDGameUILayer);
     }
 	else
 	{
