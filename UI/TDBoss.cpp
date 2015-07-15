@@ -38,7 +38,7 @@ void TDBoss::initAttributeWithIndex(int type,int id)
 	m_nType = type;
 	m_birthPosition = Point(GLB_SIZE.width-120,100);
 	m_nId = id;
-	m_nHP = 2000;
+	m_nHP = 100;
 	m_fHpBackUp = static_cast<float>(m_nHP);
 	m_nAttackRate = 1;
 	m_nDPS = 200;

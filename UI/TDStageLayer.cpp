@@ -9,6 +9,7 @@
 #include "TDStageLayer.h"
 #include "TimeMachine.h"
 #include "GameMusicControl.h"
+#include "GameUIData.h"
 
 TDStageLayer* TDStageLayer::m_self = nullptr;
 TDStageLayer::TDStageLayer()
@@ -185,6 +186,15 @@ void TDStageLayer::bossGetHit(int& id,int& hit)
                     {
                         //游戏胜利,接口;
                         m_AllBossDead = true;
+						int nowPlay = GameUIData::getInstance()->getCurNormalMission();
+						int nowProgress = GameUIData::getInstance()->getNormalMissionProgress();
+						if ( nowPlay==nowProgress )
+						{
+							GameUIData::getInstance()->setNormalMissionProgress(nowProgress+1);
+							GameUIData::getInstance()->setIntegerForKey("CurNormalMissionProgress",nowProgress+1);
+						}
+						GameUIData::getInstance()->setCurNormalMission(1);
+						GameUIData::getInstance()->setNormalMissionProgress(GameUIData::getInstance()->getIntegerForKey("CurNormalMissionProgress"));
                         NotificationCenter::getInstance()->postNotification(csMSG_BOSSDIED,NULL);
                         
                     }

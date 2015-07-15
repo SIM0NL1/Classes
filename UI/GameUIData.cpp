@@ -9,6 +9,7 @@
 #include "GameUIData.h"
 #include "GameDragonBase.h"
 #include "SupportTool.h"
+#include "GameFunctions.h"
 
 GameUIData* GameUIData::m_self = nullptr;
 GameUIData::GameUIData()
@@ -136,7 +137,7 @@ void GameUIData::readMissionProgressData(JsonFileType fileType)
     return;
 }
 
-void GameUIData::writeMissionProgressData(JsonFileType fileType)
+void GameUIData::writeMissionProgressData(JsonFileType fileType,int id,MissionPro& progress)
 {
     rapidjson::Document readdoc;
     string data;
@@ -144,14 +145,13 @@ void GameUIData::writeMissionProgressData(JsonFileType fileType)
     {
         case JsonFileType::NORMALMISSION:
             data = FileUtils::getInstance()->getStringFromFile(RESOURCE("uidata/bigmapmission.json"));
-            _vecNormalPro.clear();
+            _vecNormalPro.at(id-1) = progress;
             break;
         case JsonFileType::CHALLENGEMISSION:
             data = FileUtils::getInstance()->getStringFromFile(RESOURCE("uidata/bigmapmission_ts.json"));
-            _vecChallengePro.clear();
+            _vecChallengePro.at(id-1) = progress;
             break;
-        default:
-            break;
+        default:break;
     }
     readdoc.Parse<0>(data.c_str());
     if(readdoc.HasParseError() || !readdoc.IsArray())
@@ -159,20 +159,30 @@ void GameUIData::writeMissionProgressData(JsonFileType fileType)
         CCLOG("GetParseError%s\n",readdoc.GetParseError());
     }
     
-    for (unsigned int i=1;i<readdoc.Size();++i)
-    {
-        rapidjson::Value &temp = readdoc[i];
-        int j = 0;
-        temp[j].SetInt(99);
-        temp[++j].SetInt(99);
-        temp[++j].SetInt(99);
-        temp[++j].SetInt(99);	
-    }
-    
+	rapidjson::Value &temp = readdoc[id];
+	int j = 0;
+	temp[j].SetInt(progress.id);
+	temp[++j].SetInt(progress.start);
+	temp[++j].SetInt(progress.score);
+	temp[++j].SetInt(progress.state);
+
+  //  FileUtils::getInstance()->getWritablePath().append("userdata.json");
+
     StringBuffer buffer;
     rapidjson::Writer<StringBuffer> writer(buffer);  
     readdoc.Accept(writer);
-    FILE* file = fopen(RESOURCE("uidata/bigmapmission.json"), "wb");
+	FILE* file;
+	switch (fileType)
+	{
+	case JsonFileType::NORMALMISSION:
+		file = fopen(RESOURCE("uidata/bigmapmission.json"), "wb");
+		break;
+	case JsonFileType::CHALLENGEMISSION:
+		file = fopen(RESOURCE("uidata/bigmapmission_ts.json"), "wb");
+		break;
+	default:break;
+	}
+    
     if (file)
     {
         fputs(buffer.GetString(), file);  
@@ -315,9 +325,9 @@ MissionPro GameUIData::getMissionProgress(int id,JsonFileType fileType)
 {
     switch (fileType)
     {
-        case JsonFileType::NORMALMISSION:return _vecNormalPro.at(id);break;
-        case JsonFileType::CHALLENGEMISSION:return _vecChallengePro.at(id);break;
-        default:return _vecNormalPro.at(id);break;	//只是为了消除警告;
+        case JsonFileType::NORMALMISSION:return _vecNormalPro.at(id-1);break;
+        case JsonFileType::CHALLENGEMISSION:return _vecChallengePro.at(id-1);break;
+        default:return _vecNormalPro.at(id-1);break;	//只是为了消除警告;
     }
 }
 
@@ -511,7 +521,7 @@ void GameUIData::writeData()
 // 		object.AddMember("CurChallengeMissionProgress",0,allocator);	//挑战关卡当前进度;
 // 		object.AddMember("CurNormalMissionPlay",1,allocator);			//正在游戏的普通关卡;
 // 		object.AddMember("CurChallengeMissionPlay",0,allocator);		//正在游戏的副本关卡;
-// 		object.AddMember("CurLongBiNum",100,allocator);		//当前龙币数值;
+// 		object.AddMember("CurLongBiNum",100,allocator);			//当前龙币数值;
 // 		object.AddMember("CurDiamondsNum",100,allocator);		//当前钻石数值;
 // 		array.PushBack(object,allocator);
 // 		writedoc.AddMember("user",array,allocator);

@@ -164,7 +164,9 @@ void GameMain :: showUI()
     m_labDiamond = Label::createWithCharMap(RESOURCE("shuliang_number.png"),16,27,'0');
     m_labDiamond->setAnchorPoint(Vec2(1.f,0.5f));
     m_labDiamond->setPosition(Vec2(dibanSize.width-20.f,dibanSize.height*0.5));
-    m_labDiamond->setString("99999");
+    
+    string temp = __String::createWithFormat("%d",GameUIData::getInstance()->getMissionProgress(1,JsonFileType::NORMALMISSION).score)->getCString();
+    m_labDiamond->setString(temp);
     dibanDiamond->addChild(m_labDiamond);
     //商店按钮;
 	m_btnShop = Button :: create(RESOURCE("shangdian_01.png"),RESOURCE("shangdian_02.png"));

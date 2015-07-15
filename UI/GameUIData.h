@@ -10,20 +10,17 @@
 #define __GameUIData_H__
 
 #include <iostream>
-#include "cocos2d.h"
 #include "cocos/platform/CCStdC.h"
+#include "cocos2d.h"
 #include "json/rapidjson.h"
 #include "json/document.h"
 #include "json/writer.h"
 #include "json/stringbuffer.h"
 #include "json/prettywriter.h"
-
+#include "GameDragonBase.h"
 using namespace std;
 using namespace rapidjson;
 USING_NS_CC;
-
-#include "GameFunctions.h"
-#include "GameDragonBase.h"
 
 //基础变量的校验;
 #define json_check_is_bool(value, strKey) (value.HasMember(strKey) && value[strKey].IsBool())
@@ -48,6 +45,8 @@ USING_NS_CC;
 #define Json_Check_double(value, strKey) (json_check_is_double(value, strKey) ? ((value)[strKey]).GetDouble() : 0)
 //得到Value指针;
 #define Json_Check_value_ptr(value, strKey) (((value).HasMember(strKey)) ? &((value)[strKey]) : nullptr)
+
+#include "GameDefine.h"
 
 struct MissionPro
 {
@@ -109,7 +108,7 @@ public:
     //读取关卡进度;
     void readMissionProgressData(JsonFileType fileType);
     //写入关卡进度数据;
-    void writeMissionProgressData(JsonFileType fileType);
+    void writeMissionProgressData(JsonFileType fileType,int id,MissionPro& progress);
     //读取角色数据;
     void readRoleData();
 	//读取塔防士兵表;
