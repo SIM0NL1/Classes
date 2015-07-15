@@ -40,6 +40,8 @@ public:
     Button *m_btnShop,*m_btnAchievement,*m_btnMagicBox,*m_btnRole;
     Button *m_btnEndless,*m_btnRegisterLeft,*m_btnNewManGift;
     Button *m_btnMagicBook,*m_btnRegisterRight;
+	Label *m_labHP,*m_labLongBi,*m_labDiamond;
+	cocos2d::ProgressTimer* loadProgress;//进度条;
     Size tSize;
     void showUI();
     void initMap();
@@ -69,6 +71,8 @@ public:
     
     virtual Size sizeForPerPage();
     virtual void pageViewDidScroll(OverScrollView* scrollView);
+
+	void updateHpShow(int hp);
     
 private:
     GameMain();
@@ -77,7 +81,7 @@ private:
     GameChallengeMap* challengelayer;
     Point m_vStartPoint,m_vEndPoint;
     Button *m_btnHP,*m_btnLongBi,*m_btnDiamond;
-    Label *m_labHP,*m_labLongBi,*m_labDiamond;
+    
 };
 extern GameMain* g_pGameMain;
 #endif

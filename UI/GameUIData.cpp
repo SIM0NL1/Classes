@@ -9,7 +9,6 @@
 #include "GameUIData.h"
 #include "GameDragonBase.h"
 #include "SupportTool.h"
-#include "GameFunctions.h"
 
 GameUIData* GameUIData::m_self = nullptr;
 GameUIData::GameUIData()
@@ -572,6 +571,48 @@ void GameUIData::setIntegerForKey(const char* key,int value)
 	}
 }
 
+void GameUIData::setLongIntegerForKey(const char* key,unsigned int value)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+
+		rapidjson::Value &var = doc;
+		if (json_check_is_uint64(var,key))
+		{
+			var[key] = value;
+		}
+		else
+		{
+			doc.AddMember(key,value,allocator);
+		}
+
+		StringBuffer buffer;
+		rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+		doc.Accept(writer);
+		FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+		if (file)
+		{
+			fputs(buffer.GetString(), file);
+			fclose(file);
+		}
+
+	}
+	else
+	{
+		MessageBox("ERROR Not Exist uidata.json ! setLongIntegerForKey","JsonError");
+		CCLOG("ERROR Not Exist uidata.json ! setLongIntegerForKey");
+		return;
+	}
+}
+
 void GameUIData::setBooleanForKey(const char* key,bool value)
 {
 	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
@@ -736,6 +777,52 @@ int GameUIData::getIntegerForKey(const char* key,int defaultValue)
 	else
 	{
 		CCLOG("ERROR Not Exist uidata.json ! getIntegerForKey");
+		return 0;
+	}
+}
+
+unsigned int GameUIData::getLongIntegerForKey(const char* key)
+{
+	return getLongIntegerForKey(key,0);
+}
+
+unsigned int GameUIData::getLongIntegerForKey(const char* key,unsigned int defaultValue)
+{
+	if(FileUtils::getInstance()->isFileExist(_JSON_PATH_))
+	{
+		rapidjson::Document doc;
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		string data = FileUtils::getInstance()->getStringFromFile(_JSON_PATH_);
+		doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+		if(doc.HasParseError()||!doc.IsObject())
+		{
+			CCLOG("GetParseError%s\n",doc.GetParseError());
+		}
+
+		rapidjson::Value &var = doc;
+		if (json_check_is_uint64(var,key))
+		{
+			return Json_Check_uint64(var,key);
+		}
+		else
+		{
+			doc.AddMember(key,defaultValue,allocator);
+			StringBuffer buffer;
+			rapidjson::PrettyWriter<StringBuffer> writer(buffer);
+			doc.Accept(writer);
+			FILE* file = fopen(_JSON_PATH_.c_str(), "wb");
+			if (file)
+			{
+				fputs(buffer.GetString(), file);
+				fclose(file);
+			}
+			return defaultValue;
+		}
+	}
+	else
+	{
+		CCLOG("ERROR Not Exist uidata.json ! getLongIntegerForKey");
+		MessageBox("Not Exist uidata.json ! getLongIntegerForKey","Error");
 		return 0;
 	}
 }

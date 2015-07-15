@@ -12,10 +12,12 @@
 #include "GameUIData.h"
 #include "GameMusicControl.h"
 
-GameMissionSet::GameMissionSet()
+extern GameMissionSet* g_pGameMissionSet = nullptr;
+GameMissionSet::GameMissionSet():m_btnStart(nullptr),m_btnExit(nullptr),m_labHpCoin(nullptr),m_labTimer(nullptr)/*,m_timeMachine(nullptr)*/
 {
-	m_btnStart = nullptr;
-	m_btnExit = nullptr;
+	m_nHp = -1;
+	long_time = 0;
+	g_pGameMissionSet = this;
 }
 
 GameMissionSet::~GameMissionSet()
@@ -42,7 +44,6 @@ bool GameMissionSet::init()
 	do 
 	{
 		CC_BREAK_IF(!Layer::init());
-
 		showUI();
 
 		return true;
@@ -71,6 +72,26 @@ void GameMissionSet::showUI()
 	m_btnExit->addTouchEventListener(CC_CALLBACK_2(GameMissionSet::BtnCall,this));
 	m_btnExit->setTag(GameMissionSetBtnExit);
 
+	m_nHp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str(),60);
+	m_labHpCoin = Label::createWithCharMap(RESOURCE("shuliang_number.png"),16,27,'0');
+	m_labHpCoin->setAnchorPoint(Vec2(0.5f,0.5f));
+	m_labHpCoin->setPosition(Vec2(m_labHpCoin->getContentSize().width*0.5+80.f,GLB_SIZE.height-m_labHpCoin->getContentSize().height-80.f));
+	m_labHpCoin->setString(__String::createWithFormat("%d:60",m_nHp)->getCString());
+	this->addChild(m_labHpCoin,Z_First);
+
+	m_labTimer = Label :: createWithSystemFont("00:00","Arial",16);
+	m_labTimer->setAnchorPoint(Vec2(0.5f,0.5f));
+	m_labTimer->setPosition(Vec2(m_labHpCoin->getContentSize().width*0.5+40.f,GLB_SIZE.height-m_labHpCoin->getContentSize().height-100.f));
+	this->addChild(m_labTimer,Z_First);
+
+	if (m_nHp==60)
+	{
+		m_labTimer->setVisible(false);
+	}
+	else
+	{
+		startHpTimer();
+	}
 }
 
 void GameMissionSet::BtnCall(Ref* pSender,Widget::TouchEventType type)
@@ -98,18 +119,126 @@ void GameMissionSet::BtnCall(Ref* pSender,Widget::TouchEventType type)
 
 void GameMissionSet::onBtnStart()
 {
-	CCLOG(" Start ");
-    GameMusicControl::getInstance()->btnPlay();
-    int id = GameUIData::getInstance()->getCurNormalMission();
-    DataCenter::getInstance()->initMapInfo(id);
-    SCENE_CHANGE_NORMAL(SceneState::DDGameUILayer);
-    
+	m_nHp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str());
+    if (m_nHp>=5)
+    {
+		GameMusicControl::getInstance()->btnPlay();
+		reduceHp();
+		int id = GameUIData::getInstance()->getCurNormalMission();
+		//DataCenter::getInstance()->initMapInfo(id);
+		//m_timeMachine->removeFromParentAndCleanup(true);
+		//SCENE_CHANGE_NORMAL(SceneState::DDGameUILayer);
+    }
+	else
+	{
+		MessageBox(" Lack of Energy ","Warning");
+		return;
+	}
 }
 
 void GameMissionSet::onBtnExit()
 {
-	CCLOG(" Exit ");
     GameMusicControl::getInstance()->btnPlay();
-	SCENE_CHANGE_NORMAL(SceneState::UIGameMain);
+	SCENE_CHANGE_FADE(SceneState::UIGameMain);
 }
 
+
+
+void GameMissionSet::onEnter()
+{
+	Node::onEnter();
+}
+
+void GameMissionSet::onExit()
+{
+	Node::onExit();
+}
+
+void GameMissionSet::reduceHp()
+{
+	//扣除5点体力值;
+	m_nHp -= 5;
+	m_labHpCoin->setString(__String::createWithFormat("%d:60",m_nHp)->getCString());
+	GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_nHp);
+	if (!this->isScheduled(CC_SCHEDULE_SELECTOR(GameMissionSet::updateHp)))
+	{
+		m_nMin = 5;
+		m_nSec = 60;
+		m_labTimer->setVisible(true);
+		this->schedule(CC_SCHEDULE_SELECTOR(GameMissionSet::updateHp));
+	}
+}
+
+void GameMissionSet::startHpTimer()
+{
+	time_t t;
+	time(&t);
+	long now = t;	//本次系统时间;
+	long previous =  GameUIData::getInstance()->getLongIntegerForKey(cs_PreHpTimer.c_str(),now);	//上次系统时间;
+	m_nHp = (m_nHp+(now-previous)/ci_HpSecond)>60 ? 60 : (m_nHp+(now-previous)/ci_HpSecond);
+	GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_nHp);
+	m_labHpCoin->setString(__String::createWithFormat("%d:60",m_nHp)->getCString());
+	int hp = ci_HP_MAX-m_nHp;
+	if (now-previous>=hp*ci_HpSecond)	//已经回复满;
+	{
+		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),now);
+		m_labTimer->setVisible(false);
+	}
+	else
+	{
+		long remainder = hp*ci_HpSecond-(now-previous);	//满状态剩余秒数;
+		m_nMin = (remainder/60)%6;	//剩余倒计时分钟数;
+		m_nSec = remainder%60;		//剩余倒计时秒数;
+		if (!m_nSec && !m_nMin)
+		{
+			m_nMin = 5;
+			m_nSec = 60;
+		}
+		this->schedule(CC_SCHEDULE_SELECTOR(GameMissionSet::updateHp));
+	}
+}
+
+void GameMissionSet::updateHp(float t)
+{
+	time_t longTime;
+	time(&longTime);
+	long temp = longTime;
+	m_nHp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str());
+	if (temp-long_time >= 1)//1
+	{
+		long_time = temp;
+		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),long_time);
+		--m_nSec;
+		if (m_nSec<0)
+		{
+			--m_nMin;
+			if (m_nMin<0)
+			{
+				GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_nHp+1);
+				m_labHpCoin->setString(__String::createWithFormat("%d:60",m_nHp)->getCString());
+				if (m_nHp+1==60)
+				{
+					m_nMin = 0;
+					m_nSec = 0;
+					this->unschedule(CC_SCHEDULE_SELECTOR(GameMissionSet::updateHp));
+					m_labTimer->setVisible(false);
+					return;
+				}
+				else
+				{
+					m_nMin = 5;
+				}
+			}
+			m_nSec = 59;
+		}
+
+		if (m_nSec<10)
+		{
+			m_labTimer->setString(__String::createWithFormat("0%d : 0%d",m_nMin,m_nSec)->getCString());
+		}
+		else
+		{
+			m_labTimer->setString(__String::createWithFormat("0%d : %d",m_nMin,m_nSec)->getCString());
+		}
+	}
+}

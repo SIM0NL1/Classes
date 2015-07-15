@@ -16,7 +16,7 @@ const float _GAP = 0;
 const int _COUNT = 2;
 
 extern GameMain* g_pGameMain=nullptr;
-GameMain :: GameMain()
+GameMain :: GameMain():loadProgress(nullptr)
 {
 	m_pPageView = nullptr;
 	m_vStartPoint = Point::ZERO;
@@ -94,15 +94,15 @@ void GameMain :: showUI()
     tiliBack->setPosition(Vec2(tSize.width*0.5,tSize.height*0.5));
     tiliRect->addChild(tiliBack,Z_Back);
     // 体力蓝色体力球;
-    cocos2d::ProgressTimer* loadProgress;//进度条;
     loadProgress = ProgressTimer::create(Sprite::create(RESOURCE("tili_03.png")));//创建一个进程条;
     loadProgress->setAnchorPoint(Vec2(0.5,0.5));
     loadProgress->setBarChangeRate(Point(0,1));//设置进程条的变化速率;
     loadProgress->setType(ProgressTimer::Type::BAR);//设置进程条的类型;
     loadProgress->setMidpoint(Point(0.5,0));//设置进度的运动方向;
     loadProgress->setPosition(Vec2(tSize.width*0.5,tSize.height*0.5));
-    float percent = static_cast<float>(35+(30.f/60)*40);
-    loadProgress->setPercentage(percent);//设置初始值为35;
+	int hp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str(),60);
+    float percent = static_cast<float>(35+((float)hp/ci_HP_MAX)*40);
+    loadProgress->setPercentage(percent);
     tiliBack->addChild(loadProgress,Z_First);
 
     // 体力按钮和数字;
@@ -116,7 +116,7 @@ void GameMain :: showUI()
     m_labHP = Label::createWithCharMap(RESOURCE("shuliang_number.png"),16,27,'0');
     m_labHP->setAnchorPoint(Vec2(0.5f,0.5f));
     m_labHP->setPosition(Vec2(tSize.width*0.5,32));
-    m_labHP->setString("30:60");
+    m_labHP->setString(__String::createWithFormat("%d:60",hp)->getCString());
     tiliRect->addChild(m_labHP,Z_First);
     // 龙币底板，龙币按钮，龙币图标，龙币数字;
     Size dibanSize;
@@ -508,4 +508,11 @@ void GameMain::onBtnDiamond()
 {
 	log("********GameMain::onBtnDiamond**********");
     GameMusicControl::getInstance()->btnPlay(1);
+}
+
+void GameMain::updateHpShow(int hp)
+{
+	m_labHP->setString(__String::createWithFormat("%d:60",hp)->getCString());
+	float percent = static_cast<float>(35+((float)hp/ci_HP_MAX)*40);
+	loadProgress->setPercentage(percent);
 }

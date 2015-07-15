@@ -35,7 +35,7 @@ bool GameChallengeMap::init()
 
 TableViewCell* GameChallengeMap::tableCellAtIndex(TableView* table,ssize_t idx)
 {
-	std::string id = StringUtils::format("%d", idx+1);
+	std::string id = StringUtils::format("%ld", idx+1);
 	TableViewCell *cell = table->dequeueCell();
 
 	if (1) {

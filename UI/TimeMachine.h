@@ -23,7 +23,8 @@ public:
 public:
 	static TimeMachine* getInstance();
 	void destroyMachine();
-	
+	virtual void onEnter();
+	virtual void onExit();
 	//开启总闸模式;
 	void startTimer();
 	void update(float t);

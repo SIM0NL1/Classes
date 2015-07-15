@@ -11,16 +11,18 @@
 
 #include <iostream>
 #include "cocos/platform/CCStdC.h"
-#include "cocos2d.h"
 #include "json/rapidjson.h"
 #include "json/document.h"
 #include "json/writer.h"
 #include "json/stringbuffer.h"
 #include "json/prettywriter.h"
-#include "GameDragonBase.h"
+
 using namespace std;
 using namespace rapidjson;
 USING_NS_CC;
+
+#include "GameFunctions.h"
+#include "GameDragonBase.h"
 
 //基础变量的校验;
 #define json_check_is_bool(value, strKey) (value.HasMember(strKey) && value[strKey].IsBool())
@@ -45,8 +47,6 @@ USING_NS_CC;
 #define Json_Check_double(value, strKey) (json_check_is_double(value, strKey) ? ((value)[strKey]).GetDouble() : 0)
 //得到Value指针;
 #define Json_Check_value_ptr(value, strKey) (((value).HasMember(strKey)) ? &((value)[strKey]) : nullptr)
-
-#include "GameDefine.h"
 
 struct MissionPro
 {
@@ -120,11 +120,14 @@ public:
 
 	void writeData();
     void setIntegerForKey(const char* key,int value);
+	void setLongIntegerForKey(const char* key,unsigned int value);
     void setBooleanForKey(const char* key,bool value);
     void setStringForKey(const char* key,string value);
     void setFloatForKey(const char* key,float value);
 	int getIntegerForKey(const char* key);
 	int getIntegerForKey(const char* key,int defaultValue);
+	unsigned int getLongIntegerForKey(const char* key);
+	unsigned int getLongIntegerForKey(const char* key,unsigned int defaultValue);
 	bool getBooleanForKey(const char* key);
 	bool getBooleanForKey(const char* key,bool defaultValue);
 	string getStringForKey(const char* key);

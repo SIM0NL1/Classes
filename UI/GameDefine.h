@@ -13,19 +13,19 @@
 #include "extensions/cocos-ext.h"
 #include "ui/CocosGUI.h"
 #include "cocostudio/CocoStudio.h"
-//#include "SimpleAudioEngine.h"
 
 using namespace std;
 USING_NS_CC;
 USING_NS_CC_EXT;
 using namespace cocos2d::ui;
 using namespace cocostudio;
-//using namespace CocosDenshion;
 
 const float PI = (3.1415926f);
-const int ci_MapNum = 5;
-const int ci_NormalMissionNum = 40;
-const int ci_ChallengeMissionNum = 20;
+const int ci_HP_MAX = 60;		//最大体力上限;
+const int ci_MapNum = 5;		//地图张数;
+const int ci_NormalMissionNum = 40;		//普通关卡总关数;
+const int ci_ChallengeMissionNum = 20;	//特殊关卡总关数;
+const long ci_HpSecond = 360;	//6*60seconds回复一点体力;
 
 //取到屏幕大小;
 //const Size WIN_SIZE = Director::getInstance()->getWinSize();	//不知道为什么，总是0
@@ -38,15 +38,20 @@ const Size GLB_SIZE = Size(640.f,1136.f);
 
 //观察者模式焦点事件;
 const string csMSG_BOSSDIED = "BossDied";
+const string csMSG_HP = "TackOFFHP";
+const string csMSG_HPTIMER = "HPTimer";
 
 //安全路径;
 #define _JSON_PATH_  FileUtils::getInstance()->getWritablePath().append("userdata.json")
-
 //#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 //const string _JSON_PATH_ = "UI/uidata/userdata.json";
 //#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 //const string _JSON_PATH_ = "/Users/5agame/Documents/Projects/DND/Resources/UI/uidata/userdata.json";
 //#endif
+
+//userData中的key值;
+const string cs_CurUserHp = "CurUserHp";	//当前玩家体力值;
+const string cs_PreHpTimer = "PreviousHpTimer";	//玩家系统时间标记;
 
 //ZOrder
 enum GameZOrder
@@ -115,10 +120,8 @@ enum class TD_BossState
     Birth,
     Sleep,
     Wake,
-	Wait,
+    Wait,
     Death,
 };
 
 #endif
-
-

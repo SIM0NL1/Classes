@@ -11,6 +11,7 @@
 #include "TDBoss.h"
 #include "GameMusicControl.h"
 #include "TDStageLayer.h"
+#include "GameUIData.h"
 
 class TDBossLCA;
 class TDSoldierLCA;
@@ -46,8 +47,11 @@ void TimeMachine::destroyMachine()
 
 void TimeMachine::startTimer()
 {
-	//开启计时器;
-	this->schedule(CC_SCHEDULE_SELECTOR(TimeMachine::update));
+	if (!this->isScheduled(CC_SCHEDULE_SELECTOR(TimeMachine::update)))
+	{
+		//开启计时器;
+		this->schedule(CC_SCHEDULE_SELECTOR(TimeMachine::update));
+	}
 }
 
 void TimeMachine::update(float t)
@@ -56,13 +60,16 @@ void TimeMachine::update(float t)
 	time(&longTime);
 	long_timer = longTime;
 	__String* str = __String::createWithFormat("%ld",long_timer);
-	//NotificationCenter::getInstance()->postNotification(csMSG_TIMER,str);
+	//NotificationCenter::getInstance()->postNotification(csMSG_HPTIMER,str);
 }
 
 void TimeMachine::closeTimer()
 {
-	//关闭计时器;
-	this->unschedule(CC_SCHEDULE_SELECTOR(TimeMachine::update));
+	if (this->isScheduled(CC_SCHEDULE_SELECTOR(TimeMachine::update)))
+	{
+		//关闭计时器;
+		this->unschedule(CC_SCHEDULE_SELECTOR(TimeMachine::update));
+	}
 }
 
 void TimeMachine::startBossAC(int& attackRate)
@@ -71,6 +78,16 @@ void TimeMachine::startBossAC(int& attackRate)
 
 void TimeMachine::startSoldierAC(int& attackRate)
 {
+}
+
+void TimeMachine::onEnter()
+{
+	Node::onEnter();
+}
+
+void TimeMachine::onExit()
+{
+	Node::onExit();
 }
 
 ////////////////////////////////////////////
