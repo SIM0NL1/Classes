@@ -11,7 +11,6 @@
 #include "VisibleRect.h"
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
-#include "Progress.h"
 #include "PropNode.h"
 #include "UI/GameUIData.h"
 using namespace CocosDenshion;
@@ -20,7 +19,12 @@ using namespace CocosDenshion;
 #include "UI/TDStageLayer.h"
 
 GameUILayer::GameUILayer()
-:m_pGameLayer(NULL),m_pCloud1(nullptr),m_pCloud2(nullptr),sprTree(nullptr)
+:m_pGameLayer(NULL)
+,m_pCloud1(nullptr)
+,m_pCloud2(nullptr)
+,sprTree(nullptr)
+,m_proTime(NULL)
+,m_armTimeBG(NULL)
 {
 }
 
@@ -68,7 +72,7 @@ bool GameUILayer::init()
         
         m_pGameLayer = GameLayer::create();
         this->addChild(m_pGameLayer,10);
-//        m_pGameLayer->initPropSprite();
+        m_pGameLayer->initPropSprite();
         
         //TD接口,无尽模式没有Boss;
         Layer* pTDLayer = TDStageLayer::getInstance();
@@ -93,7 +97,7 @@ void GameUILayer::initTimeLimit()
     
     m_pGameLayer = GameLayer::create();
     this->addChild(m_pGameLayer,10);
-//    m_pGameLayer->initPropSprite();
+    m_pGameLayer->initPropSprite();
     
     m_pGameLayer->runAction(Sequence::create(DelayTime::create(0.2), CallFunc::create(CC_CALLBACK_0(GameLayer::appear, m_pGameLayer)), NULL));
     
@@ -111,9 +115,9 @@ void GameUILayer::initTimeLimit()
     m_iOperationNum = 60;
     __String *str = __String::createWithFormat("%d",m_iOperationNum);
     m_labelOperation->setString(str->getCString());
+    m_proTime->setProgress(m_iOperationNum/60.0 * 100);
     
     showLevel();
-//    m_targetBG->getAnimation()->playWithIndex(2);
 }
 
 void GameUILayer::showLevel()
@@ -209,7 +213,6 @@ void GameUILayer::showTarget()
         index++;
         it++;
     }
-//    m_targetBG->getAnimation()->playWithIndex(3 - (int)m_mapTarget.size());
     
     initData();
 }
@@ -329,7 +332,6 @@ void GameUILayer::initData()
         
         it++;
     }
-//    m_targetBG->getAnimation()->playWithIndex(3 - (int)m_mapTarget.size());
 }
 
 void GameUILayer::initBG()
@@ -549,10 +551,6 @@ void GameUILayer::initTop()
     this->addChild(levAchive, 9);
     levAchive->setPosition(starPos + Vec2(0, heigh * 2));
     
-//    Progress *pro6 = Progress::create("xui_jindu01.png", "xui_jindu02.png",false);
-//    this->addChild(pro6, 11);
-//    pro6->setPosition(320,670);
-//    pro6->setProgress(40);
     
     Progress *pro7 = Progress::create("ui_jindu01.png", "ui_jindu02.png",false);
     this->addChild(pro7, 8);
@@ -561,12 +559,27 @@ void GameUILayer::initTop()
     
     if (DataCenter::getInstance()->getTimeLimit())
     {
+        auto targetBg = Sprite::create("xui_mubiao.png");
+        this->addChild(targetBg,8);
+        targetBg->setPosition(VisibleRect::leftTop() + Vec2(targetBg->getBoundingBox().size.width/2 + 10, -targetBg->getBoundingBox().size.height/2));
+        
         m_labelScoreTarget = LabelAtlas::create("0", "defen_number.png", 16, 22, '0');
         this->addChild(m_labelScoreTarget,8);
-        m_labelScoreTarget->setPosition(Vec2(200, 1077));
+        m_labelScoreTarget->setPosition(Vec2(84, 1093));
         m_labelScoreTarget->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-        m_labelScoreTarget->setScale(1.2);
+        m_labelScoreTarget->setScale(1.1);
 
+        operationBG->setTexture("xin_time.png");
+        
+        pro7->setVisible(false);
+        
+        scoreBG->setPosition(scoreBG->getPosition() - Vec2(0, 55));
+        m_labelScore->setPosition(m_labelScore->getPosition() - Vec2(0, 55));
+        
+        m_proTime = Progress::create("kuang_time01.png", "kuang_time02.png",false);
+        this->addChild(m_proTime, 8);
+        m_proTime->setPosition(operationBG ->getPosition() - Vec2(0, 25));
+        m_proTime->setProgress(100);
     }
 }
 
@@ -1175,8 +1188,29 @@ void GameUILayer::limitTime(float dt)
     __String *str = __String::createWithFormat("%d",m_iOperationNum);
     m_labelOperation->setString(str->getCString());
     
+    m_proTime->setProgress(m_iOperationNum/60.0 * 100);
+    
+    if (m_iOperationNum == 10)
+    {
+        m_armTimeBG = Armature::create("kuang_time03");
+        this->addChild(m_armTimeBG, 8);
+        m_armTimeBG->setPosition(m_proTime->getPosition() );
+        m_armTimeBG->getAnimation()->play("Animation1");
+    }
+    if (m_iOperationNum > 10 && m_armTimeBG)
+    {
+        m_armTimeBG->removeFromParentAndCleanup(true);
+        m_armTimeBG = NULL;
+    }
+    
     if (m_iOperationNum == 0)
     {
+        if (m_armTimeBG)
+        {
+            m_armTimeBG->removeFromParentAndCleanup(true);
+            m_armTimeBG = NULL;
+        }
+
         failGame();
         unschedule(schedule_selector(GameUILayer::limitTime));
     }
@@ -1381,6 +1415,14 @@ void GameUILayer::updateCollect(Ref *obj)
             m_iOperationNum = m_iOperationNum < 60 ? m_iOperationNum : 60;
             __String *str = __String::createWithFormat("%d",m_iOperationNum);
             m_labelOperation->setString(str->getCString());
+            
+            m_proTime->setProgress(m_iOperationNum/60.0 * 100);
+            
+            if (m_armTimeBG)
+            {
+                m_armTimeBG->removeFromParentAndCleanup(true);
+                m_armTimeBG = NULL;
+            }
             
             str = __String::createWithFormat("%d",m_iScoreTarget);
 

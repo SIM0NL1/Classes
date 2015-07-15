@@ -13,6 +13,7 @@
 #include "cocos2d.h"
 #include "DataTools.h"
 #include "GameLayer.h"
+#include "Progress.h"
 
 USING_NS_CC;
 using namespace std;
@@ -149,8 +150,10 @@ private:
     LabelAtlas *m_labelTarget[COLLECT_ARRAY];
     Sprite *m_sprTarget[COLLECT_ARRAY];
     Sprite *m_sprAchieve[COLLECT_ARRAY];
-    Armature *m_targetBG;
+    Armature *m_armTimeBG;
     bool m_bComplete[COLLECT_ARRAY];  //finished
+    
+    Progress *m_proTime;
     
     int m_iArrTargetNum[maxgem];
     int m_iArrTargetIndex[maxgem];

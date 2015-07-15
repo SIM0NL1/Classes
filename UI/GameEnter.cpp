@@ -163,7 +163,7 @@ void GameEnter :: loadArmature()
     ArmatureDataManager::getInstance()->addArmatureFileInfo("xmap01_stone0.png" , "xmap01_stone0.plist" , "xmap01_stone.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("ui_fz010.png" , "ui_fz010.plist" , "ui_fz01.ExportJson");
     ArmatureDataManager::getInstance()->addArmatureFileInfo("ui_shijianyongjin0.png" , "ui_shijianyongjin0.plist" , "ui_shijianyongjin.ExportJson");
-
+    ArmatureDataManager::getInstance()->addArmatureFileInfo("kuang_time030.png" , "kuang_time030.plist" , "kuang_time03.ExportJson");
 }
 
 void GameEnter::loadMyArmature()

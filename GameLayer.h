@@ -126,6 +126,8 @@ public:
     virtual void onTouchEnded(Touch *pTouch, Event *pEvent);
     virtual void onTouchCancelled(Touch *pTouch, Event *pEvent);
     
+    void initPropSprite();
+    
     void changeGem(Direction direction);
     void runIdleAnimation(float dt);
     

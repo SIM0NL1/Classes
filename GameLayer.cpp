@@ -90,6 +90,18 @@ GameLayer::~GameLayer()
     this->removeFromParentAndCleanup(true);
 }
 
+void GameLayer::initPropSprite()
+{
+    auto skillBG = Sprite::create("xui_skill.png");
+    this->addChild(skillBG,8);
+    skillBG->setPosition(this->convertToNodeSpace(Vec2(320 , 720)));
+
+    Progress *pro6 = Progress::create("xui_jindu01.png", "xui_jindu02.png",false);
+    this->addChild(pro6, 11);
+    pro6->setPosition(skillBG->getPosition() - Vec2(0, 50));
+    pro6->setProgress(40);
+}
+
 bool GameLayer::init()
 {
     if (!Layer::init())
