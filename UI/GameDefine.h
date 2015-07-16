@@ -42,11 +42,11 @@ const string csMSG_HP = "TackOFFHP";
 const string csMSG_HPTIMER = "HPTimer";
 
 //安全路径;
-#define _JSON_PATH_  FileUtils::getInstance()->getWritablePath().append("userdata.json")
+//#define _JSON_PATH_  FileUtils::getInstance()->getWritablePath().append("userdata.json")
 //#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 //const string _JSON_PATH_ = "UI/uidata/userdata.json";
 //#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-//const string _JSON_PATH_ = "/Users/5agame/Documents/Projects/DND/Resources/UI/uidata/userdata.json";
+const string _JSON_PATH_ = "/Users/b081mac/Documents/Project/DragonGame/Resources/UI/uidata/userdata.json";
 //#endif
 
 //userData中的key值;

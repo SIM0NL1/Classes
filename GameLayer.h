@@ -31,8 +31,6 @@ private:
     MyPoint             _selectPoint;
     MyPoint             _nextPoint;
     
-    PropKind            _propkind;
-    
     PROP_TYPE           _propType;
     
     MyPoint             highLightMovePoint;
@@ -93,17 +91,6 @@ private:
     
 //    Sprite*         _hammerSprite;
     
-    Armature*       _hammerSprite;
-    
-    Armature*       _add5stepSprite;
-    
-    Armature*       _crossSprite;
-    
-    Armature*       _aroundSprite;
-    
-    Armature*       _onekindSprite;
-    
-    Armature*       _changeSprite;
     
     MyPoint         _propPosition;
     
@@ -145,10 +132,6 @@ public:
     
     //空闲状态随机播放动画
     
-    void skillAnimation(CallFuncN* callback);
-    
-    void propAnimation(CallFuncN* callback);
-    
     void magicAnimation(Node* pSender);
     
     void aroundAnimation(Node* pSender);
@@ -164,14 +147,6 @@ public:
     void gemFallCallback();//下落回调更新计数
     
     void gemFallNotification(Ref *obj);
-    
-    void fiveMatchEffect(int index,MyPoint& point,CallFuncN* callback);
-    
-    void fourMatchEffect(int index,CallFuncN* callback);
-    
-    void crossMatchEffect(int index1,int index2,CallFuncN* callback);
-    
-    void explodeSameAnimation(AnimationWraper aw ,CallFuncN* callback);
     
     Point calculateStartPoint(float edgeWidth,Size& winSize,float scaleFactor);
     
@@ -205,10 +180,6 @@ public:
     
     bool propUse(MyPoint& point);
     
-    void propRemoveRow(float dt);
-    
-    void propUnschedule();
-    
     void propShiningInBackgroud(Node* sender,int data);
     
     void winnerModeShiningInBackgroud(Node* sender,int data);
@@ -218,9 +189,7 @@ public:
     void initExplodeFlyTime();
     
     float getExplodeFlyTime(MyPoint& point);
-    
-    void removeGem(Node* sender,int data);
-    
+        
     void buyFiveSteps(Ref *obj);
     //加入教程
     void addClassLayer();

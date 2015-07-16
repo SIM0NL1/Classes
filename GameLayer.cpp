@@ -13,7 +13,6 @@ GameLayer::GameLayer()
 ,_fallGemCount(0)
 ,_edgeBlankDevidedSize(10)
 ,_isWinnerModeStart(false)
-,_propkind(PropNone)
 ,_propType(Prop_Null)
 ,_skillType(SkillNull)
 ,_magicCallBack(NULL)
@@ -26,11 +25,6 @@ GameLayer::GameLayer()
 ,_hightLightSwitch(true)
 ,_bossNode(NULL)
 ,_upIndex(NULL)
-,_hammerSprite(NULL)
-,_aroundSprite(NULL)
-,_add5stepSprite(NULL)
-,_crossSprite(NULL)
-,_onekindSprite(NULL)
 ,_removeGemSwitch(true)
 ,_matchDownMSGSwitch(false)
 ,_disappearByOder(false)
@@ -111,7 +105,6 @@ bool GameLayer::init()
     
     _mapInfo = DataCenter::getInstance()->getMapInfo();
 
-    //
     int** tempMatrix = _mapInfo->getMatrixMap();
     
     _mapMatrix = (int**)malloc(sizeof(int*)*kMatrixWidth);
@@ -157,13 +150,13 @@ bool GameLayer::init()
     
     _startPoint=calculateStartPoint(edgeBlank, winSize, _scaleFactor);
     
-    _particleNode = Node::create();//粒子效果节点,z=1
+    _particleNode = Node::create(); // 各种效果
     
-    _mapNode = Node::create();//地图节点z=-1
+    _mapNode = Node::create(); //地图节点
     
     Point startPoint =Point(-winSize.width*kGameLayerStartMultiple,(winSize.height-(winSize.width-edgeBlank*2))/2);
     
-    Point endPoint = _startPoint;//ccp(edgeBlank,(winSize.height-(winSize.width-edgeBlank*2))/2);
+    Point endPoint = _startPoint;
     
     this->addChild(_particleNode,kParticleZOrder);
     
@@ -211,7 +204,7 @@ bool GameLayer::init()
     {
         this->firstTimeInit();
     }
-    //放鸟窝，冰冻，藤条
+
     for (int i=0; i<kMatrixWidth; i++)
     {
         for(int j=0;j<kMatrixWidth;j++)
@@ -274,9 +267,6 @@ bool GameLayer::init()
     this->setPosition(endPoint);
     
     this->setTouchDisable();
-    
-
-    this->runAction(Sequence::create(DelayTime::create(kGameLayerFlyTime),/*CallFunc::create(CC_CALLBACK_0(GameLayer::appear, this)),CallFunc::create(CC_CALLBACK_0(GameLayer::shining, this)),*/NULL));
     
     _listener_touch = EventListenerTouchOneByOne::create();
     _listener_touch->onTouchBegan = CC_CALLBACK_2(GameLayer::onTouchBegan,this);
@@ -367,104 +357,6 @@ bool GameLayer::onTouchBegan(Touch *pTouch, Event *pEvent)
         return false;
     }
     
-//    if (_propkind == PropChange)
-//    {
-//        if(i>=0&&i<kMatrixWidth&&j>=0&&j<kMatrixWidth&&_gemMatrix[i][j]&&_gemMatrix[i][j]->canMove())
-//        {
-//            if (i == _selectPoint.x)
-//            {
-//                if (j == _selectPoint.y - 1)
-//                {
-//                    _nextPoint.setPosition(i, j);
-//                    changeGem(Down);
-//                }
-//                if (j == _selectPoint.y + 1)
-//                {
-//                    _nextPoint.setPosition(i, j);
-//                    changeGem(Up);
-//                }
-//            }
-//            if (j == _selectPoint.y)
-//            {
-//                if (i == _selectPoint.x - 1)
-//                {
-//                    _nextPoint.setPosition(i, j);
-//                    changeGem(Left);
-//                }
-//                if (i == _selectPoint.x + 1)
-//                {
-//                    _nextPoint.setPosition(i, j);
-//                    changeGem(Right);
-//                }
-//            }
-//        }
-//        return false;
-//    }
-    
-//    if(/*(b<0||a<0) && */_propkind == PropNone)
-//    {
-//        __String *str = __String::create("");
-//        if (_hammerSprite->getBoundingBox().containsPoint(Vec2(a, b)))
-//        {
-//            str = __String::create("chuizi_icon");
-//            _propkind = PropSingle;
-//            _hammerSprite->setOpacity(100);
-//        }
-//        if (_aroundSprite->getBoundingBox().containsPoint(Vec2(a, b)))
-//        {
-//            str = __String::create("lingxing_icon");
-//            _propkind = PropAround;
-//            _aroundSprite->setOpacity(100);
-//        }
-//        if (/*_crossSprite->getBoundingBox()*/RectApplyAffineTransform(Rect(-40, -40, 62, 62),_crossSprite->getNodeToParentAffineTransform()).containsPoint(Vec2(a, b)))
-//        {
-//            
-//            str = __String::create("shizi_icon");
-//            _propkind = PropCross;
-//            _crossSprite->setOpacity(100);
-//        }
-//        if (_changeSprite->getBoundingBox().containsPoint(Vec2(a, b)))
-//        {
-//            str = __String::create("nuqi_icon");
-//            _propkind = PropChange;
-//            _changeSprite->setOpacity(100);
-//        }
-//        if (_onekindSprite->getBoundingBox().containsPoint(Vec2(a, b)))
-//        {
-//            str = __String::create("mobang_icon");
-//            _propkind = PropOneKind;
-//            _onekindSprite->setOpacity(100);
-//        }
-//        
-//        if (_add5stepSprite->getBoundingBox().containsPoint(Vec2(a, b)))
-//        {
-//            matrixBright();
-//            _add5stepSprite->getAnimation()->play("Animation2");
-//            _add5stepSprite->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_0(GameLayer::resetAnimation, this) );
-//        }
-//
-//        
-//        if (_propkind > PropNone)
-//        {
-//            _selectPoint.reset();
-////            stopHighLight();
-//            
-//            if (this->getChildByTag(PROP_TAG))
-//            {
-//                this->removeChildByTag(PROP_TAG);
-//            }
-//            auto propSpr = Armature::create(str->getCString());
-//            this->addChild(propSpr,120,PROP_TAG);
-//            propSpr->setPosition(Vec2(a , b) + Vec2(-20, 20));
-//            if (_propkind == PropOneKind)
-//            {
-//                propSpr->setAnchorPoint(Vec2(0.3, 0.7));
-//            }
-//            return true;
-//        }
-////        return false;
-//    }
-    
     MyPoint mp = MyPoint(-1, -1);
     if(!_selectPoint.equal(mp))
     {
@@ -542,38 +434,6 @@ bool GameLayer::onTouchBegan(Touch *pTouch, Event *pEvent)
 
 void GameLayer::onTouchMoved(Touch *pTouch, Event *pEvent)
 {
-//    if (_propkind > PropNone)
-//    {
-//        stopHighLight();
-//        Point pos = pTouch->getLocation();
-//        auto sp = this->getChildByTag(PROP_TAG);
-//        sp->setPosition(Vec2(pos.x-kStartX-_startPoint.x, pos.y-kStartY-_startPoint.y) + Vec2(-20, 20));
-//        
-//        int a = sp->getPositionX();
-//        
-//        int b = sp->getPositionY();
-//        
-//        if (a < 0 || b < 0)
-//        {
-//            hidePropRange();
-//        }
-//        
-//        else
-//        {
-//            int i = a/(kElementSize*_scaleFactor);
-//            int j = b/(kElementSize*_scaleFactor);
-//            if(i>=0&&i<kMatrixWidth&&j>=0&&j<kMatrixWidth&&_gemMatrix[i][j])
-//            {
-//                showPropRange(i, j);
-//            }
-//            else
-//            {
-//                hidePropRange();
-//            }
-//        }
-//        
-//        return;
-//    }
     MyPoint mp = MyPoint(-1, -1);
 
     if (!_selectPoint.equal(mp)&&_gemMatrix[_selectPoint.x][_selectPoint.y])
@@ -746,7 +606,7 @@ bool GameLayer::useProp(int a , int b)
 void GameLayer::changeGem(Direction direction)
 {
     PotentialArea potentialArea;
-    bool canChange = false,grassguyMatch=false;
+    bool canChange = false;
     
     for(int i=0;i<_mapLayer->potentialAreaVector.size();i++)
     {
@@ -815,24 +675,6 @@ void GameLayer::changeGem(Direction direction)
 
         return;
     }
-    
-//    if(_gemMatrix[_selectPoint.x][_selectPoint.y])
-    
-//    for(int i=0;i<_mapLayer->potentialAreaVector.size();i++)
-//    {
-//        potentialArea = _mapLayer->potentialAreaVector[i];
-//        
-//        bool selectRight =potentialArea.movePoint.x == _selectPoint.x&&potentialArea.movePoint.y == _selectPoint.y&&direction==potentialArea.diretion;
-//
-//        
-//        bool nextRight = potentialArea.movePoint.x == _nextPoint.x&&potentialArea.movePoint.y == _nextPoint.y&&Direction(Down-direction) == potentialArea.diretion;
-//        
-//        if(selectRight||nextRight)
-//        {
-//            canChange = true;
-//            break;
-//        }
-//    }
     
     if(canChange)
     {
@@ -997,25 +839,6 @@ void GameLayer::showPropRange(int a, int b)
             hidePropRange();
         }
     }
-}
-
-void GameLayer::appear()
-{
-    _mapNode->setVisible(true);
-    _particleNode->setVisible(true);
-    for (int i=0; i<kMatrixWidth; i++)
-    {
-        for(int j=0;j<kMatrixWidth;j++)
-        {
-            if (_gemMatrix[i][j])
-            {
-                _gemMatrix[i][j]->setVisible(true);
-                _gemMatrix[i][j]->setScale(0);
-                _gemMatrix[i][j]->runAction(Sequence::create(DelayTime::create(0.3) , ScaleTo::create(0.3, 1), NULL));
-            }
-        }
-    }
-    this->runAction(Sequence::create(DelayTime::create(0.4) , CallFunc::create(CC_CALLBACK_0(GameLayer::shining, this)), NULL));
 }
 
 void GameLayer::highLightGem(float dt)
@@ -1355,487 +1178,6 @@ void GameLayer::flyToSame(MyPoint allPos , MyPoint samePos ,GemSkill skill)
     }
 }
 
-void GameLayer::explodeSameAnimation(AnimationWraper aw , CallFuncN* callback)
-{
-    Point startPoint = aw.dist1;
-    GemType type = aw.node->getGemType();
-    
-    int a = (startPoint.x-kStartX)/kElementSize;
-    int b = (startPoint.y-kStartY)/kElementSize;
-    
-    if (_gemMatrix[a][b] && _gemMatrix[a][b]->getGemType() == all)
-    {
-        _gemMatrix[a][b]->removeNoCollect(false);
-        _gemMatrix[a][b] = NULL;
-    }
-    
-    
-    int flagMatrix[kMatrixWidth][kMatrixWidth] = {0};
-    
-    int i,j,max=0;
-    
-    Sprite* spriteArray[kMatrixWidth*kMatrixWidth]={0};
-    MyPoint distArray[kMatrixWidth*kMatrixWidth];
-    
-    for(i=0;i<kMatrixWidth;i++)
-    {
-        for (j=0;j<kMatrixWidth; j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemType()==type)
-            {
-                flagMatrix[i][j]=1;
-            }
-        }
-    }
-
-    for(i=0;i<kMatrixWidth;i++)
-    {
-        for (j=0; j<kMatrixWidth; j++)
-        {
-            if(flagMatrix[i][j]==1)
-            {
-                Sprite* spr = Sprite::create("sparkle1.png");
-                spr->setPosition(startPoint);
-                _particleNode->addChild(spr);
-                spriteArray[max] = spr;
-                distArray[max++].setPosition(i, j);
-                
-                ParticleSystemQuad *partic1 = ParticleSystemQuad::create("tongsexiao.plist");
-                spr->addChild(partic1,10);
-                partic1->setPosition(Vec2(spr->getBoundingBox().size.width/2,spr->getBoundingBox().size.height/2));
-            }
-        }
-    }
-
-    for (i=0; i<max; i++)
-    {
-        Gem* distGem =_gemMatrix[distArray[i].x][distArray[i].y];
-        
-        Sequence* seq=NULL;
-        ccBezierConfig config;
-        Point controlPoint = GemAction::getInstance().getControlPoint(startPoint, distGem->getPosition(),(Director::getInstance()->getWinSize().width)*kParticleBezierScale);
-        config.controlPoint_1 = controlPoint;
-        config.controlPoint_2 = controlPoint;
-        config.endPosition = distGem->getPosition();
-        
-        if(i==max-1 && callback)
-        {
-            if (aw.node->getGemSkill())
-            {
-                seq = Sequence::create(Spawn::create(RotateTo::create(kSparkleFlyTime, 60),BezierTo::create(kSparkleFlyTime, config),NULL),callback,CallFuncN::create(CC_CALLBACK_1(Gem::fiveMatchEffect, distGem)),NULL);
-
-            }
-            else
-            {
-                seq = Sequence::create(Spawn::create(RotateTo::create(kSparkleFlyTime, 60),BezierTo::create(kSparkleFlyTime, config),NULL),CallFuncN::create(CC_CALLBACK_1(Gem::fiveMatchEffect, distGem)),NULL);
-                
-                this->runAction(Sequence::create(DelayTime::create(1 + kSparkleFlyTime),callback, NULL));
-
-            }
-           
-        }
-        else
-        {
-            seq = Sequence::create(Spawn::create(RotateTo::create(kSparkleFlyTime, 60),BezierTo::create(kSparkleFlyTime, config),NULL),CallFuncN::create(CC_CALLBACK_1(Gem::fiveMatchEffect, distGem)),NULL);
-        }
-        
-        spriteArray[i]->runAction(seq);
-    }
-
-}
-
-void GameLayer::fiveMatchEffect(int index,MyPoint& point,CallFuncN* callback)
-{
-    //1，播放聚集能量粒子效果,同时本排元素高亮放大
-    //2，找到屏幕中可以被影响的元素，生成光点飞向他们。
-    //3，击中元素播放高亮放大效果
-    //4，聚合类不播放该粒子效果
-    
-    vector<ConnectionArea>::iterator it;
-    
-    ConnectionArea ca = _mapLayer->connectionAreaVector[index];
-    MyPoint particlePoint = ca.particlePoint;
-    Point startPoint = _gemMatrix[particlePoint.x][particlePoint.y]->getPosition();
-    
-    GemType type = _gemMatrix[particlePoint.x][particlePoint.y]->getGemType();
-    
-    int flagMatrix[kMatrixWidth][kMatrixWidth] = {0};
-    
-    int i,j,max=0;
-    
-//    Sprite* spriteArray[kMatrixWidth*kMatrixWidth]={0};
-//    
-//    MyPoint distArray[kMatrixWidth*kMatrixWidth];
-    //地图中与5连相同种类元素，并且是可以移动的元素标记（非冰冻，束缚）
-    for(i=0;i<kMatrixWidth;i++)
-    {
-        for (j=0;j<kMatrixWidth; j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemType()==type&&_gemMatrix[i][j]->canMove())
-            {
-                flagMatrix[i][j]=1;
-            }
-        }
-    }
-    
-    for(it=_mapLayer->connectionAreaVector.begin();it!=_mapLayer->connectionAreaVector.end();it++)
-    {
-        if (it->direction == Up)
-        {
-            for (j = it->startPoint.y,i = it->startPoint.x; j < it->startPoint.y + it->count; j++)
-            {
-                if(_gemMatrix[i][j]->getGemType()==type)
-                {
-                    flagMatrix[i][j]=0;
-                }
-            }
-        }
-        else
-        {
-            for (i = it->startPoint.x,j = it->startPoint.y; i < it->startPoint.x + it->count; i++)
-            {
-                if(_gemMatrix[i][j]->getGemType()==type)
-                {
-                    flagMatrix[i][j]=0;
-                }
-            }
-        }
-    }
-    //高亮闪
-    if (ca.direction == Up)
-    {
-        for (j = ca.startPoint.y,i = ca.startPoint.x; j < ca.startPoint.y + ca.count; j++)
-        {
-            _gemMatrix[i][j]->bright();
-            
-        }
-    }
-    else
-    {
-        for (i = ca.startPoint.x,j = ca.startPoint.y; i < ca.startPoint.x + ca.count; i++)
-        {
-            _gemMatrix[i][j]->bright();
-        }
-    }
-    
-    // 	for(i=0;i<kMatrixWidth;i++)
-    // 	{
-    // 		for (j=0; j<kMatrixWidth; j++)
-    // 		{
-    // 			if(flagMatrix[i][j]==1)
-    // 			{
-    // 				Sprite* spr = Sprite::create("fireball.png");
-    // 				spr->setPosition(startPoint);
-    // 				_particleNode->addChild(spr);
-    // 				spriteArray[max] = spr;
-    // 				distArray[max++].setPosition(i, j);
-    // 			}
-    // 		}
-    // 	}
-    
-    if(max==0)
-    {
-        this->runAction(callback);
-    }
-    
-    // 	for (i=0; i<max; i++)
-    // 	{
-    // 		Gem* distGem =_gemMatrix[distArray[i].x][distArray[i].y];
-    //
-    // 		Sequence* seq=NULL;
-    // 		ccBezierConfig config;
-    // 		Point controlPoint = GemAction::getInstance().getControlPoint(startPoint, distGem->getPosition(),(Director::getInstance()->getWinSize().width)*kParticleBezierScale);
-    // 		config.controlPoint_1 = controlPoint;
-    // 		config.controlPoint_2 = controlPoint;
-    // 		config.endPosition = distGem->getPosition();
-    //
-    // 		if(i==max-1)
-    // 		{
-    // 			seq = Sequence::create(Spawn::create(RotateTo::create(kSparkleFlyTime, 60),BezierTo::create(kSparkleFlyTime, config),NULL),callback,CCCallFuncND::create(distGem, callfuncND_selector(Gem::fiveMatchEffect),(void*)NULL),NULL);
-    // 		}
-    // 		else
-    // 		{
-    // 			seq = Sequence::create(Spawn::create(RotateTo::create(kSparkleFlyTime, 60),BezierTo::create(kSparkleFlyTime, config),NULL),CCCallFuncND::create(distGem, callfuncND_selector(Gem::fiveMatchEffect), (void*)NULL),NULL);
-    // 		}
-    //
-    // 		spriteArray[i]->runAction(seq);
-    //
-    // 		distGem->explode(distArray[i], distArray[i], 0, 0);
-    // 	}
-}
-
-void GameLayer::fourMatchEffect(int index,CallFuncN *callback)
-{
-    //1,播放粒子效果
-    //2,飞出光点
-    vector<ConnectionArea>::iterator it;
-    
-    ConnectionArea ca = _mapLayer->connectionAreaVector[index];
-    
-    MyPoint particlePoint = ca.particlePoint;
-    
-    Point startPoint = _gemMatrix[particlePoint.x][particlePoint.y]->getPosition();
-    
-    Gem* fruitArray[kMatrixWidth]={0};
-    
-    int i,j,max=0;
-    
-    //四消除粒子
-    // 	DDParticleFour* fourEffect = DDParticleFour::create(_particleNode);
-    //
-    // 	fourEffect->setPosition(startPoint);
-    //
-    // 	fourEffect->setScale(kParticleScaleParm);
-    //
-    // 	if(ca.direction==Up)
-    // 	{
-    // 		fourEffect->setRotation(90);
-    // 	}
-    //
-    // 	_particleNode->addChild(fourEffect);
-    
-    //高亮闪
-    if (ca.direction == Up)
-    {
-        for (j = ca.startPoint.y,i = ca.startPoint.x; j < ca.startPoint.y + ca.count; j++)
-        {
-            _gemMatrix[i][j]->bright();
-        }
-        for(i=ca.startPoint.x,j=0;j<ca.startPoint.y;j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[max++] = _gemMatrix[i][j];
-            }
-        }
-        for(i=ca.startPoint.x,j=ca.startPoint.y+ca.count;j<kMatrixWidth;j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[max++] = _gemMatrix[i][j];
-            }
-        }
-    }
-    else
-    {
-        for (i = ca.startPoint.x,j = ca.startPoint.y; i < ca.startPoint.x + ca.count; i++)
-        {
-            _gemMatrix[i][j]->bright();
-        }
-        for(i=0,j=ca.startPoint.y;i<ca.startPoint.x;i++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[max++] = _gemMatrix[i][j];
-            }
-        }
-        for(i=ca.startPoint.x+ca.count,j=ca.startPoint.y;i<kMatrixWidth;i++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[max++] = _gemMatrix[i][j];
-            }
-        }
-    }
-    if(max==0)
-    {
-        this->runAction(Sequence::create(DelayTime::create(kSparkleFlyTime),callback,NULL));
-    }
-    this->runAction(Sequence::create(/*DelayTime::create(kSparkleFlyTime),*/callback,NULL));
-    // 	for(i=0;i<max;i++)
-    // 	{
-    // 		Sequence* seq = NULL;
-    //
-    // 		Sprite* spr = Sprite::create("sparkle1.png");
-    //
-    // 		spr->setPosition(startPoint);
-    //
-    // 		spr->setScale(3);
-    //
-    // 		_particleNode->addChild(spr);
-    //
-    // 		ccBezierConfig config;
-    //
-    // 		Point controlPoint = GemAction::getInstance().getControlPoint(spr->getPosition(), fruitArray[i]->getPosition(), (Director::getInstance()->getWinSize().width)*kParticleBezierScale);
-    //
-    // 		config.controlPoint_1 = controlPoint;
-    //
-    // 		config.controlPoint_2 = controlPoint;
-    //
-    // 		config.endPosition = fruitArray[i]->getPosition();
-    //
-    // 		if(i==max-1)
-    // 		{
-    // 			seq = Sequence::create(BezierTo::create(kSparkleFlyTime, config),callback,CCCallFuncND::create(fruitArray[i], callfuncND_selector(Gem::fourMatchEffect), (void*)NULL),NULL);
-    // 		}
-    // 		else
-    // 		{
-    // 			seq = Sequence::create(BezierTo::create(kSparkleFlyTime, config),CCCallFuncND::create(fruitArray[i], callfuncND_selector(Gem::fourMatchEffect), (void*)NULL),NULL);
-    // 		}
-    //
-    // 		spr->runAction(seq);
-    // 	}
-    
-}
-void GameLayer::crossMatchEffect(int index1,int index2, CallFuncN* callback)
-{
-    vector<ConnectionArea>::iterator it;
-    
-    ConnectionArea ca1 = _mapLayer->connectionAreaVector[index1];
-    
-    ConnectionArea ca2 = _mapLayer->connectionAreaVector[index2];
-    
-    MyPoint particlePoint = ca1.centerPoint;
-    
-    Point startPoint = _gemMatrix[particlePoint.x][particlePoint.y]->getPosition();
-    
-    int fruitArray[kMatrixWidth][kMatrixWidth]={0};
-    
-    int i,j;
-    
-    int max = 0;
-    
-    //十字消除效果
-    // 	DDParticleTen* crossEffect = DDParticleTen::create(_particleNode);
-    //
-    // 	crossEffect->setPosition(startPoint);
-    //
-    // 	crossEffect->setScale(kParticleScaleParm);
-    //
-    // 	_particleNode->addChild(crossEffect);
-    
-    if (ca1.direction == Up)
-    {
-        for (j = ca1.startPoint.y,i = ca1.startPoint.x; j < ca1.startPoint.y + ca1.count; j++)
-        {
-            _gemMatrix[i][j]->bright();
-        }
-        for(i=ca1.startPoint.x,j=0;j<ca1.startPoint.y;j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j] = 1;
-                max++;
-            }
-        }
-        for(i=ca1.startPoint.x,j=ca1.startPoint.y+ca1.count;j<kMatrixWidth;j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j]= 1;
-                max++;
-            }
-        }
-    }
-    else
-    {
-        for (i = ca1.startPoint.x,j = ca1.startPoint.y; i < ca1.startPoint.x + ca1.count; i++)
-        {
-            _gemMatrix[i][j]->bright();
-        }
-        for(i=0,j=ca1.startPoint.y;i<ca1.startPoint.x;i++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j] = 1;
-                max++;
-            }
-        }
-        for(i=ca1.startPoint.x+ca1.count,j=ca1.startPoint.y;i<kMatrixWidth;i++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j] = 1;
-                max++;
-            }
-        }
-    }
-    
-    if (ca2.direction == Up)
-    {
-        for (j = ca2.startPoint.y,i = ca2.startPoint.x; j < ca2.startPoint.y + ca2.count; j++)
-        {
-            _gemMatrix[i][j]->bright();
-        }
-        for(i=ca2.startPoint.x,j=0;j<ca2.startPoint.y;j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j]=1;
-                max++;
-            }
-        }
-        for(i=ca2.startPoint.x,j=ca2.startPoint.y+ca2.count;j<kMatrixWidth;j++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j]=1;
-                max++;
-            }
-        }
-    }
-    else
-    {
-        for (i = ca2.startPoint.x,j = ca2.startPoint.y; i < ca2.startPoint.x + ca2.count; i++)
-        {
-            _gemMatrix[i][j]->bright();
-        }
-        for(i=0,j=ca2.startPoint.y;i<ca2.startPoint.x;i++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j]=1;
-                max++;
-            }
-        }
-        for(i=ca2.startPoint.x+ca2.count,j=ca2.startPoint.y;i<kMatrixWidth;i++)
-        {
-            if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getGemKind()==NormalGem&&_gemMatrix[i][j]->canMove())
-            {
-                fruitArray[i][j]=1;
-                max++;
-            }
-        }
-    }
-    if(max==0)
-    {
-        this->runAction(Sequence::create(DelayTime::create(kSparkleFlyTime),callback,NULL));
-    }
-    this->runAction(Sequence::create(/*DelayTime::create(kSparkleFlyTime),*/callback,NULL));
-    // 	for(i=0;i<kMatrixWidth;i++)
-    // 	{
-    // 		for(j=0;j<kMatrixWidth;j++)
-    // 		{
-    // 			if(fruitArray[i][j]==1)
-    // 			{
-    // 				max--;
-    //
-    // 				Sequence* seq = NULL;
-    // 				Sprite* spr = Sprite::create("sparkle1.png");
-    // 				spr->setPosition(startPoint);
-    // 				spr->setScale(3);
-    // 				_particleNode->addChild(spr);
-    //
-    // 				ccBezierConfig config;
-    // 				Point controlPoint = GemAction::getInstance().getControlPoint(spr->getPosition(), _gemMatrix[i][j]->getPosition(), (Director::getInstance()->getWinSize().width)*kParticleBezierScale);
-    // 				config.controlPoint_1 = controlPoint;
-    // 				config.controlPoint_2 = controlPoint;
-    // 				config.endPosition = _gemMatrix[i][j]->getPosition();
-    //
-    // 				if(max==0)
-    // 				{
-    // 					seq = Sequence::create(BezierTo::create(kSparkleFlyTime, config),callback,CCCallFuncND::create(_gemMatrix[i][j], callfuncND_selector(Gem::fourMatchEffect),(void*)NULL),NULL);
-    // 				}
-    // 				else
-    // 				{
-    // 					seq = Sequence::create(BezierTo::create(kSparkleFlyTime, config),CCCallFuncND::create(_gemMatrix[i][j], callfuncND_selector(Gem::fourMatchEffect),(void*)NULL),NULL);
-    // 				}
-    //
-    // 				spr->runAction(seq);
-    // 			}
-    // 		}
-    // 	}
-}
 void GameLayer::firstTimeInit()
 {
     MyPoint pointArray[kMatrixWidth*kMatrixWidth];
@@ -1896,7 +1238,6 @@ void GameLayer::firstTimeInit()
         fruitArray[i]->runAction(action);
     }
 }
-//按照优先级，先将动画组织成队列，然后在队列尾部动画上加入回调，最后执行此序列所有动画
 
 void GameLayer::magicAnimation(Node* pSender)
 {
@@ -1947,57 +1288,6 @@ void GameLayer::magicAnimation(Node* pSender)
     setTouchEnable();
 }
 
-void GameLayer::skillAnimation(CallFuncN *callback)
-{
-    this->runAction(Sequence::create(DelayTime::create(2.3),callback,NULL));
-}
-
-void GameLayer::propAnimation(CallFuncN* callback)  // 技能 延时
-{
-    auto prop = (Armature*)this->getChildByTag(PROP_TAG);
-    prop->getAnimation()->play("Animation2");
-    
-    if (_propType == Prop_Magic)
-    {
-        prop->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(GameLayer::magicAnimation, this) );
-        return;
-    }
-    
-    if (_propType == Prop_TNT)
-    {
-        prop->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(GameLayer::aroundAnimation, this) );
-    }
-    else
-    {
-        prop->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(GameLayer::removeNodeFromParent, this) );
-        if (_propType == Prop_Cross)
-        {
-            prop->runAction(Sequence::create(DelayTime::create(2),CallFunc::create(CC_CALLBACK_0(GameLayer::crossAnimation, this)), NULL));
-        }
-    }
-    float times = 0;
-    
-    switch (_propType)
-    {
-        case Prop_Hammer:
-            times = 0.5;
-            break;
-        case Prop_Cross:
-            times = 0.8;
-            break;
-        case Prop_Change:
-            times = 0.5;
-            break;
-        case Prop_TNT:
-            times = 1;
-            break;
-        default:
-            break;
-    }
-    this->runAction(Sequence::create(DelayTime::create(times),callback,NULL));
-}
-
-
 void GameLayer::propAnimation(Armature* prop)
 {
     prop->getAnimation()->play("Animation2");
@@ -2030,14 +1320,12 @@ void GameLayer::hammerAnimation()
     {
         _gemMatrix[_propPosition.x][_propPosition.y]->explode(_propPosition, _propPosition, 0, 0);
         _gemMatrix[_propPosition.x][_propPosition.y]->beforeExplode();
-//        GemAction::getInstance().playEffectMusic(NULL,"bigboom.mp3");
         
         this->runAction(Sequence::create(MoveBy::create(0.05, Vec2(0, 5)),MoveBy::create(0.05, Vec2(0, -5)), MoveBy::create(0.05, Vec2(0, 5)),MoveBy::create(0.05, Vec2(0, -5)),MoveBy::create(0.05, Vec2(0, 5)),MoveBy::create(0.05, Vec2(0, -5)),NULL));
     }
     else if(_gemMatrix[_propPosition.x][_propPosition.y]->getGemType()>=ice && _gemMatrix[_propPosition.x][_propPosition.y]->getGemType()<=stormwind)
     {
         _gemMatrix[_propPosition.x][_propPosition.y]->affected(1);
-//        GemAction::getInstance().playEffectMusic(NULL,"bigboom.mp3");
         
         this->runAction(Sequence::create(MoveBy::create(0.05, Vec2(0, 5)),MoveBy::create(0.05, Vec2(0, -5)), MoveBy::create(0.05, Vec2(0, 5)),MoveBy::create(0.05, Vec2(0, -5)),MoveBy::create(0.05, Vec2(0, 5)),MoveBy::create(0.05, Vec2(0, -5)),NULL));
     }
@@ -2056,7 +1344,6 @@ void GameLayer::hammerAnimation()
 
 void GameLayer::crossAnimation()
 {
-//    GemAction::getInstance().playEffectMusic(NULL,"bigboom.mp3");
     for (int i = 0; i < kMatrixWidth; i++)
     {
         if (i == _propPosition.x)
@@ -2330,6 +1617,63 @@ bool GameLayer::autoSkill()
     return resule;
 }
 
+Point GameLayer::calculateStartPoint(float edgeWidth,Size& winSize,float scaleFactor)
+{
+    int leftIndex=kMatrixWidth,rightIndex=0,upIndex=0,downIndex=kMatrixWidth;
+    
+    for(int i=0;i<kMatrixWidth;i++)
+    {
+        for(int j=0;j<kMatrixWidth;j++)
+        {
+            if(_mapMatrix[i][j]!=NoneInEdge&&_mapMatrix[i][j]!=NoneInMiddle)
+            {
+                if(i<leftIndex)
+                {
+                    leftIndex = i;
+                }
+                if(i>rightIndex)
+                {
+                    rightIndex = i;
+                }
+                if(j>upIndex)
+                {
+                    upIndex = j;
+                }
+                if(j<downIndex)
+                {
+                    downIndex = j;
+                }
+            }
+        }
+    }
+    int startX = kMatrixWidth-rightIndex-leftIndex-1;
+    int startY = kMatrixWidth-upIndex-downIndex-1;
+    
+    auto skillBG = Sprite::create("map01_003.png");
+    //      (winSize.height-(winSize.width-edgeWidth*2))/2
+    return Point(edgeWidth+startX*0.5*scaleFactor*kElementSize,skillBG->getBoundingBox().size.height/1.5+startY*0.5*scaleFactor*kElementSize);
+}
+
+
+void GameLayer::appear()
+{
+    _mapNode->setVisible(true);
+    _particleNode->setVisible(true);
+    for (int i=0; i<kMatrixWidth; i++)
+    {
+        for(int j=0;j<kMatrixWidth;j++)
+        {
+            if (_gemMatrix[i][j])
+            {
+                _gemMatrix[i][j]->setVisible(true);
+                _gemMatrix[i][j]->setScale(0);
+                _gemMatrix[i][j]->runAction(Sequence::create(DelayTime::create(0.3) , ScaleTo::create(0.3, 1), NULL));
+            }
+        }
+    }
+    this->runAction(Sequence::create(DelayTime::create(0.4) , CallFunc::create(CC_CALLBACK_0(GameLayer::shining, this)), NULL));
+}
+
 //移动之后，和填空之后，均会执行beforematch函数
 void GameLayer::beforeMatch()
 {
@@ -2355,13 +1699,6 @@ void GameLayer::beforeMatch()
         //标记所有相连的为Eliminate,标记周围的为Changed,标记changed采用累加形式，派生者根据累加次数调整状态
         _mapLayer->markeMatrixChange();
     }
-    //处理特殊元素（窝，蛋）及病态元素
-//    _mapLayer->beforeMatchGem();
-    
-//    if(_isMoveDone&&_selectPoint.x!=-1&&_nextPoint.x!=-1)
-//    {
-//        _mapLayer->tigerEatAnimal(_selectPoint,_nextPoint);
-//    }
     
     if(_mapLayer->connectionAreaVector.empty())
     {
@@ -2392,9 +1729,7 @@ void GameLayer::beforeMatch()
         {
             _mapLayer->renewGemCount();
         }
-//        _mapLayer->matchAllGem(&_animationWraperVector,_continueMatchTimes);
-        
-        
+
         playContinueMatchMusic(_continueMatchTimes);
         
         dealGemBeforeExplode();
@@ -2551,10 +1886,6 @@ void GameLayer::afterMatch()
         _emptyPointVector.clear();
     }
     
-    // 	if(!_mapInfo->getHard())     进度条更新
-    // 	{
-    // 		CCNotificationCenter::getInstance()->postNotification(kMSG_UpdateStars);
-    // 	}
 }
 
 void GameLayer::dealGemBeforeExplode()
@@ -2646,6 +1977,7 @@ void GameLayer::dealGemBeforeExplode()
             }
             _gemMatrix[temp.x][temp.y]->setState(0);
             _gemMatrix[temp.x][temp.y]->setNextSkill(SkillAllSame);
+            it->centerPoint = temp;
 //            _gemMatrix[temp.x][temp.y]->setGemType();
         }
         else if(it->isInCross)
@@ -2676,6 +2008,7 @@ void GameLayer::dealGemBeforeExplode()
             }
             _gemMatrix[temp.x][temp.y]->setState(0);
             _gemMatrix[temp.x][temp.y]->setNextSkill(SkillAround2);
+            it->centerPoint = temp;
         }
         else if(it->count == 4)
         {
@@ -2695,6 +2028,8 @@ void GameLayer::dealGemBeforeExplode()
             {
                 _gemMatrix[temp.x][temp.y]->setNextSkill(SkillVerticl);
             }
+            
+            it->centerPoint = temp;
         }
     }
 
@@ -2766,43 +2101,6 @@ void GameLayer::gemFallCallback()
         
         this->runAction(CallFunc::create(CC_CALLBACK_0(GameLayer::beforeMatch, this)));
     }
-}
-
-Point GameLayer::calculateStartPoint(float edgeWidth,Size& winSize,float scaleFactor)
-{
-    int leftIndex=kMatrixWidth,rightIndex=0,upIndex=0,downIndex=kMatrixWidth;
-    
-    for(int i=0;i<kMatrixWidth;i++)
-    {
-        for(int j=0;j<kMatrixWidth;j++)
-        {
-            if(_mapMatrix[i][j]!=NoneInEdge&&_mapMatrix[i][j]!=NoneInMiddle)
-            {
-                if(i<leftIndex)
-                {
-                    leftIndex = i;
-                }
-                if(i>rightIndex)
-                {
-                    rightIndex = i;
-                }
-                if(j>upIndex)
-                {
-                    upIndex = j;
-                }
-                if(j<downIndex)
-                {
-                    downIndex = j;
-                }
-            }
-        }
-    }
-    int startX = kMatrixWidth-rightIndex-leftIndex-1;
-    int startY = kMatrixWidth-upIndex-downIndex-1;
-    
-    auto skillBG = Sprite::create("map01_003.png");
-//      (winSize.height-(winSize.width-edgeWidth*2))/2
-    return Point(edgeWidth+startX*0.5*scaleFactor*kElementSize,skillBG->getBoundingBox().size.height/1.5+startY*0.5*scaleFactor*kElementSize);
 }
 
 void GameLayer::addShieldLayer()
@@ -2898,7 +2196,7 @@ void GameLayer::shining()
             if(_gemMatrix[i][j])
             {
 //                CallFunc* callAction3 = CallFunc::create(CC_CALLBACK_0(Gem::bright, _gemMatrix[i][j]));
-                //actionArray.pushBack(callAction3);
+//                actionArray.pushBack(callAction3);
             }
         }
     }
@@ -2997,7 +2295,7 @@ void GameLayer::winnerMode(Ref *obj)
     int flagArray[kMatrixWidth*kMatrixWidth]={0};
     int tempArray[kMatrixWidth*kMatrixWidth]={0};
     
-    int i,j,max=0,index,k,l;
+    int i,j,max=0,index;
     
     for(i=0;i<kMatrixWidth;i++)
     {
@@ -3047,22 +2345,8 @@ void GameLayer::winnerMode(Ref *obj)
         _gemMatrix[p.x][p.y]->explode(p,p, 0, 0 );
     }
     
-    
-//    _animationWraperVector.push_back(aw);
-    
-//    aw.priority = e_priority_winnermode_start;
-    
-//    aw.animationID = e_aid_winnermode_start;
-    
-//    _animationWraperVector.push_back(aw);
-    
-//    AnimationWraper aw2(NULL, e_aid_normal_explode, e_priority_normal_explode);
-    
-//    _animationWraperVector.push_back(aw2);
-    
     _matchDownMSGSwitch = true;
     winnerModeStarfly(aw);
-//    runAllAnimationAndAction(NULL, (AnimationPriority)1);
 }
 
 void GameLayer::winnerModeStarfly(AnimationWraper aw)
@@ -3111,7 +2395,6 @@ void GameLayer::winnerModeStarfly(AnimationWraper aw)
     if(aw.flagArrayLength==0)
     {
         CCLOG("flagArrayLength = %d" , aw.flagArrayLength);
-//        this->runAction(Sequence::create(DelayTime::create(0.5),callback,NULL));
     }
 
 }
@@ -3228,34 +2511,6 @@ bool GameLayer::propUse(MyPoint &point)
     }
     return false;
     
-}
-void GameLayer::propRemoveRow(float dt )
-{
-    Point point = _propCar->getPosition();
-    
-    MyPoint p((point.x-kStartX)/kElementSize,(point.y-kStartY)/kElementSize);
-    
-    if(p.x>=0&&p.x<kMatrixWidth&&p.y>=0&&p.y<kMatrixWidth&&_gemMatrix[p.x][p.y]&&_gemMatrix[p.x][p.y]->getGemKind()==NormalGem&&_gemMatrix[p.x][p.y]->canMove())
-    {
-        Point dist = _explodeDistArray[_gemMatrix[p.x][p.y]->getGemType()];
-        
-        if(!dist.equals(Point(-1,-1))&&!_gemMatrix[p.x][p.y]->getSick())
-        {
-            _gemMatrix[p.x][p.y]->removeCollect(dist,getExplodeFlyTime(p),false);
-        }
-        else
-        {
-            _gemMatrix[p.x][p.y]->removeNoCollect(false);
-        }
-        
-        _gemMatrix[p.x][p.y]=NULL;
-        
-        _emptyPointVector.push_back(p);
-    }
-}
-void GameLayer::propUnschedule()
-{
-    unschedule(schedule_selector(GameLayer::propRemoveRow));
 }
 
 void GameLayer::propShiningInBackgroud(Node* sender,int data)
@@ -3523,6 +2778,7 @@ void GameLayer::initExplodeFlyTime()
         }
     }
 }
+
 float GameLayer::getExplodeFlyTime(MyPoint &point)
 {
     float time;
@@ -3538,115 +2794,14 @@ float GameLayer::getExplodeFlyTime(MyPoint &point)
     
     return time;
 }
-void GameLayer::removeGem(Node *sender, int data)
-{
-    int t = data;
-    
-    int i = t/kMatrixWidth,j=t%kMatrixWidth;
-    
-    Action* seq=NULL;
-    
-    if(j<0)
-    {
-//        Sequence* seq = Sequence::create(DelayTime::create(0.02),CallFuncN::create(CC_CALLBACK_1(GameLayer::runAllAnimationAndAction, this, (AnimationPriority)(e_priority_normal_explode+1))),NULL);
-//        
-//        this->runAction(seq);
-        
-        return;
-    }
-    int next=0;
-    float time = 0.05;
-    
-    if(i==kMatrixWidth-1&&j>=0)
-    {
-        next = j-1;
-    }
-    else if(i<kMatrixWidth)
-    {
-        next = (i+1)*kMatrixWidth+j;
-    }
-    if(_gemMatrix[i][j]&&_gemMatrix[i][j]->getState()<0)
-    {
-        Point dist = DataCenter::getInstance()->getGemPoint(_gemMatrix[i][j]->getGemType());
-        
-        MyPoint p(i,j);
-        
-        if(!dist.equals(Point(-1,-1)))
-        {
-// 			if(_gemMatrix[i][j]->getScoreSum()>0)
-// 			{
-// 				char str[5]={0};
-//
-// 				std::sprintf(str, "*%d",_gemMatrix[i][j]->getScoreSum());
-//
-// 				CCLabelBMFont* label = CCLabelBMFont::create(str,"item.fnt");
-//
-// 				label->setPosition(_gemMatrix[i][j]->getPosition());
-//
-// 				_particleNode->addChild(label);
-//
-// 				label->runAction(CCScaleTo::create(kExplodeSumShowTime, 3));
-// 			}
-         			_matchCollectTimes+=_gemMatrix[i][j]->getScore();
-
-			_gemMatrix[i][j]->removeCollect(dist, getExplodeFlyTime(p),_gemMatrix[i][j]->getFlag()==1);
- 		}
- 		else
-        {
-            _gemMatrix[i][j]->removeNoCollect(_gemMatrix[i][j]->getFlag()==1);
-        }
-        
-        _emptyPointVector.push_back(p);
-        
-        if (_disappearByOder)
-        {
-            seq = Sequence::create(DelayTime::create(time),CallFuncN::create(CC_CALLBACK_1(GameLayer::removeGem, this ,next)),NULL);
-        }
-        else
-        {
-            seq = Sequence::create(CallFuncN::create(CC_CALLBACK_1(GameLayer::removeGem, this ,next)),NULL); // 一起消失
-        }
-        
-    }
-    else
-    {
-        seq = CallFuncN::create(CC_CALLBACK_1(GameLayer::removeGem, this ,next));
-    }
-    
-    this->runAction(seq);
-}
 
 void GameLayer::addClassLayer()
 {
-    // 	if(_mapInfo->getClassKind()!=ClassNone)
-    // 	{
-    // 		_classGuidLayer = ClassGuideLayer::create();
-    // 
-    // 		_classGuidLayer->initClassGuideLayer(_startPoint, _scaleFactor);
-    // 
-    // 		this->getParent()->addChild(_classGuidLayer,10);
-    // 	}
     
 }
 void GameLayer::classGuidMove(cocos2d::Ref *obj)
 {
-//    int d = (int)obj;
-//    
-//    Direction direction = (Direction)d;
     
-    // 	_selectPoint = _mapInfo->getClassFirstPoint();
-    // 
-    // 	_nextPoint = _mapInfo->getClassSecondPoint();
-    // 
-    // 	_moveDirection = direction;
-    // 
-    // 	setTouchDisable();
-    // 
-    // 	changeGem(direction);
-    // 
-    // 	int level = DDMenuDataCenter::SharedMenuData()->getCurrSelLevelIdx();
-    // 
-    // 	_mapInfo->mapInfoClassAlert(level, ClassNone);
 }
 void GameLayer::removeGameLayer()
 {
@@ -3695,14 +2850,7 @@ void GameLayer::removeNodeFromParent(Node *pSender)
 
 void GameLayer::resetAnimation()
 {
-    Vec2 pos = _add5stepSprite->getPosition();
-    _add5stepSprite->removeFromParentAndCleanup(true);
-    _add5stepSprite = NULL;
     
-    _add5stepSprite = Armature::create("jiawu_icon");
-    this->addChild(_add5stepSprite);
-    _add5stepSprite->setPosition(pos);
-    _add5stepSprite->getAnimation()->play("Animation1");
 }
 
 
