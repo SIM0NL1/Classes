@@ -816,7 +816,7 @@ void Gem::dealWithSkill()
     {
         arm->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
         arm->setTag(888);
-        this->runAction(Sequence::create(DelayTime::create(0.6),CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
+        this->runAction(Sequence::create(DelayTime::create(0.5),CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
     }
     
     if (_skill == SkillAround1 || _skill == SkillAround3)
