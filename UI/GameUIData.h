@@ -140,11 +140,19 @@ public:
     Vec2 getChallengeMissionPos(int id);
     //获取当前关卡进度;
     MissionPro getMissionProgress(int id,JsonFileType fileType);
-    CC_SYNTHESIZE(int,normalMissionProgress,NormalMissionProgress);	//普通关卡总进度;
-    CC_SYNTHESIZE(int,curNormalMission,CurNormalMission);	//当前普通关卡;
-    CC_SYNTHESIZE(int,challengeMissionProgress,ChallengeMissionProgress);	//副本关卡总进度;
-    CC_SYNTHESIZE(int,curChallengeMission,CurChallengeMission);	//当前副本关卡;
-    CC_SYNTHESIZE(float,horizontalGps,HorizontalGps);	//水平方线切换地图坐标定位;
+
+	int normalMissionProgress,curNormalMission,challengeMissionProgress,curChallengeMission;
+	void setNormalMissionProgress(int num);	//普通关卡总进度;
+	int getNormalMissionProgress()const;
+	void setCurNormalMission(int num);		//当前普通关卡;
+	int getCurNormalMission()const;
+
+	void setChallengeMissionProgress(int num);	//副本关卡总进度;
+	int getChallengeMissionProgress()const;
+	void setCurChallengeMission(int num);	//当前副本关卡;
+	int getCurChallengeMission()const;
+
+	CC_SYNTHESIZE(float,horizontalGps,HorizontalGps);	//水平方线切换地图坐标定位;
     CC_SYNTHESIZE(float,verticalGps,VerticalGps);	//场景切换时地图坐标定位;
     CC_SYNTHESIZE(int,verticalIndex,VerticalIndex);	//场景切换时地图Page定位;
     vector<string> split(string str,string pattern);

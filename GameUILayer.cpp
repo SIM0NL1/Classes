@@ -1272,6 +1272,10 @@ void GameUILayer::gameLayerFadeIn(Node *pSender  ,float times)
 
 void GameUILayer::addWinLayer()
 {
+    //返回当前分数和星级;
+    int starts = 3;		//暂时三星;
+    TDStageLayer::getInstance()->getScoreAndStart(m_iScoreNum,starts);
+    
     LayerColor* backLayerColor = LayerColor::create(Color4B(0, 0, 0, 0));
     this->addChild(backLayerColor,99);
 

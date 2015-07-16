@@ -17,7 +17,6 @@ enum GameMissionSetBtnTag
 	GameMissionSetBtnExit,
 };
 
-//class TimeMachine;
 class GameMissionSet : public Layer
 {
 public:

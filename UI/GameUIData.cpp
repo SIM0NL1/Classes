@@ -169,7 +169,7 @@ void GameUIData::writeMissionProgressData(JsonFileType fileType,int id,MissionPr
   //  FileUtils::getInstance()->getWritablePath().append("userdata.json");
 
     StringBuffer buffer;
-    rapidjson::Writer<StringBuffer> writer(buffer);  
+    rapidjson::PrettyWriter<StringBuffer> writer(buffer);  
     readdoc.Accept(writer);
 	FILE* file;
 	switch (fileType)
@@ -188,7 +188,7 @@ void GameUIData::writeMissionProgressData(JsonFileType fileType,int id,MissionPr
         fputs(buffer.GetString(), file);  
         fclose(file);
     }
-    CCLOG("%s",buffer.GetString()); 
+    //CCLOG("%s",buffer.GetString()); 
     
     return;
 }
@@ -997,3 +997,48 @@ void GameUIData::removeDataForKey(const char* key)
         return;
     }
 }
+
+void GameUIData::setNormalMissionProgress(int num)
+{
+	normalMissionProgress = num;
+	GameUIData::getInstance()->setIntegerForKey("CurNormalMissionProgress",num);
+}
+
+int GameUIData::getNormalMissionProgress() const
+{
+	return normalMissionProgress;
+}
+
+void GameUIData::setCurNormalMission(int num)
+{
+	curNormalMission = num;
+	GameUIData::getInstance()->setIntegerForKey("CurNormalMissionPlay",num);
+}
+
+int GameUIData::getCurNormalMission() const
+{
+	return curNormalMission;
+}
+
+void GameUIData::setChallengeMissionProgress(int num)
+{
+	challengeMissionProgress = num;
+	GameUIData::getInstance()->setIntegerForKey("CurChallengeMissionProgress",num);
+}
+
+int GameUIData::getChallengeMissionProgress() const
+{
+	return challengeMissionProgress;
+}
+
+void GameUIData::setCurChallengeMission(int num)
+{
+	curChallengeMission = num;
+	GameUIData::getInstance()->setIntegerForKey("CurChallengeMissionPlay",num);
+}
+
+int GameUIData::getCurChallengeMission() const
+{
+	return curChallengeMission;
+}
+

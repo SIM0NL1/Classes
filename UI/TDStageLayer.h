@@ -24,7 +24,7 @@ public:
     vector<string> target_file;
     vector<int> target_num;
     vector<int> target_index;
-    
+
 public:
     virtual bool init();
     virtual void onEnter();
@@ -56,6 +56,8 @@ public:
     void updateBossTag(int num,int index);
     void targetFinish();
     
+	void getScoreAndStart(int& score,int& start);
+
 private:
     TDStageLayer();
     virtual ~TDStageLayer();

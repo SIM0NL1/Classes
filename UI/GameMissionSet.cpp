@@ -13,7 +13,7 @@
 #include "GameMusicControl.h"
 
 extern GameMissionSet* g_pGameMissionSet = nullptr;
-GameMissionSet::GameMissionSet():m_btnStart(nullptr),m_btnExit(nullptr),m_labHpCoin(nullptr),m_labTimer(nullptr)/*,m_timeMachine(nullptr)*/
+GameMissionSet::GameMissionSet():m_btnStart(nullptr),m_btnExit(nullptr),m_labHpCoin(nullptr),m_labTimer(nullptr)
 {
 	m_nHp = -1;
 	long_time = 0;

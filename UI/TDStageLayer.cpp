@@ -184,19 +184,9 @@ void TDStageLayer::bossGetHit(int& id,int& hit)
                     //干掉最后一个Boss,GameOver;
                     if (id+1==vec_boss.size())
                     {
-                        //游戏胜利,接口;
+						//游戏胜利,接口;
                         m_AllBossDead = true;
-						int nowPlay = GameUIData::getInstance()->getCurNormalMission();
-						int nowProgress = GameUIData::getInstance()->getNormalMissionProgress();
-						if ( nowPlay==nowProgress )
-						{
-							GameUIData::getInstance()->setNormalMissionProgress(nowProgress+1);
-							GameUIData::getInstance()->setIntegerForKey("CurNormalMissionProgress",nowProgress+1);
-						}
-						GameUIData::getInstance()->setCurNormalMission(1);
-						GameUIData::getInstance()->setNormalMissionProgress(GameUIData::getInstance()->getIntegerForKey("CurNormalMissionProgress"));
-                        NotificationCenter::getInstance()->postNotification(csMSG_BOSSDIED,NULL);
-                        
+						NotificationCenter::getInstance()->postNotification(csMSG_BOSSDIED,NULL);
                     }
                 }
             }
@@ -327,3 +317,25 @@ void TDStageLayer::addSoldierBirthland()
 	Animate* pAction = Animate :: create(pAniamtion);
 	pSpr->runAction(pAction);
 }
+
+void TDStageLayer::getScoreAndStart(int& score,int& start)
+{
+	//胜利之后需要做的事;
+	//1.判断当前关卡是不是进度关卡，如果是则保存进度加一，是不是都刷新关卡数据，注意数据取最优值保存;
+	//2.不用管当前正在玩的关卡，这个实在点击按钮时就确定的;
+	int nowPlay = GameUIData::getInstance()->getCurNormalMission();
+	int nowProgress = GameUIData::getInstance()->getNormalMissionProgress();
+	if ( nowPlay==nowProgress )
+	{
+		GameUIData::getInstance()->setNormalMissionProgress(nowProgress+1);
+	}
+	//刷新数据;
+	MissionPro temp;
+	temp.id = nowPlay;
+	temp.start = start;
+	temp.score = score;
+	temp.state = 1;
+	GameUIData::getInstance()->writeMissionProgressData(JsonFileType::NORMALMISSION,nowPlay,temp);
+	//
+}
+

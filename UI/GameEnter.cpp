@@ -85,13 +85,6 @@ void GameEnter::loadJsonData()
     GameUIData::getInstance()->readTDSoldierData();
     GameUIData::getInstance()->readTDBossData();
     GameUIData::getInstance()->readTDShieldData();
-    
-	MissionPro temp;
-	temp.id = 1;
-	temp.start = 3;
-	temp.score = 10;
-	temp.state = 3;
-	GameUIData::getInstance()->writeMissionProgressData(JsonFileType::NORMALMISSION,1,temp);
 
 	for (int i=1;i<=ci_NormalMissionNum;++i)
 	{
