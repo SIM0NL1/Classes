@@ -1880,7 +1880,8 @@ void GameLayer::afterMatch()
         }
         else
         {
-            this->fallDownToEnd(NULL, 0);
+//            this->fallDownToEnd(NULL, 0);
+            this->runAction(Sequence::create(DelayTime::create(0.2),CallFuncN::create(CC_CALLBACK_1(GameLayer::fallDownToEnd, this,(0))),NULL));
         }
         
         _emptyPointVector.clear();

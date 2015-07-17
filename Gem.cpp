@@ -314,7 +314,7 @@ void Gem::removeNoCollect(bool playMusic)
     if (_state == -1 || (_type == all && _state == all))
     {
         _removeAlready = true;
-        this->runAction(Sequence::create(/*ScaleTo::create(kRemoveScaleLargeTime,1.2),ScaleTo::create(kRemoveScaleSmallTime,0.8),*/CallFuncN::create(CC_CALLBACK_1(Gem::playExplodeRandomMusic, this))/*,action*/,CallFunc::create(CC_CALLBACK_0(Gem::explosionParticle, this)),CallFunc::create(CC_CALLBACK_0(Gem::addCollectGem, this)),CallFunc::create(CC_CALLBACK_0(Gem::removeSkillSpr, this)),CallFunc::create(CC_CALLBACK_0(Gem::hideSprite, this)),CallFunc::create(CC_CALLBACK_0(Gem::removeGem, this)),NULL));
+        this->runAction(Sequence::create(CallFuncN::create(CC_CALLBACK_1(Gem::playExplodeRandomMusic, this)),CallFunc::create(CC_CALLBACK_0(Gem::explosionParticle, this)),CallFunc::create(CC_CALLBACK_0(Gem::addCollectGem, this)),CallFunc::create(CC_CALLBACK_0(Gem::removeSkillSpr, this)),CallFunc::create(CC_CALLBACK_0(Gem::hideSprite, this)),CallFunc::create(CC_CALLBACK_0(Gem::removeGem, this)),NULL));
     }
 }
 
@@ -1654,7 +1654,7 @@ void Gem::swap(Direction direction, bool reverse,bool isSelected,CallFunc* callb
         {
             this->setZOrder(-1);
             
-            this->runAction(Sequence::create(swapAction,CallFunc::create(CC_CALLBACK_0(Gem::swapCallback, this)),DelayTime::create(0.2),callbackAction/*,CallFuncN::create(CC_CALLBACK_1(GemAction::playEffectMusic,caller,"change.mp3"))*/,NULL));
+            this->runAction(Sequence::create(swapAction,CallFunc::create(CC_CALLBACK_0(Gem::swapCallback, this)),callbackAction/*,CallFuncN::create(CC_CALLBACK_1(GemAction::playEffectMusic,caller,"change.mp3"))*/,NULL));
         }
     }
 }
@@ -1709,25 +1709,25 @@ void Gem::explosionParticle()
     }
     else
     {
-//        ParticleSystemQuad *partic1 = ParticleSystemQuad::create(str->getCString());
-//        _particleNode->addChild(partic1,11);
-//        partic1->setPosition(this->getPosition());
-//        partic1->setAutoRemoveOnFinish(true);
-//        
-//        ParticleSystemQuad *partic2 = ParticleSystemQuad::create("suilie2.plist");
-//        _particleNode->addChild(partic2,10);
-//        partic2->setPosition(this->getPosition());
-//        partic2->setAutoRemoveOnFinish(true);
+        ParticleSystemQuad *partic1 = ParticleSystemQuad::create(str->getCString());
+        _particleNode->addChild(partic1,11);
+        partic1->setPosition(this->getPosition());
+        partic1->setAutoRemoveOnFinish(true);
+        
+        ParticleSystemQuad *partic2 = ParticleSystemQuad::create("suilie2.plist");
+        _particleNode->addChild(partic2,10);
+        partic2->setPosition(this->getPosition());
+        partic2->setAutoRemoveOnFinish(true);
         
 //        partic2->setStartColor(Color4F(_particleColor1));
 //        partic2->setEndColor(Color4F(_particleColor1));
         
         
-        Armature *armature1 = Armature::create( "effect_suilie");
-        _particleNode->addChild(armature1);
-        armature1->getAnimation()->playWithIndex(0);
-        armature1->setPosition(this->getPosition());
-        armature1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::removeSelf, this) );
+//        Armature *armature1 = Armature::create( "effect_suilie");
+//        _particleNode->addChild(armature1);
+//        armature1->getAnimation()->playWithIndex(0);
+//        armature1->setPosition(this->getPosition());
+//        armature1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::removeSelf, this) );
         
     }
     this->setZOrder(1);
