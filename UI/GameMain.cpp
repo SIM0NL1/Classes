@@ -30,6 +30,11 @@ GameMain :: GameMain():loadProgress(nullptr)
 	m_btnLongBi = nullptr;
 	m_btnDiamond = nullptr;
 	m_labHP = nullptr;
+	m_hp = -1;
+	m_labTimer = nullptr;
+	m_nMin = -1;
+	m_nSec = -1;
+	long_time = 0;
 	m_labLongBi = nullptr;
 	m_labDiamond = nullptr;
 	g_pGameMain = this;
@@ -85,7 +90,7 @@ void GameMain :: showUI()
     tiliRect->setAnchorPoint(Vec2(0.5f,0.5f));
     tSize = tiliRect->getContentSize();
     tiliRect->setPosition(Vec2(tSize.width*0.5,GLB_SIZE.height-tSize.height*0.5));
-    this->addChild(tiliRect,Z_First);
+    this->addChild(tiliRect,Z_Second);
     //设置vertexZ;
     GameFunctions::getInstance()->vertexZ(&tiliRect);
     // 体力背景;
@@ -100,8 +105,8 @@ void GameMain :: showUI()
     loadProgress->setType(ProgressTimer::Type::BAR);//设置进程条的类型;
     loadProgress->setMidpoint(Point(0.5,0));//设置进度的运动方向;
     loadProgress->setPosition(Vec2(tSize.width*0.5,tSize.height*0.5));
-	int hp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str(),60);
-    float percent = static_cast<float>(35+((float)hp/ci_HP_MAX)*40);
+	m_hp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str(),60);
+    float percent = static_cast<float>(35+((float)m_hp/ci_HP_MAX)*40);
     loadProgress->setPercentage(percent);
     tiliBack->addChild(loadProgress,Z_First);
 
@@ -116,8 +121,23 @@ void GameMain :: showUI()
     m_labHP = Label::createWithCharMap(RESOURCE("shuliang_number.png"),16,27,'0');
     m_labHP->setAnchorPoint(Vec2(0.5f,0.5f));
     m_labHP->setPosition(Vec2(tSize.width*0.5,32));
-    m_labHP->setString(__String::createWithFormat("%d:60",hp)->getCString());
+    m_labHP->setString(__String::createWithFormat("%d:60",m_hp)->getCString());
     tiliRect->addChild(m_labHP,Z_First);
+
+	m_labTimer = Label :: createWithCharMap(RESOURCE("shuliang_number.png"),16,27,'0');
+	m_labTimer->setAnchorPoint(Vec2(0.5f,0.5f));
+	m_labTimer->setPosition(Vec2(tSize.width*0.5,0));
+	tiliRect->addChild(m_labTimer,Z_Third);
+	//m_labTimer->setString(__String::createWithFormat("%d;60",m_hp)->getCString());
+	if (m_hp==60)
+	{
+		m_labTimer->setVisible(false);
+	}
+	else
+	{
+		startHpTimer();
+	}
+
     // 龙币底板，龙币按钮，龙币图标，龙币数字;
     Size dibanSize;
     Sprite* dibanlongbi = Sprite :: create(RESOURCE("diban01.png"));
@@ -644,4 +664,78 @@ void GameMain::extractOpenMethod(int nowProgress)
 //	{
 //		m_pPageView->pTableView->vec_normalMission.at(0)->setMissionState(GameMissionState::MISSION_OPEN);
 //	}
+}
+
+void GameMain::startHpTimer()
+{
+	time_t t;
+	time(&t);
+	unsigned int now = t;	//本次系统时间;
+	unsigned int previous =  GameUIData::getInstance()->getLongIntegerForKey(cs_PreHpTimer.c_str(),now);	//上次系统时间;
+	m_hp = (m_hp+(now-previous)/ci_HpSecond)>60 ? 60 : (m_hp+(now-previous)/ci_HpSecond);
+	GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_hp);
+	updateHpShow(m_hp);
+	int hp = ci_HP_MAX-m_hp;
+	if (now-previous>=hp*ci_HpSecond)	//已经回复满;
+	{
+		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),now);
+		m_labTimer->setVisible(false);
+	}
+	else
+	{
+		long remainder = hp*ci_HpSecond-(now-previous);	//满状态剩余秒数;
+		m_nMin = (remainder/60)%6;	//剩余倒计时分钟数;
+		m_nSec = remainder%60;		//剩余倒计时秒数;
+		if (!m_nSec && !m_nMin)
+		{
+			m_nMin = 5;
+			m_nSec = 60;
+		}
+		this->schedule(CC_SCHEDULE_SELECTOR(GameMain::updateHp));
+	}
+}
+
+void GameMain::updateHp(float t)
+{
+	time_t longTime;
+	time(&longTime);
+	long temp = longTime;
+	m_hp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str());
+	if (temp-long_time >= 1)//1
+	{
+		long_time = temp;
+		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),long_time);
+		--m_nSec;
+		if (m_nSec<0)
+		{
+			--m_nMin;
+			if (m_nMin<0)
+			{
+				GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_hp+1);
+				updateHpShow(m_hp);
+				if (m_hp+1==60)
+				{
+					m_nMin = 0;
+					m_nSec = 0;
+					this->unschedule(CC_SCHEDULE_SELECTOR(GameMain::updateHp));
+					m_labTimer->setVisible(false);
+					return;
+				}
+				else
+				{
+					m_nMin = 5;
+				}
+			}
+			m_nSec = 59;
+		}
+
+		if (m_nSec<10)
+		{
+			m_labTimer->setString(__String::createWithFormat("0%d;0%d",m_nMin,m_nSec)->getCString());
+		}
+		else
+		{
+			m_labTimer->setString(__String::createWithFormat("0%d;%d",m_nMin,m_nSec)->getCString());
+		}
+	}
 }

@@ -43,6 +43,11 @@ public:
 	Label *m_labHP,*m_labLongBi,*m_labDiamond;
 	cocos2d::ProgressTimer* loadProgress;//进度条;
     Size tSize;
+	int m_hp;
+	Label* m_labTimer;
+	int m_nMin,m_nSec;	//倒计时的分秒;
+	long long_time;
+
     void showUI();
     void initMap();
     void setBtnTouch(bool flag);
@@ -83,6 +88,9 @@ public:
 	//控制界面内除关卡按钮外的其他可触控件开关;
 	void uiTouchEnable(bool flag);
 
+	void startHpTimer();	//开启更新;
+	void updateHp(float t);	//每次上线更新体力时间;
+	
 private:
     GameMain();
     ~GameMain();
