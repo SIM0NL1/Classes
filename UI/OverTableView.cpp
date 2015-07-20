@@ -112,7 +112,7 @@ TableViewCell* OverTableView::tableCellAtIndex(TableView *table,ssize_t idx)
 		{
 			GameNormalMission* mission_left = GameNormalMission :: create();
 			mission_left->m_nMissionId = missionId;
-			mission_left->setTag(1000+missionId);
+			mission_left->setTag(missionId);
 			mission_left->setAnchorPoint(Vec2::ZERO);
 			//取得关卡ID对应的坐标;
 			Vec2 temp=GameUIData::getInstance()->getNormalMissionPos(missionId);
