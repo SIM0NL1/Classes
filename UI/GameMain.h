@@ -46,6 +46,7 @@ public:
     void showUI();
     void initMap();
     void setBtnTouch(bool flag);
+	void setAllBtnTouch(bool flag);
     void BtnCall(Ref* pSender,Widget::TouchEventType type);
     void onBtnShop();
     void onBtnAchievement();
@@ -53,7 +54,11 @@ public:
     void onBtnRole();
     void onBtnEndless();
     void onBtnRegisterLeft();
-    void onBtnNewManGift();
+	//游戏胜利开启新关卡的开启效果;
+	void extractOpenMethod(int nowProgress);
+	//游戏胜利开启新关卡的移动效果;
+	void extractMoveMethod();
+	void onBtnNewManGift();
     void onBtnRegisterRight();
     void onBtnMagicBook();
     void onBtnHP();
@@ -71,9 +76,13 @@ public:
     
     virtual Size sizeForPerPage();
     virtual void pageViewDidScroll(OverScrollView* scrollView);
-
+	//更新体力值;
 	void updateHpShow(int hp);
-    
+    //响应游戏返回,自动开启下一关,弹窗;
+	void quitGameCallBack(QuitGameType type);
+	//控制界面内除关卡按钮外的其他可触控件开关;
+	void uiTouchEnable(bool flag);
+
 private:
     GameMain();
     ~GameMain();

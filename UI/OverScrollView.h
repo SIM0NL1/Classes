@@ -41,7 +41,8 @@ public:
     virtual void onTouchCancelled(Touch* touch,Event* unused_event);
     OverTableView* pTableView;
     Armature *qiehuan;
-    bool _isChmap;
+    bool _isChmap;		//用来屏蔽水平滑动的触摸,在水平和垂直滑动切换时使用;
+	bool _Enable;		//暴力解决一切问题,强制关闭水平滑动;
     Sprite* pChmap;
     void chmapEffect(float offset);
     void horizontalGPS(bool flag=true);

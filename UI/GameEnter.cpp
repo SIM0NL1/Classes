@@ -26,7 +26,7 @@ Scene* GameEnter :: createScene()
         Scene* scene = Scene :: create();
         CC_BREAK_IF(!scene);
 
-        //GameMusicControl::getInstance()->musicOn();
+        GameMusicControl::getInstance()->musicOn();
         
         GameEnter* pLayer = GameEnter :: create();
         CC_BREAK_IF(!pLayer);
@@ -76,7 +76,7 @@ void GameEnter::loadJsonData()
     GameUIData::getInstance()->writeData();
     GameUIData::getInstance()->setNormalMissionProgress(GameUIData::getInstance()->getIntegerForKey("CurNormalMissionProgress"));
     GameUIData::getInstance()->setChallengeMissionProgress(12);
-    GameUIData::getInstance()->setCurNormalMission(1);
+    GameUIData::getInstance()->setCurNormalMission(GameUIData::getInstance()->getIntegerForKey("CurNormalMissionPlay"));
     GameUIData::getInstance()->setCurChallengeMission(1);
     GameUIData::getInstance()->readPosData(JsonFileType::NORMALMISSION);
     GameUIData::getInstance()->readPosData(JsonFileType::CHALLENGEMISSION);

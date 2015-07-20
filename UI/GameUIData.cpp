@@ -508,9 +508,9 @@ void GameUIData::writeData()
 
 		writedoc.SetObject();
 		//json object  格式添加键值对;
-		writedoc.AddMember("CurNormalMissionProgress",1,allocator);		//普通关卡当前进度;
+		writedoc.AddMember("CurNormalMissionProgress",2,allocator);		//普通关卡当前进度;
 		writedoc.AddMember("CurChallengeMissionProgress",0,allocator);	//挑战关卡当前进度;
-		writedoc.AddMember("CurNormalMissionPlay",1,allocator);			//正在游戏的普通关卡;
+		writedoc.AddMember("CurNormalMissionPlay",2,allocator);			//正在游戏的普通关卡;
 		writedoc.AddMember("CurChallengeMissionPlay",0,allocator);		//正在游戏的副本关卡;
 		writedoc.AddMember("CurLongBiNum",100,allocator);		//当前龙币数值;
 		writedoc.AddMember("CurDiamondsNum",100,allocator);		//当前钻石数值;

@@ -164,9 +164,7 @@ void GameMain :: showUI()
     m_labDiamond = Label::createWithCharMap(RESOURCE("shuliang_number.png"),16,27,'0');
     m_labDiamond->setAnchorPoint(Vec2(1.f,0.5f));
     m_labDiamond->setPosition(Vec2(dibanSize.width-20.f,dibanSize.height*0.5));
-    
-    string temp = __String::createWithFormat("%d",GameUIData::getInstance()->getMissionProgress(1,JsonFileType::NORMALMISSION).score)->getCString();
-    m_labDiamond->setString(temp);
+    m_labDiamond->setString("99999");
     dibanDiamond->addChild(m_labDiamond);
     //商店按钮;
 	m_btnShop = Button :: create(RESOURCE("shangdian_01.png"),RESOURCE("shangdian_02.png"));
@@ -308,6 +306,23 @@ void GameMain::setBtnTouch(bool flag)
 	m_btnMagicBook->setEnabled(flag);
 	m_btnRegisterRight->setEnabled(flag);
 }
+
+void GameMain::setAllBtnTouch(bool flag)
+{
+	m_btnShop->setEnabled(flag);
+	m_btnAchievement->setEnabled(flag);
+	m_btnMagicBox->setEnabled(flag);
+	m_btnRole->setEnabled(flag);
+	m_btnEndless->setEnabled(flag);
+	m_btnRegisterLeft->setEnabled(flag);
+	m_btnNewManGift->setEnabled(flag);
+	m_btnHP->setEnabled(flag);
+	m_btnLongBi->setEnabled(flag);
+	m_btnDiamond->setEnabled(flag);
+	m_btnMagicBook->setEnabled(flag);
+	m_btnRegisterRight->setEnabled(flag);
+}
+
 
 void GameMain::BtnCall(Ref* pSender,Widget::TouchEventType type)
 {
@@ -474,6 +489,18 @@ void GameMain::onBtnRegisterLeft()
 {
 	log("********GameMain::onBtnRegisterLeft**********");
     GameMusicControl::getInstance()->btnPlay(1);
+	int nowPlay = GameUIData::getInstance()->getCurNormalMission();
+	int nowProgress = GameUIData::getInstance()->getNormalMissionProgress();
+	if ( nowPlay==nowProgress )
+	{
+		uiTouchEnable(false);
+		this->runAction(Sequence::create(DelayTime::create(0.5f)
+			,CallFunc::create(CC_CALLBACK_0(GameMain::extractMoveMethod,this))
+			,DelayTime::create(1.f)
+			,CallFunc::create(CC_CALLBACK_0(GameMain::extractOpenMethod,this,nowProgress))
+			,CallFunc::create(CC_CALLBACK_0(GameMain::uiTouchEnable,this,true))
+			,nullptr));
+	}
 }
 
 void GameMain::onBtnNewManGift()
@@ -517,4 +544,104 @@ void GameMain::updateHpShow(int hp)
 	m_labHP->setString(__String::createWithFormat("%d:60",hp)->getCString());
 	float percent = static_cast<float>(35+((float)hp/ci_HP_MAX)*40);
 	loadProgress->setPercentage(percent);
+}
+
+void GameMain::quitGameCallBack(QuitGameType type)
+{
+	
+	switch (type)
+	{
+	case QuitGameType::NONE:
+		break;
+	case QuitGameType::PAUSE:
+		break;
+	case QuitGameType::WinQuit:
+		{
+			int nowPlay = GameUIData::getInstance()->getCurNormalMission();
+			int nowProgress = GameUIData::getInstance()->getNormalMissionProgress();
+			if ( nowPlay==nowProgress )
+			{
+				uiTouchEnable(false);
+				this->runAction(Sequence::create(DelayTime::create(0.5f)
+					,CallFunc::create(CC_CALLBACK_0(GameMain::extractMoveMethod,this))
+					,DelayTime::create(1.f)
+					,CallFunc::create(CC_CALLBACK_0(GameMain::extractOpenMethod,this,nowProgress))
+					,CallFunc::create(CC_CALLBACK_0(GameMain::uiTouchEnable,this,true))
+					,nullptr));
+			}
+		}
+		break;
+	case QuitGameType::WinContinue:
+		break;
+	case QuitGameType::FailQuit:
+		break;
+	case QuitGameType::FailContinue:
+		break;
+	default:
+		break;
+	}
+}
+
+void GameMain::uiTouchEnable(bool flag)
+{
+	m_pPageView->pTableView->tableView->setTouchEnabled(flag);
+	m_pPageView->_Enable = flag;
+	setAllBtnTouch(flag);
+}
+
+void GameMain::extractMoveMethod()
+{
+	m_pPageView->pTableView->scrollViewForDistance(-100.f);
+}
+
+void GameMain::extractOpenMethod(int nowProgress)
+{
+	//如果达到最终关卡,最终关卡是已开启关卡;
+//	if (ci_NormalMissionNum>nowProgress)
+//	{
+		//从关卡Id上做文章;
+		//int cellId = 3;
+// 		if (nowProgress%10)
+// 		{
+// 			cellId = ci_MapNum-1-nowProgress/10;
+// 		}
+// 		else
+// 		{
+// 			cellId = ci_MapNum-(nowProgress/10);
+// 		}
+		GameUIData::getInstance()->setNormalMissionProgress(nowProgress+1);
+		//1-9;
+		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->cellAtIndex(cellId)->getChildByTag(nowProgress+1000) ) )->setMissionState(GameMissionState::MISSION_OPEN);
+		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->cellAtIndex(cellId)->getChildByTag(nowProgress+1+1000) ) )->setMissionState(GameMissionState::MISSION_NOW);
+
+//		m_pPageView->pTableView->vec_normalMission.at(ci_NormalMissionNum-nowProgress)->setMissionState(GameMissionState::MISSION_OPEN);
+//		m_pPageView->pTableView->vec_normalMission.at(ci_NormalMissionNum-1-nowProgress)->setMissionState(GameMissionState::MISSION_NOW);
+		
+		//9-nowProgress%10
+		//8-nowProgress%10
+// 		if (nowProgress%10==1)
+// 		{
+// 			m_pPageView->pTableView->vec_normalMission.at(9)->setMissionState(GameMissionState::MISSION_OPEN);
+// 			m_pPageView->pTableView->vec_normalMission.at(8)->setMissionState(GameMissionState::MISSION_NOW);
+// 		}
+// 		else if (!(nowProgress%10))
+// 		{
+// 			m_pPageView->pTableView->vec_normalMissionBack.at(0)->setMissionState(GameMissionState::MISSION_OPEN);
+// 			m_pPageView->pTableView->vec_normalMission.at(9)->setMissionState(GameMissionState::MISSION_NOW);
+// 		}
+// 		else
+// 		{
+// 			m_pPageView->pTableView->vec_normalMissionBack.at(10-nowProgress%10)->setMissionState(GameMissionState::MISSION_OPEN);
+// 			m_pPageView->pTableView->vec_normalMissionBack.at(9-nowProgress%10)->setMissionState(GameMissionState::MISSION_NOW);
+// 		}
+		//m_pPageView->pTableView->vec_normalMission.at(4)->setMissionState(GameMissionState::MISSION_OPEN);//10-nowProgress
+		//m_pPageView->pTableView->vec_normalMission.at(3)->setMissionState(GameMissionState::MISSION_NOW);//10-1-nowProgress
+
+		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->getChildByTag(nowProgress+1000) ) )->setMissionState(GameMissionState::MISSION_OPEN);
+		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->getChildByTag(nowProgress+1+1000) ) )->setMissionState(GameMissionState::MISSION_NOW);
+//	}
+//	else
+//	{
+//		m_pPageView->pTableView->vec_normalMission.at(0)->setMissionState(GameMissionState::MISSION_OPEN);
+//	}
 }

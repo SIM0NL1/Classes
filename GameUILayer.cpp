@@ -855,7 +855,7 @@ void GameUILayer::pauseMenu(Ref *pSender)
     
     auto *labelItemRestar = MenuItemImage::create("icon_chonglai.png", "icon_chonglai2.png", bind(&GameUILayer::restarGame, this, std::placeholders::_1, backLayerColor));
     
-    auto *labelItemQuit = MenuItemImage::create("icon_zhucaidan.png", "icon_zhucaidan2.png", CC_CALLBACK_1(GameUILayer::quitGame, this));
+    auto *labelItemQuit = MenuItemImage::create("icon_zhucaidan.png", "icon_zhucaidan2.png", CC_CALLBACK_1(GameUILayer::quitGame, this,QuitGameType::PAUSE));
     
     auto *labelItemContinue = MenuItemImage::create("icon_jixu.png", "icon_jixu2.png", bind(&GameUILayer::continueGame, this, std::placeholders::_1, backLayerColor));
     
@@ -873,7 +873,7 @@ void GameUILayer::pauseMenu(Ref *pSender)
 }
 
 
-void GameUILayer::quitGame(Ref *pSender)
+void GameUILayer::quitGame(Ref *pSender,QuitGameType type)
 {
     resumeGame();
     DataCenter::getInstance()->setWinnerMode(false);
@@ -881,6 +881,7 @@ void GameUILayer::quitGame(Ref *pSender)
     DataCenter::getInstance()->setTimeLimit(false);
     TDStageLayer::getInstance()->destroyInstance();
     SCENE_CHANGE_NORMAL(SceneState::UIGameMain);
+    //传递type;
 }
 
 void GameUILayer::continueGame(Ref *pSender, Node *pNode)
@@ -1086,7 +1087,7 @@ void GameUILayer::addTimeDown(Node *pSender, Node *pLayer)
 
     auto *labelItemRestar = MenuItemImage::create("icon_cxtz.png", "icon_cxtz2.png", bind(&GameUILayer::restarGame, this, std::placeholders::_1, pLayer));
     
-    auto *labelItemQuit = MenuItemImage::create("icon_jinhua.png", "icon_jinhua2.png", CC_CALLBACK_1(GameUILayer::quitGame, this));
+    auto *labelItemQuit = MenuItemImage::create("icon_jinhua.png", "icon_jinhua2.png", CC_CALLBACK_1(GameUILayer::quitGame, this,QuitGameType::FailQuit));
     
     auto menu = Menu::create(labelItemQuit,labelItemRestar,NULL);
     menu->setPosition(VisibleRect::center() - Vec2(0, 65));
@@ -1327,11 +1328,11 @@ void GameUILayer::addWinLayer()
 
     auto *labelItemRestar = MenuItemImage::create("icon_chonglai.png", "icon_chonglai2.png", bind(&GameUILayer::restarGame, this, std::placeholders::_1, backLayerColor));
     
-    auto *labelItemQuit = MenuItemImage::create("icon_zhucaidan.png", "icon_zhucaidan2.png", CC_CALLBACK_1(GameUILayer::quitGame, this));
+    auto *labelItemQuit = MenuItemImage::create("icon_zhucaidan.png", "icon_zhucaidan2.png", CC_CALLBACK_1(GameUILayer::quitGame, this,QuitGameType::WinQuit));
     
-    auto *labelItemContinue = MenuItemImage::create("icon_xiayiguan2.png", "icon_xiayiguan2.png", CC_CALLBACK_1(GameUILayer::quitGame, this));
+    auto *labelItemContinue = MenuItemImage::create("icon_xiayiguan2.png", "icon_xiayiguan2.png", CC_CALLBACK_1(GameUILayer::quitGame, this,QuitGameType::WinContinue));
     
-    auto *labelItemCha = MenuItemImage::create("icon_guanbi01_1.png", "icon_guanbi01_2.png", CC_CALLBACK_1(GameUILayer::quitGame, this));
+    auto *labelItemCha = MenuItemImage::create("icon_guanbi01_1.png", "icon_guanbi01_2.png", CC_CALLBACK_1(GameUILayer::quitGame, this,QuitGameType::WinQuit));
     labelItemCha->setOpacity(0);
     labelItemCha->runAction(FadeIn::create(1));
     auto menu = Menu::create(labelItemQuit,labelItemRestar,labelItemContinue, NULL);

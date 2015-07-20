@@ -20,6 +20,8 @@ GameNormalMission::GameNormalMission()
 	missionStartNum = 0;
 	m_dizuoSize = Size::ZERO;
 	m_stoneSize = Size::ZERO;
+	m_halo = nullptr;
+	m_nMissionId = -1;
 }
 
 GameNormalMission::~GameNormalMission()
@@ -65,6 +67,11 @@ void GameNormalMission::initMission()
 	m_labMissionId->setPosition(Vec2(m_stoneSize.width*0.5,m_stoneSize.height*0.5+20));
 	m_btnStone->addChild(m_labMissionId);
 
+	m_halo = Sprite::create(RESOURCE("guang_effect.png"));
+	m_halo->setAnchorPoint(Vec2(0.5f,0.5f));
+	m_halo->setPosition(Vec2(m_stoneSize.width*0.5,m_stoneSize.height*0.5+12));
+	m_btnStone->addChild(m_halo,Z_Back);
+	m_halo->setVisible(false);
 }
 
 void GameNormalMission::BtnCall(Ref* pSender,Widget::TouchEventType type)
@@ -121,6 +128,7 @@ void GameNormalMission::setMissionState(GameMissionState state)
 		}
 	case GameMissionState::MISSION_OPEN:
 		{
+			m_halo->setVisible(false);
 			missionOpen();
 			break;
 		}
@@ -187,12 +195,10 @@ void GameNormalMission::missionOpen()
 
 void GameNormalMission::missionNow()
 {
-	Sprite* halo = Sprite::create(RESOURCE("guang_effect.png"));
-	halo->setAnchorPoint(Vec2(0.5f,0.5f));
-	halo->setPosition(Vec2(m_stoneSize.width*0.5,m_stoneSize.height*0.5+12));
-	m_btnStone->addChild(halo,Z_Back);
-	halo->runAction(RepeatForever::create(RotateBy::create(6.f,360.f)));
-    halo->runAction(RepeatForever::create(Sequence::create(ScaleTo::create(1.f,0.6f),ScaleTo::create(1.f,1.f),nullptr)));
+	m_labMissionId->setVisible(true);
+	m_halo->setVisible(true);
+	m_halo->runAction(RepeatForever::create(RotateBy::create(6.f,360.f)));
+    m_halo->runAction(RepeatForever::create(Sequence::create(ScaleTo::create(1.f,0.6f),ScaleTo::create(1.f,1.f),nullptr)));
 }
 
 void GameNormalMission::setMissionStartNum(int missionId,int startNum)

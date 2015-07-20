@@ -15,6 +15,8 @@
 #include "GameLayer.h"
 #include "Progress.h"
 
+#include "UI/GameDefine.h"
+
 USING_NS_CC;
 using namespace std;
 
@@ -61,7 +63,7 @@ public:
     
     void restarGame(Ref* pSender,Node* pNode);
     
-    void quitGame(Ref* pSender);
+    void quitGame(Ref* pSender,QuitGameType type);
     
     void resumeGame();
     

@@ -48,7 +48,7 @@ public:
 
 protected:
 	OverTableView();
-	virtual ~OverTableView();
+	~OverTableView();
     Sprite* m_pMengBan;      // 特殊关卡蒙灰;
 };
 

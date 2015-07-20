@@ -16,6 +16,7 @@ OverScrollView::OverScrollView()
 	m_startPoint = Point::ZERO;
 	m_endPoint = Point :: ZERO;
 	_isChmap = false;
+	_Enable = true;
 	current_offset = 0;
 	current_index = 0;
     qiehuan = nullptr;
@@ -54,6 +55,7 @@ bool OverScrollView::init(OverScrollViewDelegate* delegate)
 	pLayer->setContentSize(Size(640*2-1,1136));
 	this->addChild(pLayer,Z_First);
     
+	//tableView实现地图;
 	pTableView = OverTableView::create();
 	pTableView->scrollViewForDistance();
     if (GameUIData::getInstance()->getVerticalGps() == -1)
@@ -95,6 +97,10 @@ bool OverScrollView::init(OverScrollViewDelegate* delegate)
 
 bool OverScrollView::onTouchBegan(Touch* touch,Event* unused_event)
 {
+	if (!_Enable)
+	{
+		return false;
+	}
 	_dragging = false;
 	//
 	Point currentPoint = touch->getLocation();
@@ -114,7 +120,11 @@ bool OverScrollView::onTouchBegan(Touch* touch,Event* unused_event)
 
 void OverScrollView::onTouchMoved(Touch* touch,Event* unused_event)
 {
-	if (_isChmap)
+	if (!_Enable)
+	{
+		return;
+	}
+	else if (_isChmap)
 	{
 		m_startPoint = touch->getStartLocation();
 		m_endPoint = touch->getLocation();
@@ -144,7 +154,11 @@ void OverScrollView::onTouchMoved(Touch* touch,Event* unused_event)
 
 void OverScrollView::onTouchEnded(Touch* touch,Event* unused_event)
 {
-	if (_isChmap)
+	if (!_Enable)
+	{
+		return;
+	}
+	else if (_isChmap)
 	{
 		m_endPoint = this->getContentOffset();
 		float offset = m_endPoint.x - current_offset;
