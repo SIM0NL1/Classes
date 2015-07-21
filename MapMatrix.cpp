@@ -1,5 +1,5 @@
 #include "MapMatrix.h"
-
+#include "UI/GameUIData.h"
 
 MapMatrix::MapMatrix(int **mm,Gem ***fm, int count,MapInfo* mapinfo)
 :_mapMatrix(mm)
@@ -758,9 +758,15 @@ void MapMatrix::fillEmptyNew(Layer* layer, int i, int j)
 //拼接地图框
 SpriteBatchNode* MapMatrix::createMapFrame(Node* mapNode)
 {
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile( "map.plist" );
+    int id = GameUIData::getInstance()->getCurNormalMission();
+    __String *plist = __String::createWithFormat("map_%d.plist",id%2);
+    __String *lastplist = __String::createWithFormat("map_%d.plist",(id+1)%2);
+    __String *png = __String::createWithFormat("map_%d.png",id%2);
     
-    SpriteBatchNode* batchNode = SpriteBatchNode::create("map.png",1000);
+    SpriteFrameCache::getInstance()->removeSpriteFramesFromFile(lastplist->getCString());
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile( plist->getCString() );
+    
+    SpriteBatchNode* batchNode = SpriteBatchNode::create(png->getCString(),1000);
     
     batchNode->setPosition(Vec2::ZERO);
     
