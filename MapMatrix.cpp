@@ -759,14 +759,12 @@ void MapMatrix::fillEmptyNew(Layer* layer, int i, int j)
 SpriteBatchNode* MapMatrix::createMapFrame(Node* mapNode)
 {
     int id = GameUIData::getInstance()->getCurNormalMission();
-    __String *plist = __String::createWithFormat("map_%d.plist",id%2);
-    __String *lastplist = __String::createWithFormat("map_%d.plist",(id+1)%2);
-    __String *png = __String::createWithFormat("map_%d.png",id%2);
+    __String *dark = __String::createWithFormat("battlemap_%d_dark.png",id%2);
+    __String *light = __String::createWithFormat("battlemap_%d_light.png",id%2);
     
-    SpriteFrameCache::getInstance()->removeSpriteFramesFromFile(lastplist->getCString());
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile( plist->getCString() );
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile( "map.plist" );
     
-    SpriteBatchNode* batchNode = SpriteBatchNode::create(png->getCString(),1000);
+    SpriteBatchNode* batchNode = SpriteBatchNode::create("map.png",1000);
     
     batchNode->setPosition(Vec2::ZERO);
     
@@ -804,22 +802,22 @@ SpriteBatchNode* MapMatrix::createMapFrame(Node* mapNode)
                 {
                     if(j%2==0)
                     {
-                        backspr= Sprite::createWithSpriteFrameName("battlemap_5_dark.png");
+                        backspr= Sprite::createWithSpriteFrameName(dark->getCString());
                     }
                     else
                     {
-                        backspr= Sprite::createWithSpriteFrameName("battlemap_5_light.png");
+                        backspr= Sprite::createWithSpriteFrameName(light->getCString());
                     }
                 }
                 else
                 {
                     if(j%2==0)
                     {
-                        backspr= Sprite::createWithSpriteFrameName("battlemap_5_light.png");
+                        backspr= Sprite::createWithSpriteFrameName(light->getCString());
                     }
                     else
                     {
-                        backspr= Sprite::createWithSpriteFrameName("battlemap_5_dark.png");
+                        backspr= Sprite::createWithSpriteFrameName(dark->getCString());
                     }
                 }
 //                backspr->setScale(60.0/70);
