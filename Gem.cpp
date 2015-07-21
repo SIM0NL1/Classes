@@ -352,10 +352,9 @@ void Gem::createSkill()
                         _gemStoneMatrix[i][j]->setSkillSpr();
                         _gemStoneMatrix[i][j]->setZOrder(2);
                         
-                        if (_gemStoneMatrix[i][j]->getGemSkill())
-                        {
-                            _gemStoneMatrix[i][j]->beforeExplode();
-                        }
+                    
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                    
                         continue;
                     }
                     
@@ -379,10 +378,9 @@ void Gem::createSkill()
                         _gemStoneMatrix[i][j]->setSkillSpr();
                         _gemStoneMatrix[i][j]->setZOrder(2);
                         
-                        if (_gemStoneMatrix[i][j]->getGemSkill())
-                        {
-                            _gemStoneMatrix[i][j]->beforeExplode();
-                        }
+            
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                
                         
                         continue;
                     }
@@ -404,10 +402,8 @@ void Gem::createSkill()
                         _gemStoneMatrix[i][j]->setSkillSpr();
                         _gemStoneMatrix[i][j]->setZOrder(2);
                         
-                        if (_gemStoneMatrix[i][j]->getGemSkill())
-                        {
-                            _gemStoneMatrix[i][j]->beforeExplode();
-                        }
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                   
                         
                         continue;
                     }
@@ -432,10 +428,10 @@ void Gem::createSkill()
                     {
                         _gemStoneMatrix[i][j]->setSkillSpr();
                         _gemStoneMatrix[i][j]->setZOrder(2);
-                        if (_gemStoneMatrix[i][j]->getGemSkill())
-                        {
+//                        if (_gemStoneMatrix[i][j]->getGemSkill())
+//                        {
                             _gemStoneMatrix[i][j]->beforeExplode();
-                        }
+//                        }
                         continue;
                     }
                     if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
@@ -456,10 +452,9 @@ void Gem::createSkill()
                     {
                         _gemStoneMatrix[i][j]->setSkillSpr();
                         _gemStoneMatrix[i][j]->setZOrder(2);
-                        if (_gemStoneMatrix[i][j]->getGemSkill())
-                        {
-                            _gemStoneMatrix[i][j]->beforeExplode();
-                        }
+                        
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                        
                         continue;
                     }
                     if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
@@ -479,10 +474,9 @@ void Gem::createSkill()
                     {
                         _gemStoneMatrix[i][j]->setSkillSpr();
                         _gemStoneMatrix[i][j]->setZOrder(2);
-                        if (_gemStoneMatrix[i][j]->getGemSkill())
-                        {
-                            _gemStoneMatrix[i][j]->beforeExplode();
-                        }
+                        
+                        _gemStoneMatrix[i][j]->beforeExplode();
+                    
                         continue;
                     }
                     if (_gemStoneMatrix[i][j]&&_gemStoneMatrix[i][j]->getGemSkill() && (_gemStoneMatrix[i][j]->getState() == -1 || _gemStoneMatrix[i][j]->getNextSkill()))
@@ -496,8 +490,6 @@ void Gem::createSkill()
             }
             
         }
-
-            
     }
     
     
@@ -506,15 +498,82 @@ void Gem::createSkill()
 
 void Gem::gemMoveCenter(Point pos)
 {
-    pos = pos - this->getPosition() ;
-    _state = -1;
-    _spr->runAction(Sequence::create(MoveTo::create(0.15, pos),CallFunc::create(CC_CALLBACK_0(Gem::gemMoveOver, this)),NULL));
-    
+    if (canMove())
+    {
+        pos = pos - this->getPosition() ;
+        _state = -1;
+        _spr->runAction(Sequence::create(MoveTo::create(0.15, pos),CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, _spr)),NULL));
+        gemMoveOver();
+    }
+    else
+    {
+        beforeExplode();
+    }
 }
 
 void Gem::gemMoveOver()
 {
-    removeNoCollect(false);
+    NotificationCenter::getInstance()->postNotification("display_score",this);
+    
+    MyPoint myPoint = getCurrentIndex(this->getPosition());
+    int i = myPoint.x,j=myPoint.y;
+    
+    if (i < kMatrixWidth && j < kMatrixWidth)
+    {
+        if(i-1>=0&&_gemStoneMatrix[i-1][j]&&_gemStoneMatrix[i-1][j]->getGemType() == fog)
+        {
+            Fog *fg = (Fog*)_gemStoneMatrix[i-1][j];
+            fg->changeState(0);
+        }
+        if(i+1<kMatrixWidth&&_gemStoneMatrix[i+1][j]&&_gemStoneMatrix[i+1][j]->getGemType() == fog)
+        {
+            Fog *fg = (Fog*)_gemStoneMatrix[i+1][j];
+            fg->changeState(0);
+        }
+        if(j-1>=0&&_gemStoneMatrix[i][j-1]&&_gemStoneMatrix[i][j-1]->getGemType() == fog)
+        {
+            Fog *fg = (Fog*)_gemStoneMatrix[i][j-1];
+            fg->changeState(0);
+        }
+        if(j+1<kMatrixWidth&&_gemStoneMatrix[i][j+1]&&_gemStoneMatrix[i][j+1]->getGemType() == fog)
+        {
+            Fog *fg = (Fog*)_gemStoneMatrix[i][j+1];
+            fg->changeState(0);
+        }
+    }
+    
+    MyPoint mp = getCurrentIndex(this->getPosition());
+    
+    if (_mapNode->getChildByTag(mp.x * kMatrixWidth + mp.y))
+    {
+        Armature *armature1 = Armature::create( "effect_bingkuaisui");
+        _mapNode->addChild(armature1);
+        armature1->getAnimation()->playWithIndex(0);
+        armature1->setPosition(this->getPosition());
+        armature1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::removeSelf, this) );
+        auto spr = (Sprite*)_mapNode->getChildByTag(mp.x * kMatrixWidth + mp.y);
+        int iFlag = spr->getLocalZOrder();
+        if (iFlag == 1)
+        {
+            spr->setZOrder(-1);
+            NotificationCenter::getInstance()->postNotification("display_score",this);
+            
+            _mapNode->removeChildByTag(mp.x * kMatrixWidth + mp.y , true);
+            
+            int msg = 1000*10;
+            __String *str = __String::createWithFormat("%d",msg);
+            NotificationCenter::getInstance()->postNotification(kMSG_ShowCollecte,str );
+        }
+        if(iFlag == 2)
+        {
+            spr->setTexture("icefloor.png");
+            spr->setLocalZOrder(1);
+        }
+    }
+
+    
+    this->runAction(Sequence::create(DelayTime::create(0.17),CallFunc::create(CC_CALLBACK_0(Gem::removeGem, this)),NULL));
+//    removeNoCollect(false);
 }
 
 void Gem::triggerSkill()
@@ -814,9 +873,9 @@ void Gem::dealWithSkill()
     }
     else
     {
-        arm->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
+        arm->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::gemBright, this));
         arm->setTag(888);
-        this->runAction(Sequence::create(DelayTime::create(0.5),CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
+//        this->runAction(Sequence::create(DelayTime::create(0.5),CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
     }
     
     if (_skill == SkillAround1 || _skill == SkillAround3)
@@ -1788,15 +1847,15 @@ void Gem::aroundAnimation(Node *pSender)
     arm1->getAnimation()->playWithIndex(0);
     _particleNode->addChild(arm1);
     arm1->setPosition(_gemStoneMatrix[mp.x][mp.y]->getPosition());
-    arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
-    this->runAction(Sequence::create(DelayTime::create(0.4),CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
+    arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::gemBright, this));
+//    this->runAction(Sequence::create(DelayTime::create(0.4),CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
     arm1->setTag(999);
 }
 
 void Gem::gemBright(Node *pSender)
 {
     CCLOG("pSender->getTag() = %d" , pSender->getTag());
-//    pSender->removeFromParentAndCleanup(true);
+    pSender->removeFromParentAndCleanup(true);
     
     MyPoint mp = getCurrentIndex(this->getPosition());
     

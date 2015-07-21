@@ -89,16 +89,16 @@ ActionInterval* GemAction::getGemChangeAction(Direction direction)
     switch (direction)
     {
         case Up:
-            action = EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point(0, kElementSize)));
+            action = MoveBy::create(kChangeMoveTime, Point(0, kElementSize));//EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point(0, kElementSize)));
             break;
         case Down:
-            action = EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point(0, -kElementSize)));
+            action = MoveBy::create(kChangeMoveTime, Point(0, -kElementSize));//EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point(0, -kElementSize)));
             break;
         case Left:
-            action = EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point( -kElementSize,0)));
+            action = MoveBy::create(kChangeMoveTime, Point( -kElementSize,0));//EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point( -kElementSize,0)));
             break;
         case Right:
-            action = EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point(kElementSize , 0)));
+            action = MoveBy::create(kChangeMoveTime, Point(kElementSize , 0));//EaseBackOut::create(MoveBy::create(kChangeMoveTime, Point(kElementSize , 0)));
             break;
         default:
             break;
