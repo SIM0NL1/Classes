@@ -45,6 +45,8 @@ public:
 	// view移动，默认是移动到底部;
 	void scrollViewForDistance(float distance = -1);
 	vector<GameNormalMission*> vec_normalMission;
+	vector<GameNormalMission*> vec_normalMissionBack;
+	map<int,vector<GameNormalMission*>> m_mapNormalMission;
 
 protected:
 	OverTableView();

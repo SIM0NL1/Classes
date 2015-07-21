@@ -47,6 +47,7 @@ public:
 	Label* m_labTimer;
 	int m_nMin,m_nSec;	//倒计时的分秒;
 	long long_time;
+	bool m_IsContinue;
 
     void showUI();
     void initMap();

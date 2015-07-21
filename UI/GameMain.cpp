@@ -40,6 +40,7 @@ GameMain :: GameMain():loadProgress(nullptr)
 	g_pGameMain = this;
 	normallayer = nullptr;
 	challengelayer = nullptr;
+	m_IsContinue = false;
 }
 
 GameMain :: ~GameMain()
@@ -568,7 +569,6 @@ void GameMain::updateHpShow(int hp)
 
 void GameMain::quitGameCallBack(QuitGameType type)
 {
-	
 	switch (type)
 	{
 	case QuitGameType::NONE:
@@ -592,6 +592,8 @@ void GameMain::quitGameCallBack(QuitGameType type)
 		}
 		break;
 	case QuitGameType::WinContinue:
+		m_IsContinue = true;
+		quitGameCallBack(QuitGameType::WinQuit);
 		break;
 	case QuitGameType::FailQuit:
 		break;
@@ -607,6 +609,11 @@ void GameMain::uiTouchEnable(bool flag)
 	m_pPageView->pTableView->tableView->setTouchEnabled(flag);
 	m_pPageView->_Enable = flag;
 	setAllBtnTouch(flag);
+	if (m_IsContinue&&flag)
+	{
+		m_IsContinue = false;
+		SCENE_CHANGE_FADE(SceneState::UIGameMissionSet);
+	}	
 }
 
 void GameMain::extractMoveMethod()
@@ -616,54 +623,26 @@ void GameMain::extractMoveMethod()
 
 void GameMain::extractOpenMethod(int nowProgress)
 {
-	//如果达到最终关卡,最终关卡是已开启关卡;
-//	if (ci_NormalMissionNum>nowProgress)
-//	{
-		//从关卡Id上做文章;
-		//int cellId = 3;
-// 		if (nowProgress%10)
-// 		{
-// 			cellId = ci_MapNum-1-nowProgress/10;
-// 		}
-// 		else
-// 		{
-// 			cellId = ci_MapNum-(nowProgress/10);
-// 		}
+	if (ci_NormalMissionNum>nowProgress)
+	{
 		GameUIData::getInstance()->setNormalMissionProgress(nowProgress+1);
-		//1-9;
-		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->cellAtIndex(cellId)->getChildByTag(nowProgress+1000) ) )->setMissionState(GameMissionState::MISSION_OPEN);
-		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->cellAtIndex(cellId)->getChildByTag(nowProgress+1+1000) ) )->setMissionState(GameMissionState::MISSION_NOW);
-
-//		m_pPageView->pTableView->vec_normalMission.at(ci_NormalMissionNum-nowProgress)->setMissionState(GameMissionState::MISSION_OPEN);
-//		m_pPageView->pTableView->vec_normalMission.at(ci_NormalMissionNum-1-nowProgress)->setMissionState(GameMissionState::MISSION_NOW);
-		
-		//9-nowProgress%10
-		//8-nowProgress%10
-// 		if (nowProgress%10==1)
-// 		{
-// 			m_pPageView->pTableView->vec_normalMission.at(9)->setMissionState(GameMissionState::MISSION_OPEN);
-// 			m_pPageView->pTableView->vec_normalMission.at(8)->setMissionState(GameMissionState::MISSION_NOW);
-// 		}
-// 		else if (!(nowProgress%10))
-// 		{
-// 			m_pPageView->pTableView->vec_normalMissionBack.at(0)->setMissionState(GameMissionState::MISSION_OPEN);
-// 			m_pPageView->pTableView->vec_normalMission.at(9)->setMissionState(GameMissionState::MISSION_NOW);
-// 		}
-// 		else
-// 		{
-// 			m_pPageView->pTableView->vec_normalMissionBack.at(10-nowProgress%10)->setMissionState(GameMissionState::MISSION_OPEN);
-// 			m_pPageView->pTableView->vec_normalMissionBack.at(9-nowProgress%10)->setMissionState(GameMissionState::MISSION_NOW);
-// 		}
-		//m_pPageView->pTableView->vec_normalMission.at(4)->setMissionState(GameMissionState::MISSION_OPEN);//10-nowProgress
-		//m_pPageView->pTableView->vec_normalMission.at(3)->setMissionState(GameMissionState::MISSION_NOW);//10-1-nowProgress
-
-		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->getChildByTag(nowProgress+1000) ) )->setMissionState(GameMissionState::MISSION_OPEN);
-		//( (GameNormalMission*)( m_pPageView->pTableView->tableView->getChildByTag(nowProgress+1+1000) ) )->setMissionState(GameMissionState::MISSION_NOW);
-//	}
-//	else
-//	{
-//		m_pPageView->pTableView->vec_normalMission.at(0)->setMissionState(GameMissionState::MISSION_OPEN);
-//	}
+		GameUIData::getInstance()->setCurNormalMission(nowProgress+1);
+		if (nowProgress%10)
+		{ 
+			m_pPageView->pTableView->m_mapNormalMission.at(nowProgress/10).at(10-nowProgress%10)->setMissionState(GameMissionState::MISSION_OPEN);
+			m_pPageView->pTableView->m_mapNormalMission.at(nowProgress/10).at(9-nowProgress%10)->setMissionState(GameMissionState::MISSION_NOW);
+		}
+		else
+		{
+			m_pPageView->pTableView->m_mapNormalMission.at(nowProgress/10 - 1).at(0)->setMissionState(GameMissionState::MISSION_OPEN);
+			m_pPageView->pTableView->m_mapNormalMission.at(nowProgress/10).at(9)->setMissionState(GameMissionState::MISSION_NOW);
+		}
+	}
+	else
+	{
+		//如果达到最终关卡,最终关卡是已开启关卡;
+		m_pPageView->pTableView->m_mapNormalMission.at(nowProgress/10-1).at(0)->setMissionState(GameMissionState::MISSION_OPEN);
+	}
 }
 
 void GameMain::startHpTimer()

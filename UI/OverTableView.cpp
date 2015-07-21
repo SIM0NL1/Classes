@@ -22,11 +22,15 @@ OverTableView::OverTableView()
     fileMap = false;
     m_pMengBan = nullptr;
 	vec_normalMission.clear();
+	vec_normalMissionBack.clear();
+	m_mapNormalMission.clear();
 }
 
 OverTableView::~OverTableView()
 {
 	vec_normalMission.clear();
+	vec_normalMissionBack.clear();
+	m_mapNormalMission.clear();
 }
 
 // on "init" you need to initialize your instance
@@ -46,6 +50,13 @@ bool OverTableView::init()
     tableView->reloadData();
     tableView->setBounceable(true);
     tableView->cellAtIndex(0);
+
+	vec_normalMission.resize(10);
+	for (unsigned int i=0;i<5;i++)
+	{
+		m_mapNormalMission[i] = vec_normalMission;
+	}
+
     return true;
 }
 
@@ -104,6 +115,16 @@ TableViewCell* OverTableView::tableCellAtIndex(TableView *table,ssize_t idx)
 	label_right->setPosition(Point(50+639, 0));
 	label_right->setColor(Color3B(0,0,0));
 	//cell->addChild(label_right);
+
+// 	vec_normalMissionBack.clear();
+// 	for (int i=0;i<vec_normalMission.size();i++)
+// 	{
+// 		vec_normalMissionBack.push_back(vec_normalMission.at(i));
+// 	}
+
+	vec_normalMission.clear();
+	m_mapNormalMission[idx].clear();
+
 	//布置普通关卡;
 	if (idx>=ci_MapNum-ci_NormalMissionNum/10)	//如果130关，就是13，但必须是10的整数倍;
 	{
@@ -118,12 +139,15 @@ TableViewCell* OverTableView::tableCellAtIndex(TableView *table,ssize_t idx)
 			Vec2 temp=GameUIData::getInstance()->getNormalMissionPos(missionId);
 			mission_left->setPosition(temp);
 			cell->addChild(mission_left);
+
 			vec_normalMission.push_back(mission_left);
+			
 			mission_left->setMissionPorperty(missionId);
 			mission_left->missionShow(missionId);
 			GameFunctions::getInstance()->vertexZ(&mission_left,false);
 			--missionId;
 		}
+		m_mapNormalMission[ci_MapNum-1-idx]=vec_normalMission;
 	}
 
 	// 特殊关卡蒙灰;
@@ -172,7 +196,7 @@ ssize_t OverTableView::numberOfCellsInTableView(TableView *table)
 // 触摸事件;
 void OverTableView::tableCellTouched(TableView* table, TableViewCell* cell)
 {
-    //log("第%zi个单元格;", cell->getIdx());
+    log("(@o@) cell Id = %d ", cell->getIdx());
     //tableView->setContentOffset(Vec2(0,tableView->getContentOffset().y-20.f));
 }
 
