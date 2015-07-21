@@ -336,68 +336,51 @@ void GameUILayer::initData()
 
 void GameUILayer::initBG()
 {
-    auto sprSkillBG = Sprite::create("map01_003.png");
+    auto sprSkillBG = Sprite::create(RESOURCETEST(3));//"map01_003.png"
     sprSkillBG->setPosition(VisibleRect::bottom() + Vec2(0, sprSkillBG->getBoundingBox().size.height/2));
     this->addChild(sprSkillBG,6);
     
-    auto sprGameBG = Sprite::create("map01_001.png");
+    auto sprGameBG = Sprite::create(RESOURCETEST(1));//"map01_001.png"
     sprGameBG->setPosition(VisibleRect::bottom() + Vec2(0, sprGameBG->getBoundingBox().size.height/2));
     this->addChild(sprGameBG,5);
     
-    sprTree = Sprite::create("map01_002.png");
+    sprTree = Sprite::create(RESOURCETEST(2));//"map01_002.png"
     sprTree->setPosition(Vec2(0, sprGameBG->getPositionY()) + Vec2(0, sprGameBG->getBoundingBox().size.height/2));
     sprTree->setAnchorPoint(Vec2::ZERO);
     this->addChild(sprTree,8);
-
+    
     cloudScroll();
-
-    auto sprTree_1 = Sprite::create("map01_002.png");
+    
+    auto sprTree_1 = Sprite::create(RESOURCETEST(2));//"map01_002.png"
     sprTree_1->setPosition(Vec2(sprTree->getContentSize().width,0));
     sprTree_1->setAnchorPoint(Vec2::ZERO);
     sprTree->addChild(sprTree_1);
     
-    auto sprSky = Sprite::create("map01_008.png");
+    auto sprSky = Sprite::create(RESOURCETEST(8));//"map01_008.png"
     sprSky->setPosition(sprTree->getPosition());
     sprSky->setAnchorPoint(Vec2::ZERO);
     this->addChild(sprSky,7);
     
-    auto sprMontain = Sprite::create("map01_007.png");
+    auto sprMontain = Sprite::create(RESOURCETEST(7));//"map01_007.png"
     sprMontain->setPosition(sprTree->getPosition());
     sprMontain->setAnchorPoint(Vec2::ZERO);
     this->addChild(sprMontain,6);
     
-    auto sprCloud = Sprite::create("map01_006.png");
+    auto sprCloud = Sprite::create(RESOURCETEST(6));//"map01_006.png"
     sprCloud->setPosition(sprTree->getPosition());
     sprCloud->setAnchorPoint(Vec2::ZERO);
     this->addChild(sprCloud,5);
     
-    auto sprState1 = Sprite::create("map01_005.png");
+    auto sprState1 = Sprite::create(RESOURCETEST(5));//"map01_005.png"
     sprState1->setPosition(sprTree->getPosition());
     sprState1->setAnchorPoint(Vec2::ZERO);
     this->addChild(sprState1,4);
-
+    
     auto cloud = Armature::create("xmap01_stone");
     cloud->getAnimation()->playWithIndex(0);
     cloud->setPosition(VisibleRect::top() - Vec2(0 , 160));
     this->addChild(cloud,3);
-//
-//    auto light = Armature::create("map01_line");
-//    light->getAnimation()->playWithIndex(0);
-//    light->setPosition(VisibleRect::top() - Vec2(300, sprCloud->getBoundingBox().size.height/2));
-//    this->addChild(light,3);
     
-//    auto sprState3 = Sprite::create("map01_taizi.png");
-//    sprState3->setPosition(sprGameBG->getPosition() + Vec2(-1.4*sprState3->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState3->getBoundingBox().size.height/3));
-//    this->addChild(sprState3,4);
-//    
-//    auto sprState4 = Sprite::create("map01_taizi.png");
-//    sprState4->setPosition(sprGameBG->getPosition() + Vec2(2.8*sprState4->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState4->getBoundingBox().size.height*0));
-//    this->addChild(sprState4,4);
-//    
-//    auto sprState5 = Sprite::create("map01_taizi.png");
-//    sprState5->setPosition(sprGameBG->getPosition() + Vec2(-2.8*sprState5->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState5->getBoundingBox().size.height*0));
-//    this->addChild(sprState5,4);
-
     if (!DataCenter::getInstance()->getTimeLimit())
     {
         sprSky->runAction(Sequence::create(DelayTime::create(0.5),MoveTo::create(3, Vec2(sprSky->getPositionX() - sprSky->getBoundingBox().size.width + 640, sprSky->getPositionY())), NULL));
@@ -406,61 +389,6 @@ void GameUILayer::initBG()
         sprCloud->runAction(Sequence::create(DelayTime::create(0.5), MoveTo::create(3, Vec2(sprCloud->getPositionX() - sprCloud->getBoundingBox().size.width + 640, sprCloud->getPositionY())),NULL));
         sprState1->runAction(Sequence::create(DelayTime::create(0.5), MoveTo::create(3, Vec2(sprState1->getPositionX() - sprState1->getBoundingBox().size.width + 640, sprState1->getPositionY())),CallFunc::create(CC_CALLBACK_0(GameUILayer::addBoss,this)),NULL));
     }
-    
-//    auto sprSkillBG = Sprite::create("map01_00.png");
-//    sprSkillBG->setPosition(VisibleRect::bottom() + Vec2(0, sprSkillBG->getBoundingBox().size.height/2));
-//    this->addChild(sprSkillBG,6);
-//    
-//    auto sprGameBG = Sprite::create("map01_01.png");
-//    sprGameBG->setPosition(VisibleRect::bottom() + Vec2(0, sprGameBG->getBoundingBox().size.height/2));
-//    this->addChild(sprGameBG,5);
-//    
-//    auto sprTree = Sprite::create("map01_02.png");
-//    sprTree->setPosition(VisibleRect::top() + Vec2(0, -sprTree->getBoundingBox().size.height/2));
-//    this->addChild(sprTree,3);
-//    
-//    auto sprSky = Sprite::create("map01_05.png");
-//    sprSky->setPosition(VisibleRect::top() + Vec2(0, -sprSky->getBoundingBox().size.height/2));
-//    this->addChild(sprSky,0);
-//    
-//    auto sprMontain = Sprite::create("map01_03.png");
-//    sprMontain->setPosition(VisibleRect::top() + Vec2(0, -sprSky->getBoundingBox().size.height/2 - sprMontain->getBoundingBox().size.height/1.5));
-//    this->addChild(sprMontain,2);
-//    
-//    auto sprCloud = Sprite::create("map01_04.png");
-//    sprCloud->setPosition(VisibleRect::top() + Vec2(0, -sprCloud->getBoundingBox().size.height));
-////    this->addChild(sprCloud,1);
-//    
-//    auto cloud = Armature::create("map01_yun");
-//    cloud->getAnimation()->playWithIndex(0);
-//    cloud->setPosition(VisibleRect::top() + Vec2(0, -sprCloud->getBoundingBox().size.height));
-//    this->addChild(cloud,1);
-//    
-//    auto light = Armature::create("map01_line");
-//    light->getAnimation()->playWithIndex(0);
-//    light->setPosition(VisibleRect::top() - Vec2(300, sprCloud->getBoundingBox().size.height/2));
-//    this->addChild(light,3);
-//    
-//    auto sprState1 = Sprite::create("map01_taizi.png");
-//    sprState1->setPosition(sprGameBG->getPosition() + Vec2(0, sprGameBG->getBoundingBox().size.height/2 - sprState1->getBoundingBox().size.height/2));
-//    this->addChild(sprState1,4);
-//    
-//    auto sprState2 = Sprite::create("map01_taizi.png");
-//    sprState2->setPosition(sprGameBG->getPosition() + Vec2(1.4*sprState2->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState2->getBoundingBox().size.height/3));
-//    this->addChild(sprState2,4);
-//    
-//    auto sprState3 = Sprite::create("map01_taizi.png");
-//    sprState3->setPosition(sprGameBG->getPosition() + Vec2(-1.4*sprState3->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState3->getBoundingBox().size.height/3));
-//    this->addChild(sprState3,4);
-//    
-//    auto sprState4 = Sprite::create("map01_taizi.png");
-//    sprState4->setPosition(sprGameBG->getPosition() + Vec2(2.8*sprState4->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState4->getBoundingBox().size.height*0));
-//    this->addChild(sprState4,4);
-//    
-//    auto sprState5 = Sprite::create("map01_taizi.png");
-//    sprState5->setPosition(sprGameBG->getPosition() + Vec2(-2.8*sprState5->getBoundingBox().size.width, sprGameBG->getBoundingBox().size.height/2 - sprState5->getBoundingBox().size.height*0));
-//    this->addChild(sprState5,4);
-
 }
 
 void GameUILayer::initTop()
@@ -1502,17 +1430,16 @@ void GameUILayer::undateCloud(float t)
 
 void GameUILayer::cloudScroll()
 {
-	m_pCloud1 = Sprite::create("map01_004.png");
-	m_pCloud1->setPosition(sprTree->getPosition());
-	m_pCloud1->setAnchorPoint(Vec2::ZERO);
-	this->addChild(m_pCloud1,3);
-
-	if (!DataCenter::getInstance()->getTimeLimit())
-	{
-		m_pCloud2 = Sprite::create("map01_004.png");
-		m_pCloud2->setPosition(Vec2(m_pCloud2->getContentSize().width,m_pCloud1->getPositionY()));
-		m_pCloud2->setAnchorPoint(Vec2::ZERO);
-		this->addChild(m_pCloud2,3);
-		this->schedule(CC_SCHEDULE_SELECTOR(GameUILayer::undateCloud));
-	}
-}
+    m_pCloud1 = Sprite::create(RESOURCETEST(4));//"map01_004.png"
+    m_pCloud1->setPosition(sprTree->getPosition());
+    m_pCloud1->setAnchorPoint(Vec2::ZERO);
+    this->addChild(m_pCloud1,3);
+    
+    if (!DataCenter::getInstance()->getTimeLimit())
+    {
+        m_pCloud2 = Sprite::create(RESOURCETEST(4));//"map01_004.png"
+        m_pCloud2->setPosition(Vec2(m_pCloud2->getContentSize().width,m_pCloud1->getPositionY()));
+        m_pCloud2->setAnchorPoint(Vec2::ZERO);
+        this->addChild(m_pCloud2,3);
+        this->schedule(CC_SCHEDULE_SELECTOR(GameUILayer::undateCloud));
+    }}

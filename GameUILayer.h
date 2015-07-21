@@ -48,7 +48,6 @@ public:
 
 	void cloudScroll();
 
-
     void initTop();
     
     void initData();

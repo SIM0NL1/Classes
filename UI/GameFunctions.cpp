@@ -7,6 +7,7 @@
 //  单例实现;
 
 #include "GameFunctions.h"
+#include "GameUIData.h"
 
 GameFunctions* GameFunctions :: m_self = nullptr;
 
@@ -42,6 +43,20 @@ const char* GameFunctions::readResourcesPath(string fileName)
 	//设置资源路径统一接口，方便后期操作;
 	GameFunctions::getInstance()->m_sFilePath="UI/"+fileName;		//防止资源路径修改;
 	return GameFunctions::getInstance()->m_sFilePath.c_str();
+}
+
+const char* GameFunctions::readResourcesPathTest(int fileName)
+{
+	if(GameUIData::getInstance()->getCurNormalMission()%2)
+	{
+		return __String::createWithFormat("map01_00%d.png",fileName)->getCString();
+	}
+	else
+	{
+		string name = __String::createWithFormat("xmap00_00%d.png",fileName)->getCString();
+		GameFunctions::getInstance()->m_sFilePath="UI/test/"+name;		//防止资源路径修改;
+		return GameFunctions::getInstance()->m_sFilePath.c_str();
+	}
 }
 
 void GameFunctions::initSoldierType()

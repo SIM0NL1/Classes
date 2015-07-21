@@ -18,6 +18,7 @@
 
 //读取资源;
 #define RESOURCE(_STR_PATH_) GameFunctions::getInstance()->readResourcesPath(_STR_PATH_)
+#define RESOURCETEST(_STR_PATH_) GameFunctions::getInstance()->readResourcesPathTest(_STR_PATH_)
 
 class GameFunctions : public Ref
 {
@@ -25,6 +26,7 @@ public:
 	static GameFunctions* getInstance();
 	static void deleteGameFunctions();
 	const char* readResourcesPath(string fileName);
+	const char* readResourcesPathTest(int fileName);
 	string g_sChineseName;
     CC_SYNTHESIZE(float,verticalOffset,VerticalOffset);
 	string soldierTypeName[5][5];
