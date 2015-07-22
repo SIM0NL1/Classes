@@ -10,7 +10,7 @@ Node*										Gem::_mapNode = NULL;
 vector<AnimationWraper>*                    Gem::_animationWraperVector = NULL;
 vector<MyPoint>*                            Gem::_emptyPointVector = NULL;
 vector<ConnectionArea>*                     Gem::_connectionAreaVector=NULL;
-int											Gem::_grassguyCount = 0;
+int											Gem::_specialCount = 0;
 vector<Gem*>                                Gem::_vecRemoveGem = {};
 
 
@@ -64,19 +64,10 @@ Gem* Gem::createRandomGem(Node* layer,Point point,bool visible)
     
     GemType fType;
     
-    if(/*_mapInfo->isHasSeed()*/false)
+    if(_specialCount == 0 && false)
     {
-        //if(_grassguyCount<2)
-        // {
-        //      fType = grassguy;
-        // }
-        // else
-        // 	{
-        //      do{
-        // 			index = arc4random()%_mapInfo->getNumOfGemType();
-        // 			fType = (GemType)_mapInfo->getGemTypeArray()[index];
-        // 		}while(fType==grassguy);
-        // 	}
+        
+        fType = special;
     }
     else
     {
@@ -106,7 +97,7 @@ void Gem::setMapInfo(Node *particleNode,Node* mapNode, Gem ***matrix, MapInfo *m
     
     _connectionAreaVector = connectVector;
     
-    _grassguyCount = 0;
+    _specialCount = 0;
 }
 
 void Gem::addCollectGemScore()
@@ -232,25 +223,21 @@ void Gem::removeNoCollect(bool playMusic)
     
     if (i < kMatrixWidth && j < kMatrixWidth)
     {
-        if(i-1>=0&&_gemStoneMatrix[i-1][j]&&_gemStoneMatrix[i-1][j]->getGemType() == fog)
+        if(i-1>=0&&_gemStoneMatrix[i-1][j])
         {
-            Fog *fg = (Fog*)_gemStoneMatrix[i-1][j];
-            fg->changeState(0);
+            _gemStoneMatrix[i-1][j]->changeState(0);
         }
-        if(i+1<kMatrixWidth&&_gemStoneMatrix[i+1][j]&&_gemStoneMatrix[i+1][j]->getGemType() == fog)
+        if(i+1<kMatrixWidth&&_gemStoneMatrix[i+1][j])
         {
-            Fog *fg = (Fog*)_gemStoneMatrix[i+1][j];
-            fg->changeState(0);
+            _gemStoneMatrix[i+1][j]->changeState(0);
         }
-        if(j-1>=0&&_gemStoneMatrix[i][j-1]&&_gemStoneMatrix[i][j-1]->getGemType() == fog)
+        if(j-1>=0&&_gemStoneMatrix[i][j-1])
         {
-            Fog *fg = (Fog*)_gemStoneMatrix[i][j-1];
-            fg->changeState(0);
+            _gemStoneMatrix[i][j-1]->changeState(0);
         }
-        if(j+1<kMatrixWidth&&_gemStoneMatrix[i][j+1]&&_gemStoneMatrix[i][j+1]->getGemType() == fog)
+        if(j+1<kMatrixWidth&&_gemStoneMatrix[i][j+1])
         {
-            Fog *fg = (Fog*)_gemStoneMatrix[i][j+1];
-            fg->changeState(0);
+            _gemStoneMatrix[i][j+1]->changeState(0);
         }
     }
     
@@ -873,9 +860,9 @@ void Gem::dealWithSkill()
     }
     else
     {
-        arm->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::gemBright, this));
+        arm->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
         arm->setTag(888);
-//        this->runAction(Sequence::create(DelayTime::create(0.5),CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
+        this->runAction(Sequence::create(/*DelayTime::create(0.2),*/CallFuncN::create(CC_CALLBACK_1(Gem::gemBright, this)), NULL));
     }
     
     if (_skill == SkillAround1 || _skill == SkillAround3)
@@ -1856,7 +1843,7 @@ void Gem::aroundAnimation(Node *pSender)
 void Gem::gemBright(Node *pSender)
 {
     CCLOG("pSender->getTag() = %d" , pSender->getTag());
-    pSender->removeFromParentAndCleanup(true);
+//    pSender->removeFromParentAndCleanup(true);
     
     MyPoint mp = getCurrentIndex(this->getPosition());
     

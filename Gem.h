@@ -43,7 +43,7 @@ protected:
     
     static vector<ConnectionArea>* _connectionAreaVector;
     
-    static int                  _grassguyCount;
+    static int                  _specialCount;
     
     static vector<Gem*>         _vecRemoveGem;
     
@@ -127,6 +127,8 @@ public:
     GemType                     getGemType();//取水果类型返回
     
     void                        setGemType();
+    
+    void                        setGemType(GemType type){_type = type;}
     
     GemSkill                    getGemSkill();
     
@@ -236,7 +238,9 @@ public:
     
     void                        addRestrain();
     
-    GemKind                   getGemKind(){return _GemKind;}
+    GemKind                     getGemKind(){return _GemKind;}
+    
+    void                        setGemKind(GemKind kind){_GemKind = kind;}
     
     int                         getFrozen(){return _frozen;}
     int                         getRestrain(){return _restrain;}
@@ -348,6 +352,8 @@ public:
     virtual void                afterMatch(int i,int j);//消除之后收尾
     
     virtual void                growOnFertile(int i,int j);
+    
+    virtual void                changeState(int state){}
     
     //道具
     void                        propSingle();
@@ -507,7 +513,6 @@ public:
     void                        createFog(int i ,int j , int distance);
 };
 
-//
  class DragonTooth : public Gem
  {
  public:
@@ -558,6 +563,23 @@ public:
     void                        setSick(bool s){}
     void                        addScore(int count,bool isAffect){}
     void                        idle(){}
+};
+
+class Special : public Gem
+{
+public:
+    Special();
+    bool                        createGemSprite( Node *layer,  Point point,bool visible);
+    bool                        canMove();
+    bool                        equal(Gem* Gem);
+    void                        setSick(bool s){}
+    void                        highLight(){};
+    void                        addScore(int count,bool isAffect){}
+    void                        idle();
+    void                        beforeMatch(int i,int j);
+    void                        affected(int count);
+    void                        changeState(int state);
+    void                        selected(){};
 };
 
 #endif  //__DRAGONEGGTRIPLE_GEM_H__
