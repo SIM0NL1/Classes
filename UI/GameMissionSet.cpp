@@ -11,6 +11,7 @@
 #include "../DataCenter.h"
 #include "GameUIData.h"
 #include "GameMusicControl.h"
+#include "GameUIData.h"
 
 extern GameMissionSet* g_pGameMissionSet = nullptr;
 GameMissionSet::GameMissionSet():m_btnStart(nullptr),m_btnExit(nullptr),m_labHpCoin(nullptr),m_labTimer(nullptr)
@@ -130,8 +131,7 @@ void GameMissionSet::onBtnStart()
     }
 	else
 	{
-		//MessageBox(" Lack of Energy ","Warning");
-        MessageBox("体力不足","提示");
+		MessageBox("体力不足","提示");
 		return;
 	}
 }
@@ -175,13 +175,14 @@ void GameMissionSet::startHpTimer()
 	time(&t);
 	unsigned int now = t;	//本次系统时间;
 	unsigned int previous =  GameUIData::getInstance()->getLongIntegerForKey(cs_PreHpTimer.c_str(),now);	//上次系统时间;
+	//刷新时间;
 	m_nHp = (m_nHp+(now-previous)/ci_HpSecond)>60 ? 60 : (m_nHp+(now-previous)/ci_HpSecond);
 	GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_nHp);
 	m_labHpCoin->setString(__String::createWithFormat("%d:60",m_nHp)->getCString());
 	int hp = ci_HP_MAX-m_nHp;
+
 	if (now-previous>=hp*ci_HpSecond)	//已经回复满;
 	{
-		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),now);
 		m_labTimer->setVisible(false);
 	}
 	else
@@ -202,12 +203,11 @@ void GameMissionSet::updateHp(float t)
 {
 	time_t longTime;
 	time(&longTime);
-	long temp = longTime;
+	unsigned int temp = longTime;
 	m_nHp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str());
 	if (temp-long_time >= 1)//1
 	{
 		long_time = temp;
-		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),long_time);
 		--m_nSec;
 		if (m_nSec<0)
 		{
@@ -215,6 +215,9 @@ void GameMissionSet::updateHp(float t)
 			if (m_nMin<0)
 			{
 				GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_nHp+1);
+				//记录;
+				GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),temp);
+
 				m_labHpCoin->setString(__String::createWithFormat("%d:60",m_nHp)->getCString());
 				if (m_nHp+1==60)
 				{

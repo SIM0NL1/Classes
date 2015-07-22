@@ -651,13 +651,14 @@ void GameMain::startHpTimer()
 	time(&t);
 	unsigned int now = t;	//本次系统时间;
 	unsigned int previous =  GameUIData::getInstance()->getLongIntegerForKey(cs_PreHpTimer.c_str(),now);	//上次系统时间;
+	//刷新时间;
 	m_hp = (m_hp+(now-previous)/ci_HpSecond)>60 ? 60 : (m_hp+(now-previous)/ci_HpSecond);
 	GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_hp);
 	updateHpShow(m_hp);
 	int hp = ci_HP_MAX-m_hp;
+
 	if (now-previous>=hp*ci_HpSecond)	//已经回复满;
 	{
-		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),now);
 		m_labTimer->setVisible(false);
 	}
 	else
@@ -678,12 +679,11 @@ void GameMain::updateHp(float t)
 {
 	time_t longTime;
 	time(&longTime);
-	long temp = longTime;
+	unsigned int temp = longTime;
 	m_hp = GameUIData::getInstance()->getIntegerForKey(cs_CurUserHp.c_str());
 	if (temp-long_time >= 1)//1
 	{
 		long_time = temp;
-		GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),long_time);
 		--m_nSec;
 		if (m_nSec<0)
 		{
@@ -691,6 +691,9 @@ void GameMain::updateHp(float t)
 			if (m_nMin<0)
 			{
 				GameUIData::getInstance()->setIntegerForKey(cs_CurUserHp.c_str(),m_hp+1);
+				//记录;
+				GameUIData::getInstance()->setLongIntegerForKey(cs_PreHpTimer.c_str(),temp);
+
 				updateHpShow(m_hp);
 				if (m_hp+1==60)
 				{
