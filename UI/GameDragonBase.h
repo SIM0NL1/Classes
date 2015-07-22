@@ -41,15 +41,12 @@ public:
 
 	//二次加载;
 	bool m_bIsLock;				//是否解锁
-	//伤害值;
 
-	//实例化;
 public:
 	GameDragonBase();
 	virtual ~GameDragonBase();
 	void initAttribute();
 
-private:
 };
 
 #endif

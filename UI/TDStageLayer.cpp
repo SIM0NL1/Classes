@@ -324,11 +324,11 @@ void TDStageLayer::getScoreAndStart(int& score,int& start)
 	//1.判断当前关卡是不是进度关卡，如果是则保存进度加一，是不是都刷新关卡数据，注意数据取最优值保存;
 	//2.不用管当前正在玩的关卡，这个实在点击按钮时就确定的;
 	int nowPlay = GameUIData::getInstance()->getCurNormalMission();
- 	int nowProgress = GameUIData::getInstance()->getNormalMissionProgress();
- 	if ( nowPlay==nowProgress )
- 	{
- 		GameUIData::getInstance()->setNormalMissionProgress(nowProgress+1);
- 	}
+// 	int nowProgress = GameUIData::getInstance()->getNormalMissionProgress();
+// 	if ( nowPlay==nowProgress )
+// 	{
+// 		GameUIData::getInstance()->setNormalMissionProgress(nowProgress+1);
+// 	}
 	//刷新数据;
 	MissionPro temp;
 	temp.id = nowPlay;

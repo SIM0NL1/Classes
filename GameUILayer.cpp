@@ -12,11 +12,13 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 #include "PropNode.h"
-#include "UI/GameUIData.h"
+
 using namespace CocosDenshion;
 
+#include "UI/GameUIData.h"
 #include "UI/GameSceneState.h"
 #include "UI/TDStageLayer.h"
+#include "UI/GameMain.h"
 
 GameUILayer::GameUILayer()
 :m_pGameLayer(NULL)
@@ -379,7 +381,10 @@ void GameUILayer::initBG()
     auto cloud = Armature::create("xmap01_stone");
     cloud->getAnimation()->playWithIndex(0);
     cloud->setPosition(VisibleRect::top() - Vec2(0 , 160));
-    this->addChild(cloud,3);
+    if (GameUIData::getInstance()->getCurNormalMission()%2)
+    {
+        this->addChild(cloud,3);
+    }
     
     if (!DataCenter::getInstance()->getTimeLimit())
     {
@@ -810,6 +815,7 @@ void GameUILayer::quitGame(Ref *pSender,QuitGameType type)
     TDStageLayer::getInstance()->destroyInstance();
     SCENE_CHANGE_NORMAL(SceneState::UIGameMain);
     //传递type;
+    g_pGameMain->quitGameCallBack(type);
 }
 
 void GameUILayer::continueGame(Ref *pSender, Node *pNode)
@@ -1086,7 +1092,10 @@ void GameUILayer::limitOperatiomNum()
         {
             //TD接口;
             CCLOG("m_iOneScore = %d",m_iOneScore);
-            TDStageLayer::getInstance()->soldierFactory(m_iOneScore);
+            if (m_iOneScore>=60)
+            {
+                TDStageLayer::getInstance()->soldierFactory(m_iOneScore);
+            }
             m_iOneScore = 0;
         }
     }
@@ -1442,4 +1451,5 @@ void GameUILayer::cloudScroll()
         m_pCloud2->setAnchorPoint(Vec2::ZERO);
         this->addChild(m_pCloud2,3);
         this->schedule(CC_SCHEDULE_SELECTOR(GameUILayer::undateCloud));
-    }}
+    }
+}

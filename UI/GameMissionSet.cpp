@@ -130,7 +130,8 @@ void GameMissionSet::onBtnStart()
     }
 	else
 	{
-		MessageBox(" Lack of Energy ","Warning");
+		//MessageBox(" Lack of Energy ","Warning");
+        MessageBox("体力不足","提示");
 		return;
 	}
 }
