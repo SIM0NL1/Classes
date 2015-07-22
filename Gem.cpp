@@ -365,7 +365,7 @@ void Gem::createSkill()
                     }
 
 
-                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                    _gemStoneMatrix[i][j]->gemMoveCenter(Vec2(it->centerPoint.x * kElementSize + kStartX + kElementSize/2, it->centerPoint.y * kElementSize + kStartY + kElementSize/2));
                 }
                 continue;
             }
@@ -390,7 +390,7 @@ void Gem::createSkill()
                         continue;
                     }
 
-                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                    _gemStoneMatrix[i][j]->gemMoveCenter(Vec2(it->centerPoint.x * kElementSize + kStartX + kElementSize/2, it->centerPoint.y * kElementSize + kStartY + kElementSize/2));
                 }
             }
             if (it->count >= 5)
@@ -413,7 +413,7 @@ void Gem::createSkill()
                         continue;
                     }
 
-                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                    _gemStoneMatrix[i][j]->gemMoveCenter(Vec2(it->centerPoint.x * kElementSize + kStartX + kElementSize/2, it->centerPoint.y * kElementSize + kStartY + kElementSize/2));
                 }
             }
         }
@@ -440,7 +440,7 @@ void Gem::createSkill()
                         continue;
                     }
 
-                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                    _gemStoneMatrix[i][j]->gemMoveCenter(Vec2(it->centerPoint.x * kElementSize + kStartX + kElementSize/2, it->centerPoint.y * kElementSize + kStartY + kElementSize/2));
                 }
                 continue;
             }
@@ -463,7 +463,7 @@ void Gem::createSkill()
                         continue;
                     }
 
-                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                    _gemStoneMatrix[i][j]->gemMoveCenter(Vec2(it->centerPoint.x * kElementSize + kStartX + kElementSize/2, it->centerPoint.y * kElementSize + kStartY + kElementSize/2));
                 }
             }
             if (it->count >= 5)
@@ -485,7 +485,7 @@ void Gem::createSkill()
                         continue;
                     }
 
-                    _gemStoneMatrix[i][j]->gemMoveCenter(_gemStoneMatrix[it->centerPoint.x][it->centerPoint.y]->getPosition());
+                    _gemStoneMatrix[i][j]->gemMoveCenter(Vec2(it->centerPoint.x * kElementSize + kStartX + kElementSize/2, it->centerPoint.y * kElementSize + kStartY + kElementSize/2));
                 }
             }
             
@@ -502,7 +502,7 @@ void Gem::gemMoveCenter(Point pos)
     {
         pos = pos - this->getPosition() ;
         _state = -1;
-        _spr->runAction(Sequence::create(MoveTo::create(0.15, pos),CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, _spr)),NULL));
+        _spr->runAction(Sequence::create(MoveTo::create(0.25, pos),CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, _spr)),NULL));
         gemMoveOver();
     }
     else
@@ -572,7 +572,7 @@ void Gem::gemMoveOver()
     }
 
     
-    this->runAction(Sequence::create(DelayTime::create(0.17),CallFunc::create(CC_CALLBACK_0(Gem::removeGem, this)),NULL));
+    this->runAction(Sequence::create(DelayTime::create(0.26),CallFunc::create(CC_CALLBACK_0(Gem::removeGem, this)),NULL));
 //    removeNoCollect(false);
 }
 
@@ -1343,6 +1343,7 @@ void Gem::displaySkill(Node *pSender)
             _skillSprite->setRotation(90);
         }
         _skillSprite->runAction(RepeatForever::create(action));
+        _spr->setZOrder(2);
     }
 }
 
@@ -1682,7 +1683,7 @@ void Gem::swap(Direction direction, bool reverse,bool isSelected,CallFunc* callb
     
     swapAction = GemAction::getInstance().getGemChangeAction(direction);
     
-    delayTime = DelayTime::create(0.08);
+    delayTime = DelayTime::create(0.1);
     
     GemAction* caller = &(GemAction::getInstance());
     
