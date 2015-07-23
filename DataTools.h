@@ -489,6 +489,10 @@ typedef enum
 
 typedef enum
 {
+    SkillLeft = -4,
+    SkillRight,
+    SkillTen,
+    SkillTurnTen,
     SkillNull = 0,
     SkillHorizontal,
     SkillVerticl,
