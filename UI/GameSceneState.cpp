@@ -12,6 +12,7 @@
 #include "GameUIData.h"
 #include "../GameUILayer.h"
 #include "GameMusicControl.h"
+#include "RoleDisplay.h"
 
 GameSceneState* GameSceneState::m_self;
 GameSceneState::GameSceneState()
@@ -69,8 +70,12 @@ void GameSceneState::switchScene(SceneState state,float t/*=0*/)
             scene = GameUILayer::gameScene();
             break;
         }
-        default:
-            break;
+		case SceneState::UIRoleDisplay:
+		{
+			scene = RoleDisplay::createScene();
+			break;
+		}
+        default:break;
 	}
 
 	//更新状态;
@@ -109,11 +114,12 @@ SceneState GameSceneState::getNowState() const
 	return m_stateNow;
 }
 
-
+//切换场景时,需要做的一些特殊处理;
 void GameSceneState::replaceSpecial()
 {
     if (m_stateLast == SceneState::UIGameMain)
     {
+		//关卡定位,地图模式定位;
         float offset = g_pGameMain->m_pPageView->pTableView->tableView->getContentOffset().y;
         GameUIData::getInstance()->setVerticalGps(offset);
         int index = g_pGameMain->m_pPageView->getCurPageIndex();
@@ -121,6 +127,7 @@ void GameSceneState::replaceSpecial()
     }
     else if (m_stateLast == SceneState::DDGameUILayer)
     {
+		//背景音乐切换;
         GameMusicControl::getInstance()->musicOn();
     }
 }

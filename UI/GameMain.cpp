@@ -487,13 +487,14 @@ void GameMain::onBtnAchievement()
 void GameMain::onBtnMagicBox()
 {
 	log("********GameMain::onBtnMagicBox**********");
-    GameMusicControl::getInstance()->btnPlay(1);
+    GameMusicControl::getInstance()->btnPlay(1);	
 }
 
 void GameMain::onBtnRole()
 {
 	log("********GameMain::onBtnRole**********");
     GameMusicControl::getInstance()->btnPlay(1);
+	SCENE_CHANGE_FADE(SceneState::UIRoleDisplay);
 }
 
 void GameMain::onBtnEndless()
@@ -503,7 +504,6 @@ void GameMain::onBtnEndless()
     DataCenter::getInstance()->setTimeLimit(true);
     DataCenter::getInstance()->initMapInfo(0);
     SCENE_CHANGE_NORMAL(SceneState::DDGameUILayer);
-    //Director::getInstance()->replaceScene(GameUILayer::gameScene());
 }
 
 void GameMain::onBtnRegisterLeft()

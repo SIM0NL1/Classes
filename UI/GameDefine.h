@@ -42,11 +42,11 @@ const string csMSG_HP = "TackOFFHP";
 const string csMSG_HPTIMER = "HPTimer";
 
 //安全路径;
-//#define _JSON_PATH_  FileUtils::getInstance()->getWritablePath().append("userdata.json")
+#define _JSON_PATH_  FileUtils::getInstance()->getWritablePath().append("userdata.json")
 //#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 //const string _JSON_PATH_ = "UI/uidata/userdata.json";
 //#elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-const string _JSON_PATH_ = "/Users/b081mac/Documents/Project/DragonGame/Resources/UI/uidata/userdata.json";
+//const string _JSON_PATH_ = "/Users/b081mac/Documents/Project/DragonGame/Resources/UI/uidata/userdata.json";
 //#endif
 
 //userData中的key值;
@@ -78,10 +78,11 @@ enum GameTag
 enum class SceneState
 {
     UIGameNone,
-    UIGameEnter,
-    UIGameMain,
-    UIGameMissionSet,
-    DDGameUILayer,
+    UIGameEnter,		//入口;
+    UIGameMain,			//大地图;
+    UIGameMissionSet,	//游戏开始之前,关卡配置;
+    DDGameUILayer,		//游戏界面;
+	UIRoleDisplay,		//角色界面;
 };
 //关卡状态;
 enum class GameMissionState

@@ -11,15 +11,56 @@
 
 #include "GameFunctions.h"
 
+//控件类,每种角色控件,包括底图,按钮,动画,数据等;
+enum RoleWidgetBtnTag
+{
+	RoleWidgetBtnRole,
+	RoleWidgetBtnFight,
+};
+
+class RoleWidget : public Layout
+{
+public:
+	Sprite* m_roleBg;		//角色底图;
+	Button* m_roleBtn;		//角色按钮;
+	Button* m_roleFightBtn;	//角色出战按钮;
+	Sprite* m_roleFightSpr;	//角色已经出战图片;
+
+public:
+	CREATE_FUNC(RoleWidget);
+	void BtnCall(Ref* pSender,Widget::TouchEventType type);
+	void onBtnRole();
+	void onBtnFight();
+
+private:
+	RoleWidget();
+	virtual bool init();
+
+};
+
+//角色;
+enum RoleDisplayBtnTag
+{
+	RoleDisplayBtnExit,
+};
+
 class RoleDisplay : public Layer
 {
 public:
+	Button* m_btnExit;
+	vector<RoleWidget*> m_vecRoleWidget;
+
+public:
+	static Scene* createScene();
 	CREATE_FUNC(RoleDisplay);
 	void showUI();
 
+	void BtnCall(Ref* pSender,Widget::TouchEventType type);
+	void onBtnExit();
+
+
 private:
 	RoleDisplay();
-	static Scene* createScene();
 	virtual bool init();
 
 };
