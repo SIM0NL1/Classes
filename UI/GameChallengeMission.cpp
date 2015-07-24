@@ -16,7 +16,7 @@ GameChallengeMission::GameChallengeMission()
 	m_labMissionId = nullptr;
 	missionStartNum = 0;
 	m_size = Size::ZERO;
-
+	m_nMissionId = -1;
 }
 
 GameChallengeMission::~GameChallengeMission()
@@ -145,9 +145,12 @@ void GameChallengeMission::setBtnTouch(bool flag)
 
 void GameChallengeMission::onBtnCandle()
 {
-	int id = this->getTag();
+	int id = this->m_nMissionId;
 	log(" %d GameChallengeMission :: onBtnCandle",id);
     GameMusicControl::getInstance()->btnPlay(1);
+
+	GameUIData::getInstance()->setCurChallengeMission(id);
+	SCENE_CHANGE_FADE(SceneState::UIGameMissionSet);
 }
 
 void GameChallengeMission::setMissionPorperty(int id)
@@ -178,7 +181,7 @@ void GameChallengeMission::missionShow(int missionId)
 {
 	//根据ID获取星星数量
 
-	//设置星星显示
+	//设置星星显示;
 	static int startNum=1;
 	for (int i=1;i<=startNum;++i)
 	{

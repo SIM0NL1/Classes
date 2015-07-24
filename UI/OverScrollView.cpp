@@ -65,6 +65,7 @@ bool OverScrollView::init(OverScrollViewDelegate* delegate)
     }
     else
     {
+		current_index = 1;
         verticalGPS();
     }
 	pLayer->addChild(pTableView);
@@ -265,7 +266,7 @@ void OverScrollView::horizontalGPS(bool flag/*=true*/)
 void OverScrollView::verticalGPS()
 {
     int index = GameUIData::getInstance()->getVerticalIndex();
-    Vec2 vec = Vec2(-(current_index*640),0);
+    Vec2 vec = Vec2(-(index*640),0);
     this->setContentOffset(vec);
     g_pGameMain->ensureBtnFade(index);
     

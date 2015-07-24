@@ -52,17 +52,17 @@ void GameSceneState::switchScene(SceneState state,float t/*=0*/)
 	{
         case SceneState::UIGameEnter:
         {
-			scene = GameEnter::createScene();
+			scene = CREATE_SCENE(GameEnter);
 			break;
 		}
         case SceneState::UIGameMain:
         {
-			scene = GameMain::createScene();
+			scene = CREATE_SCENE(GameMain)
 			break;
 		}
         case SceneState::UIGameMissionSet:
 		{
-			scene = GameMissionSet::createScene();
+			scene = CREATE_SCENE(GameMissionSet);
 			break;
 		}
         case SceneState::DDGameUILayer:
@@ -72,7 +72,7 @@ void GameSceneState::switchScene(SceneState state,float t/*=0*/)
         }
 		case SceneState::UIRoleDisplay:
 		{
-			scene = RoleDisplay::createScene();
+			scene = CREATE_SCENE(RoleDisplay);
 			break;
 		}
         default:break;

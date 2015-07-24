@@ -139,13 +139,13 @@ void GameNormalMission::setMissionState(GameMissionState state)
 
 void GameNormalMission::onBtnDizuo()
 {
-	int id = this->getTag();
+	int id = this->m_nMissionId;
 	log(" %d  GameNormalMission::onBtnDizuo",id);
 }
 
 void GameNormalMission::onBtnStone()
 {
-	int id = this->getTag();
+	int id = this->m_nMissionId;
 	log(" %d  GameNormalMission::onBtnStone",id);
     GameMusicControl::getInstance()->btnPlay(1);
     GameUIData::getInstance()->setCurNormalMission(id);

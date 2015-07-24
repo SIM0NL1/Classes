@@ -20,6 +20,9 @@
 #define RESOURCE(_STR_PATH_) GameFunctions::getInstance()->readResourcesPath(_STR_PATH_)
 #define RESOURCETEST(_STR_PATH_) GameFunctions::getInstance()->readResourcesPathTest(_STR_PATH_)
 
+//场景创建函数;
+#define CREATE_SCENE(_CLASS_NAME_) _CLASS_NAME_::createScene();
+
 class GameFunctions : public Ref
 {
 public:
@@ -45,7 +48,6 @@ public:
         }
         
     }
-
     
 private:
 	GameFunctions();

@@ -11,6 +11,7 @@
 #include "../GameUILayer.h"
 #include "../DataCenter.h"
 #include "GameMusicControl.h"
+//#include "OverSlideButton.h"
 
 const float _GAP = 0;
 const int _COUNT = 2;
@@ -219,15 +220,18 @@ void GameMain :: showUI()
 	m_btnMagicBox->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnMagicBox->setSwallowTouches(false);
     //角色;
-	m_btnRole = Button :: create(RESOURCE("juese_01.png"),RESOURCE("juese_02.png"));
+	m_btnRole = Button::create(RESOURCE("juese_01.png"),RESOURCE("juese_02.png"));
 	m_btnRole->setAnchorPoint(Vec2(0.5f,0.5f));
 	m_btnRole->setTag(BtnRole);
 	m_btnRole->setPosition(Vec2(btnSize.width*3.5+10.f,btnSize.height*0.5));
 	this->addChild(m_btnRole,Z_First);
     //设置vertexZ;
     GameFunctions::getInstance()->vertexZ(&m_btnRole);
-	m_btnRole->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
-	m_btnRole->setSwallowTouches(false);
+	
+	//pFunc = onBtnRole;
+	//m_btnRole->addCallBack(this,pFunc)
+	//m_btnRole->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
+	//m_btnRole->setSwallowTouches(false);
 	//无尽模式;
 	m_btnEndless = Button :: create(RESOURCE("wujin_01.png"),RESOURCE("wujin_02.png"));
 	m_btnEndless->setAnchorPoint(Vec2(0.5f,0.5f));
@@ -350,57 +354,57 @@ void GameMain::BtnCall(Ref* pSender,Widget::TouchEventType type)
 	int tag = ((Button*)pSender)->getTag();
 	switch (type)
 	{
-        case Widget::TouchEventType::ENDED:
+    case Widget::TouchEventType::ENDED:
+        {
+            Point start = ((Button*)pSender)->getTouchBeganPosition();
+            Point end = ((Button*)pSender)->getTouchEndPosition();
+            if (fabs(end.y-start.y)<10)
             {
-                Point start = ((Button*)pSender)->getTouchBeganPosition();
-                Point end = ((Button*)pSender)->getTouchEndPosition();
-                if (fabs(end.y-start.y)<10)
+                switch(tag)
                 {
-                    switch(tag)
-                    {
-                        case BtnShop:
-                            onBtnShop();
-                            break;
-                        case BtnAchievement:
-                            onBtnAchievement();
-                            break;
-                        case BtnMagicBox:
-                            onBtnMagicBox();
-                            break;
-                        case BtnRole:
-                            onBtnRole();
-                            break;
-                        case BtnEndless:
-                            onBtnEndless();
-                            break;
-                        case BtnRegisterLeft:
-                            onBtnRegisterLeft();
-                            break;
-                        case BtnRegisterRight:
-                            onBtnRegisterRight();
-                            break;
-                        case BtnNewManGift:
-                            onBtnNewManGift();
-                            break;
-                        case BtnMagicBook:
-                            onBtnMagicBook();
-                            break;
-                        case BtnHP:
-                            onBtnHP();
-                            break;
-                        case BtnLongBi:
-                            onBtnLongBi();
-                            break;
-                        case BtnDiamond:
-                            onBtnDiamond();
-                            break;
-                    }
-                    
+                    case BtnShop:
+                        onBtnShop();
+                        break;
+                    case BtnAchievement:
+                        onBtnAchievement();
+                        break;
+                    case BtnMagicBox:
+                        onBtnMagicBox();
+                        break;
+                    case BtnRole:
+                        onBtnRole();
+                        break;
+                    case BtnEndless:
+                        onBtnEndless();
+                        break;
+                    case BtnRegisterLeft:
+                        onBtnRegisterLeft();
+                        break;
+                    case BtnRegisterRight:
+                        onBtnRegisterRight();
+                        break;
+                    case BtnNewManGift:
+                        onBtnNewManGift();
+                        break;
+                    case BtnMagicBook:
+                        onBtnMagicBook();
+                        break;
+                    case BtnHP:
+                        onBtnHP();
+                        break;
+                    case BtnLongBi:
+                        onBtnLongBi();
+                        break;
+                    case BtnDiamond:
+                        onBtnDiamond();
+                        break;
                 }
+                    
             }
-            break;
-        default:
-            break;
+        }
+        break;
+    default:
+        break;
 	}
 }
 
@@ -475,19 +479,21 @@ void GameMain::onBtnShop()
 {
 	log("********GameMain::onBtnShop**********");
     GameMusicControl::getInstance()->btnPlay(1);
-
+	SCENE_CHANGE_FADE(SceneState::UIRoleDisplay);
 }
 
 void GameMain::onBtnAchievement()
 {
 	log("********GameMain::onBtnAchievement**********");
     GameMusicControl::getInstance()->btnPlay(1);
+	SCENE_CHANGE_FADE(SceneState::UIRoleDisplay);
 }
 
 void GameMain::onBtnMagicBox()
 {
 	log("********GameMain::onBtnMagicBox**********");
-    GameMusicControl::getInstance()->btnPlay(1);	
+    GameMusicControl::getInstance()->btnPlay(1);
+	SCENE_CHANGE_FADE(SceneState::UIRoleDisplay);
 }
 
 void GameMain::onBtnRole()

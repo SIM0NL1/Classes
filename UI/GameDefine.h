@@ -56,40 +56,40 @@ const string cs_PreHpTimer = "PreviousHpTimer";	//玩家系统时间标记;
 //ZOrder
 enum GameZOrder
 {
-    Z_Back = -1,
-    Z_First = 3,
-    Z_Second = 6,
-    Z_Third = 9,
-    Z_Fourth = 12,
-    Z_Fifth = 15,
+    Z_Back		= -1,
+    Z_First		= 1 << 1,
+    Z_Second	= 1 << 2,
+    Z_Third		= 1 << 3,
+    Z_Fourth	= 1 << 4,
+    Z_Fifth		= 1 << 5,
 };
 //Tag
 enum GameTag
 {
-    T_Zero,
-    T_First,
-    T_Second,
-    T_Third,
-    T_Fourth,
-    T_Fifth,
-    T_Sixth,
+	T_Zero		= 1 << 0,
+	T_First		= 1 << 1,
+	T_Second	= 1 << 2,
+	T_Third		= 1 << 3,
+	T_Fourth	= 1 << 4,
+	T_Fifth		= 1 << 5,
+	T_Sixth		= 1 << 6,
 };
 //场景切换状态;
 enum class SceneState
 {
-    UIGameNone,
-    UIGameEnter,		//入口;
-    UIGameMain,			//大地图;
-    UIGameMissionSet,	//游戏开始之前,关卡配置;
-    DDGameUILayer,		//游戏界面;
-	UIRoleDisplay,		//角色界面;
+    UIGameNone			= 1 << 0,
+    UIGameEnter			= 1 << 1,	//入口;
+    UIGameMain			= 1 << 2,	//大地图;
+    UIGameMissionSet	= 1 << 3,	//游戏开始之前,关卡配置;
+    DDGameUILayer		= 1 << 4,	//游戏界面;
+	UIRoleDisplay		= 1 << 5,	//角色界面;
 };
 //关卡状态;
 enum class GameMissionState
 {
-    MISSION_NOW,	//目前关卡;
-    MISSION_OPEN,	//已开启卡;
-    MISSION_CLOSE,	//未开启卡;
+    MISSION_NOW			= 1 << 0,	//目前关卡;
+    MISSION_OPEN		= 1 << 1,	//已开启卡;
+    MISSION_CLOSE		= 1 << 2,	//未开启卡;
 };
 //关卡星级;
 enum class GameMissionStart
@@ -108,32 +108,32 @@ enum class JsonFileType
 //soldier状态;
 enum class TD_SoldierState
 {
-    None,
-    Birth,
-    Run,
-    Attack,
-    Death,
+    None		= 1 << 0,
+    Birth		= 1 << 1,
+    Run			= 1 << 2,
+    Attack		= 1 << 3,
+    Death		= 1 << 4,
 };
 //Boss状态;
 enum class TD_BossState
 {
-    None,
-    Birth,
-    Sleep,
-    Wake,
-    Wait,
-    Death,
+    None		= 1 << 0,
+    Birth		= 1 << 1,
+    Sleep		= 1 << 2,
+    Wake		= 1 << 3,
+    Wait		= 1 << 4,
+    Death		= 1 << 5,
 };
 
 //游戏离开方式;
 enum class QuitGameType
 {
-    NONE,
-    PAUSE,
-    WinQuit,
-    WinContinue,
-    FailQuit,
-    FailContinue,
+    NONE			= 1 << 0,
+    PAUSE			= 1 << 1,
+    WinQuit			= 1 << 2,
+    WinContinue		= 1 << 3,
+    FailQuit		= 1 << 4,
+    FailContinue	= 1 << 5,
 };
 
 #endif

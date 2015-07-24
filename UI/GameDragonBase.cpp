@@ -32,7 +32,7 @@ GameDragonBase::GameDragonBase()
 	m_sAnimate = "";
 	m_sImage = "";
 	m_sIcon = "";
-	m_bIsLock = -1;
+	m_bIsLock = false;
 }
 
 GameDragonBase::~GameDragonBase()
