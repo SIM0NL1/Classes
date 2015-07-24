@@ -65,7 +65,7 @@ bool OverScrollView::init(OverScrollViewDelegate* delegate)
     }
     else
     {
-		current_index = 1;
+        current_index = GameUIData::getInstance()->getVerticalIndex();
         verticalGPS();
     }
 	pLayer->addChild(pTableView);
