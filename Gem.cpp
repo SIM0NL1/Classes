@@ -1523,9 +1523,9 @@ void Gem::sameDisplay(Node *pSender)
 void Gem::setSkillSpr()
 {
     Armature *armature1 = Armature::create( "jvqi_effect");
-    _particleNode->addChild(armature1);
+    this->addChild(armature1,-1);
     armature1->getAnimation()->playWithIndex(0);
-    armature1->setPosition(this->getPosition());
+    armature1->setPosition(Vec2::ZERO);
     armature1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::displaySkill, this) );
 }
 
@@ -2481,8 +2481,7 @@ void Gem::setSick(bool sick)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Gem::explode(MyPoint &myPoint,MyPoint &distPoint,int count,int index)
 {
-    MyPoint mp = getCurrentIndex(this->getPosition());
-    int i = mp.x,j=mp.y;
+    int i = myPoint.x,j=myPoint.y;
     
     if(i-1>=0&&_gemStoneMatrix[i-1][j])
     {
