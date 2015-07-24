@@ -1,5 +1,5 @@
 #include "Gem.h"
-
+#include "UI/GameUIData.h"
 #include <time.h>
 
 MapInfo*									Gem::_mapInfo = NULL;
@@ -64,10 +64,17 @@ Gem* Gem::createRandomGem(Node* layer,Point point,bool visible)
     
     GemType fType;
     
-    if(_specialCount == 0 && false)
+    if(GameUIData::getInstance()->getVerticalIndex())
     {
-        
-        fType = special;
+        if (_specialCount == 0 )
+        {
+            fType = special;
+        }
+        else
+        {
+            index = arc4random()%_mapInfo->getGemType().size();
+            fType = (GemType)_mapInfo->getGemType().at(index);
+        }
     }
     else
     {
@@ -628,7 +635,7 @@ void Gem::matchAll()
         j = it->startPoint.y;
         i = it->startPoint.x;
         
-        if (it->isInCross || it->count > 3)
+        if ( (it->isInCross || it->count > 3) && GameUIData::getInstance()->getVerticalIndex() == 0 )
         {
             continue;
         }
@@ -769,13 +776,14 @@ void Gem::dealWithSkill()
         case SkillThreeCross:
         case SkillLeft:
         case SkillRight:
+        case SkillTen:
             str = __String::create("hengxiao_effect");
             break;
         case SkillAround2:
         case SkillAround1:
         case SkillAround4:
         case SkillAround3:
-        case SkillTen:
+        
         case SkillTurnTen:
             str = __String::create("jiugong03_effect");
             break;
@@ -797,7 +805,7 @@ void Gem::dealWithSkill()
     {
         arm->setRotation(135);
     }
-    if (_skill == SkillCross)
+    if (_skill == SkillCross || _skill == SkillTen)
     {
         Armature *arm1 = Armature::create("hengxiao_effect");
         arm1->getAnimation()->playWithIndex(0);
@@ -866,7 +874,7 @@ void Gem::dealWithSkill()
     arm->setPosition(this->getPosition());
     setSkAnimaByID(0);
     
-    if ((_skill >= SkillAround1 && _skill <= SkillAround4) || (_skill == SkillTurnTen || _skill == SkillTen) )
+    if ((_skill >= SkillAround1 && _skill <= SkillAround4) || _skill == SkillTurnTen )
     {
         _spr->setOpacity(150);
         arm->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::aroundAnimation, this));;
@@ -1441,8 +1449,6 @@ void Gem::displaySkill(Node *pSender)
         case SkillVerticl:
         case SkillLeft:
         case SkillRight:
-        case SkillTen:
-        case SkillTurnTen:
         {
             str = __String::create("item_heng01.png");
             for (int i = 1; i < 8; i++)
@@ -1470,7 +1476,35 @@ void Gem::displaySkill(Node *pSender)
             animation->setRestoreOriginalFrame(true);
         }
             break;
-            
+        case SkillTen:
+        {
+            str = __String::create("item_shizi01.png");
+            for (int i = 1; i < 8; i++)
+            {
+                __String *file = __String::createWithFormat("item_shizi0%d.png",i);
+                
+                auto sprite = Sprite::create(file->getCString());
+                animation->addSpriteFrame(sprite->getSpriteFrame());
+            }
+            animation->setDelayPerUnit(0.2);
+            animation->setRestoreOriginalFrame(true);
+        }
+            break;
+        case SkillTurnTen:
+        {
+            str = __String::create("item_fanshizi01.png");
+            for (int i = 1; i < 8; i++)
+            {
+                __String *file = __String::createWithFormat("item_fanshizi0%d.png",i);
+                
+                auto sprite = Sprite::create(file->getCString());
+                animation->addSpriteFrame(sprite->getSpriteFrame());
+            }
+            animation->setDelayPerUnit(0.2);
+            animation->setRestoreOriginalFrame(true);
+        }
+            break;
+
         default:
             break;
     }

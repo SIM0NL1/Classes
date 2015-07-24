@@ -4,7 +4,7 @@
 #include "Progress.h"
 #include <math.h>
 #include <time.h>
-
+#include "UI/GameUIData.h"
 
 GameLayer::GameLayer()
 :_isMoveDone(true)
@@ -1968,69 +1968,71 @@ void GameLayer::dealGemBeforeExplode()
             }
         }
 
-        
-        if (it->count >= 5)
+        if (GameUIData::getInstance()->getVerticalIndex() == 0)
         {
-            createSkill = true;
-            if (_gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemSkill() != SkillAround2)
+            if (it->count >= 5)
             {
-                temp = it->centerPoint;
-            }
-            _gemMatrix[temp.x][temp.y]->setState(0);
-            _gemMatrix[temp.x][temp.y]->setNextSkill(SkillAllSame);
-            it->centerPoint = temp;
-//            _gemMatrix[temp.x][temp.y]->setGemType();
-        }
-        else if(it->isInCross)
-        {
-            createSkill = true;
-            if (_gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemSkill() != SkillAround2)
-            {
-                temp = it->centerPoint;
-            }
-            else
-            {
-                if (it->centerPoint.y + 1 < kMatrixWidth && _gemMatrix[it->centerPoint.x][it->centerPoint.y + 1] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x][it->centerPoint.y + 1]->getGemType())
+                createSkill = true;
+                if (_gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemSkill() != SkillAround2)
                 {
+                    temp = it->centerPoint;
+                }
+                _gemMatrix[temp.x][temp.y]->setState(0);
+                _gemMatrix[temp.x][temp.y]->setNextSkill(SkillAllSame);
+                it->centerPoint = temp;
+            }
+            else if(it->isInCross)
+            {
+                createSkill = true;
+                if (_gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemSkill() != SkillAround2)
+                {
+                    temp = it->centerPoint;
+                }
+                else
+                {
+                    if (it->centerPoint.y + 1 < kMatrixWidth && _gemMatrix[it->centerPoint.x][it->centerPoint.y + 1] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x][it->centerPoint.y + 1]->getGemType())
+                    {
                         temp = MyPoint(it->centerPoint.x, it->centerPoint.y + 1);
-                }
-                else if(it->centerPoint.y - 1 >= 0 && _gemMatrix[it->centerPoint.x][it->centerPoint.y - 1] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x][it->centerPoint.y - 1]->getGemType())
-                {
+                    }
+                    else if(it->centerPoint.y - 1 >= 0 && _gemMatrix[it->centerPoint.x][it->centerPoint.y - 1] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x][it->centerPoint.y - 1]->getGemType())
+                    {
                         temp = MyPoint(it->centerPoint.x, it->centerPoint.y - 1);
+                    }
+                    else if(it->centerPoint.x + 1 < kMatrixWidth && _gemMatrix[it->centerPoint.x + 1][it->centerPoint.y] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x + 1][it->centerPoint.y]->getGemType())
+                    {
+                        temp = MyPoint(it->centerPoint.x + 1, it->centerPoint.y);
+                    }
+                    else if(it->centerPoint.x - 1 >= 0 && _gemMatrix[it->centerPoint.x - 1][it->centerPoint.y] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x - 1][it->centerPoint.y]->getGemType())
+                    {
+                        temp = MyPoint(it->centerPoint.x - 1, it->centerPoint.y);
+                    }
                 }
-                else if(it->centerPoint.x + 1 < kMatrixWidth && _gemMatrix[it->centerPoint.x + 1][it->centerPoint.y] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x + 1][it->centerPoint.y]->getGemType())
+                _gemMatrix[temp.x][temp.y]->setState(0);
+                _gemMatrix[temp.x][temp.y]->setNextSkill(SkillAround2);
+                it->centerPoint = temp;
+            }
+            else if(it->count == 4)
+            {
+                createSkill = true;
+                
+                if (_gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemSkill() != SkillAround2)
                 {
-                    temp = MyPoint(it->centerPoint.x + 1, it->centerPoint.y);
+                    temp = it->centerPoint;
                 }
-                else if(it->centerPoint.x - 1 >= 0 && _gemMatrix[it->centerPoint.x - 1][it->centerPoint.y] && _gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemType() == _gemMatrix[it->centerPoint.x - 1][it->centerPoint.y]->getGemType())
+                
+                _gemMatrix[temp.x][temp.y]->setState(0);
+                if (it->direction == Up)
                 {
-                    temp = MyPoint(it->centerPoint.x - 1, it->centerPoint.y);
+                    _gemMatrix[temp.x][temp.y]->setNextSkill(SkillHorizontal);
                 }
+                else
+                {
+                    _gemMatrix[temp.x][temp.y]->setNextSkill(SkillVerticl);
+                }
+                
+                it->centerPoint = temp;
             }
-            _gemMatrix[temp.x][temp.y]->setState(0);
-            _gemMatrix[temp.x][temp.y]->setNextSkill(SkillAround2);
-            it->centerPoint = temp;
-        }
-        else if(it->count == 4)
-        {
-            createSkill = true;
-            
-            if (_gemMatrix[it->centerPoint.x][it->centerPoint.y]->getGemSkill() != SkillAround2)
-            {
-                temp = it->centerPoint;
-            }
-            
-            _gemMatrix[temp.x][temp.y]->setState(0);
-            if (it->direction == Up)
-            {
-                _gemMatrix[temp.x][temp.y]->setNextSkill(SkillHorizontal);
-            }
-            else
-            {
-                _gemMatrix[temp.x][temp.y]->setNextSkill(SkillVerticl);
-            }
-            
-            it->centerPoint = temp;
+
         }
     }
 

@@ -2,6 +2,8 @@
 #include "cocostudio/CocoStudio.h"
 #include <time.h>
 
+#include "UI/GameUIData.h"
+
 MapInfo::MapInfo(void)
 {
     m_iArrMatrix = (int **)malloc(sizeof(int*)*kMatrixWidth);
@@ -41,7 +43,18 @@ MapInfo::~MapInfo(void)
 
 bool MapInfo::getJsonData(int iLev)
 {
-    string filename="MapInfo.json";
+    __String*str;
+    
+    if (GameUIData::getInstance()->getVerticalIndex())
+    {
+        str = __String::create("DuplicateInfo.json");
+    }
+    else
+    {
+        str = __String::create("MapInfo.json");
+    }
+    
+    string filename=str->getCString();
     rapidjson::Document doc;
     //判断文件是否存在
     if(!FileUtils::getInstance()->isFileExist(filename))

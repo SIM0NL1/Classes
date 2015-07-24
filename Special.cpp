@@ -90,13 +90,14 @@ void Special::changeState(int state)
         Gem *temp = _gemStoneMatrix[i][j];
         _gemStoneMatrix[i][j] = Gem::createFixGem(fType,this->getParent(),temp->getPosition(),true);
         temp->removeFromParentAndCleanup(true);
+        _specialCount = 0;
         
         int random = arc4random()%100;
-        if (random < 99)//10
+        if (random < 10)//10
         {
             _gemStoneMatrix[i][j]->setNextSkill(SkillTurnTen);
         }
-        else if(random < 0)//30
+        else if(random < 30)//30
         {
             _gemStoneMatrix[i][j]->setNextSkill(SkillTen);
         }
