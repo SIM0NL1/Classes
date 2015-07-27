@@ -14,7 +14,7 @@ GameFunctions* GameFunctions :: m_self = nullptr;
 GameFunctions :: GameFunctions()
 {
 	m_sFilePath = "";
-
+	isUIBtnCallBack = false;
 }
 
 GameFunctions :: ~GameFunctions()

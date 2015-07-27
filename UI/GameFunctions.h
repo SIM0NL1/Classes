@@ -35,20 +35,9 @@ public:
 	string soldierTypeName[5][5];
 	//初始化不同角色和等级的士兵UI;
 	void initSoldierType();
-    template<typename T>
-    void vertexZ(T** pSender,bool flag=true)
-    {
-        if (flag)
-        {
-            //(*pSender)->setPositionZ(Z_Second);
-        }
-        else
-        {
-            //(*pSender)->setPositionZ(Z_First);
-        }
-        
-    }
-    
+	//大地图界面按钮与关卡按钮回调屏蔽;
+	CC_SYNTHESIZE(bool ,isUIBtnCallBack,IsUIBtnCallBack);
+
 private:
 	GameFunctions();
 	virtual ~GameFunctions();

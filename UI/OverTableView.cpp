@@ -144,7 +144,6 @@ TableViewCell* OverTableView::tableCellAtIndex(TableView *table,ssize_t idx)
 			
 			mission_left->setMissionPorperty(missionId);
 			mission_left->missionShow(missionId);
-			GameFunctions::getInstance()->vertexZ(&mission_left,false);
 			--missionId;
 		}
 		m_mapNormalMission[ci_MapNum-1-idx]=vec_normalMission;
@@ -173,6 +172,7 @@ TableViewCell* OverTableView::tableCellAtIndex(TableView *table,ssize_t idx)
 		{
 			GameChallengeMission* mission_right = GameChallengeMission::create();
 			mission_right->setTag(missionId);
+			mission_right->m_nMissionId = missionId;
 			mission_right->setAnchorPoint(Vec2::ZERO);
 			//取得关卡ID对应的坐标;
 			Vec2 temp=GameUIData::getInstance()->getChallengeMissionPos(missionId);

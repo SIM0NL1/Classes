@@ -81,6 +81,11 @@ void GameNormalMission::BtnCall(Ref* pSender,Widget::TouchEventType type)
 	{
         case Widget::TouchEventType::ENDED:
             {
+				if (GameFunctions::getInstance()->getIsUIBtnCallBack())
+				{
+					GameFunctions::getInstance()->setIsUIBtnCallBack(false);
+					return;
+				}
                 Point start = ((Button*)pSender)->getTouchBeganPosition();
                 Point end = ((Button*)pSender)->getTouchEndPosition();
                 if (fabs(end.y-start.y)<10)

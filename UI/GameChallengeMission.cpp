@@ -123,10 +123,13 @@ void GameChallengeMission::BtnCall(Ref* pSender,Widget::TouchEventType type)
 	int tag = ((Button*)pSender)->getTag();
 	switch (type)
 	{
-        case Widget::TouchEventType::BEGAN:break;
-        case Widget::TouchEventType::MOVED:break;
         case Widget::TouchEventType::ENDED:
             {
+				if (GameFunctions::getInstance()->getIsUIBtnCallBack())
+				{
+					GameFunctions::getInstance()->setIsUIBtnCallBack(false);
+					return;
+				}
                 if (tag)
                 {
                     onBtnCandle();

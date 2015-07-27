@@ -11,7 +11,6 @@
 #include "../GameUILayer.h"
 #include "../DataCenter.h"
 #include "GameMusicControl.h"
-//#include "OverSlideButton.h"
 
 const float _GAP = 0;
 const int _COUNT = 2;
@@ -93,8 +92,6 @@ void GameMain :: showUI()
     tSize = tiliRect->getContentSize();
     tiliRect->setPosition(Vec2(tSize.width*0.5,GLB_SIZE.height-tSize.height*0.5));
     this->addChild(tiliRect,Z_Second);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&tiliRect);
     // 体力背景;
     Sprite* tiliBack = Sprite :: create(RESOURCE("tili_02.png"));
     tiliBack->setAnchorPoint(Vec2(0.5,0.5));
@@ -147,8 +144,6 @@ void GameMain :: showUI()
     dibanlongbi->setAnchorPoint(Vec2(0.5f,0.5f));
     dibanlongbi->setPosition(Vec2(tSize.width+dibanSize.width*0.5+40,GLB_SIZE.height-dibanSize.height));
     this->addChild(dibanlongbi,Z_First);
-    //设置vertex;
-    GameFunctions::getInstance()->vertexZ(&dibanlongbi);
     m_btnLongBi = Button::create(RESOURCE("add_01.png"),RESOURCE("add_02.png"));
     m_btnLongBi->setAnchorPoint(Vec2(0.5f,0.5f));
     m_btnLongBi->setPosition(Vec2(dibanSize.width+20,dibanSize.height*0.5));
@@ -170,8 +165,6 @@ void GameMain :: showUI()
     dibanDiamond->setAnchorPoint(Vec2(0.5f,0.5f));
     dibanDiamond->setPosition(Vec2(tSize.width+dibanSize.width*2+60,GLB_SIZE.height-dibanSize.height));
     this->addChild(dibanDiamond,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&dibanDiamond);
     m_btnDiamond = Button::create(RESOURCE("add_01.png"),RESOURCE("add_02.png"));
     m_btnDiamond->setAnchorPoint(Vec2(0.5f,0.5f));
     m_btnDiamond->setPosition(Vec2(dibanSize.width+20,dibanSize.height*0.5));
@@ -195,8 +188,6 @@ void GameMain :: showUI()
 	Size btnSize = m_btnShop->getContentSize();
 	m_btnShop->setPosition(Vec2(btnSize.width*0.5+10.f,btnSize.height*0.5));
 	this->addChild(m_btnShop,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnShop);
 	m_btnShop->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnShop->setSwallowTouches(false);
     //成就按钮;
@@ -205,8 +196,6 @@ void GameMain :: showUI()
 	m_btnAchievement->setTag(BtnAchievement);
 	m_btnAchievement->setPosition(Vec2(btnSize.width*1.5+10.f,btnSize.height*0.5));
 	this->addChild(m_btnAchievement,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnAchievement);
 	m_btnAchievement->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnAchievement->setSwallowTouches(false);
     //魔法包厢;
@@ -215,8 +204,6 @@ void GameMain :: showUI()
 	m_btnMagicBox->setTag(BtnMagicBox);
 	m_btnMagicBox->setPosition(Vec2(btnSize.width*2.5+10.f,btnSize.height*0.5));
 	this->addChild(m_btnMagicBox,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnMagicBox);
 	m_btnMagicBox->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnMagicBox->setSwallowTouches(false);
     //角色;
@@ -225,13 +212,8 @@ void GameMain :: showUI()
 	m_btnRole->setTag(BtnRole);
 	m_btnRole->setPosition(Vec2(btnSize.width*3.5+10.f,btnSize.height*0.5));
 	this->addChild(m_btnRole,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnRole);
-	
-	//pFunc = onBtnRole;
-	//m_btnRole->addCallBack(this,pFunc)
-	//m_btnRole->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
-	//m_btnRole->setSwallowTouches(false);
+	m_btnRole->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
+	m_btnRole->setSwallowTouches(false);
 	//无尽模式;
 	m_btnEndless = Button :: create(RESOURCE("wujin_01.png"),RESOURCE("wujin_02.png"));
 	m_btnEndless->setAnchorPoint(Vec2(0.5f,0.5f));
@@ -239,8 +221,6 @@ void GameMain :: showUI()
 	Size btnSize2 = m_btnEndless->getContentSize();
 	m_btnEndless->setPosition(Vec2(btnSize2.width*0.5-10.f,GLB_SIZE.height-tSize.height-35.f));
 	this->addChild(m_btnEndless,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnEndless);
 	m_btnEndless->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnEndless->setEnabled(true);
 	m_btnEndless->setOpacity(255);
@@ -251,8 +231,6 @@ void GameMain :: showUI()
 	m_btnRegisterLeft->setTag(BtnRegisterLeft);
 	m_btnRegisterLeft->setPosition(Vec2(btnSize2.width*0.5-10.f,GLB_SIZE.height-tSize.height*1.5-70.f));
 	this->addChild(m_btnRegisterLeft,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnRegisterLeft);
 	m_btnRegisterLeft->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnRegisterLeft->setEnabled(true);
 	m_btnRegisterLeft->setOpacity(255);
@@ -263,8 +241,6 @@ void GameMain :: showUI()
 	m_btnNewManGift->setTag(BtnNewManGift);
 	m_btnNewManGift->setPosition(Vec2(btnSize2.width*0.5-10.f,GLB_SIZE.height-tSize.height*2-95.f));
 	this->addChild(m_btnNewManGift,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnNewManGift);
 	m_btnNewManGift->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnNewManGift->setEnabled(true);
 	m_btnNewManGift->setOpacity(255);
@@ -275,8 +251,6 @@ void GameMain :: showUI()
 	m_btnMagicBook->setTag(BtnMagicBook);
 	m_btnMagicBook->setPosition(Vec2(GLB_SIZE.width-btnSize2.width*0.5,GLB_SIZE.height-tSize.height-35.f));
 	this->addChild(m_btnMagicBook,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnMagicBook);
 	m_btnMagicBook->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnMagicBook->setEnabled(false);
 	m_btnMagicBook->setOpacity(0);
@@ -287,8 +261,6 @@ void GameMain :: showUI()
 	m_btnRegisterRight->setTag(BtnRegisterRight);
 	m_btnRegisterRight->setPosition(Vec2(GLB_SIZE.width-btnSize2.width*0.5,GLB_SIZE.height-tSize.height*1.5-75.f));
 	this->addChild(m_btnRegisterRight,Z_First);
-    //设置vertexZ;
-    GameFunctions::getInstance()->vertexZ(&m_btnRegisterRight);
 	m_btnRegisterRight->addTouchEventListener(CC_CALLBACK_2(GameMain::BtnCall,this));
 	m_btnRegisterRight->setEnabled(false);
 	m_btnRegisterRight->setOpacity(0);
@@ -318,16 +290,9 @@ void GameMain::pageViewDidScroll(OverScrollView* scrollView)
 
 void GameMain::setBtnTouch(bool flag)
 {
-// 	m_btnShop->setEnabled(flag);
-// 	m_btnAchievement->setEnabled(flag);
-// 	m_btnMagicBox->setEnabled(flag);
-// 	m_btnRole->setEnabled(flag);
 	m_btnEndless->setEnabled(flag);
 	m_btnRegisterLeft->setEnabled(flag);
 	m_btnNewManGift->setEnabled(flag);
-// 	m_btnHP->setEnabled(flag);
-// 	m_btnLongBi->setEnabled(flag);
-// 	m_btnDiamond->setEnabled(flag);
 	m_btnMagicBook->setEnabled(flag);
 	m_btnRegisterRight->setEnabled(flag);
 }
@@ -356,6 +321,9 @@ void GameMain::BtnCall(Ref* pSender,Widget::TouchEventType type)
 	{
     case Widget::TouchEventType::ENDED:
         {
+			//屏蔽关卡按钮;
+			GameFunctions::getInstance()->setIsUIBtnCallBack(true);
+
             Point start = ((Button*)pSender)->getTouchBeganPosition();
             Point end = ((Button*)pSender)->getTouchEndPosition();
             if (fabs(end.y-start.y)<10)

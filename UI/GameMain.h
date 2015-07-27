@@ -70,9 +70,8 @@ public:
     void onBtnHP();
     void onBtnLongBi();
     void onBtnDiamond();
-    //
+    //地图切换按钮渐隐渐现特效;
     void ensureBtnFade(int id);
-    //
     int getPageViewId();
     void setLeftBtnFadeInterface(int opacity);
     void setRightBtnFadeInterface(int opacity);

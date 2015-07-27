@@ -228,7 +228,7 @@ void TDBoss::wakeEnd()
 
 void TDBoss::updateHpProgress(int& hp)
 {
-	m_BossHpProgress->setPercentage(15+hp*75/m_fHpBackUp);
+	m_BossHpProgress->setPercentage(10+hp*75/m_fHpBackUp);
 }
 
 

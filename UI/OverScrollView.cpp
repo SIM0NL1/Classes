@@ -65,7 +65,7 @@ bool OverScrollView::init(OverScrollViewDelegate* delegate)
     }
     else
     {
-        current_index = GameUIData::getInstance()->getVerticalIndex();
+		current_index = GameUIData::getInstance()->getVerticalIndex();
         verticalGPS();
     }
 	pLayer->addChild(pTableView);
@@ -75,7 +75,6 @@ bool OverScrollView::init(OverScrollViewDelegate* delegate)
 	qiehuan->setAnchorPoint(Vec2(0.5f,0.5f));
 	qiehuan->setPosition(Vec2(639,GLB_SIZE.height*0.5+80.f));
 	this->addChild(qiehuan,Z_Third);
-    GameFunctions::getInstance()->vertexZ(&qiehuan);
 	qiehuan->getAnimation()->playWithIndex(0);
 
 	pChmap = Sprite::create(RESOURCE("qiehuan_fanwei.png"));
@@ -103,7 +102,7 @@ bool OverScrollView::onTouchBegan(Touch* touch,Event* unused_event)
 		return false;
 	}
 	_dragging = false;
-	//
+	//判断触摸点是否在切换图形内部;
 	Point currentPoint = touch->getLocation();
 	if (current_index)
 	{
