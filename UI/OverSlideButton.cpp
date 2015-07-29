@@ -148,6 +148,8 @@ const Size& OverSlideButton::getContentSize() const
 	}
 	else
 	{
-		return Size(0.f,0.f);
+        Size s = Size(0,0);
+        Size& t = s;
+		return t;
 	}
 }

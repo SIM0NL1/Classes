@@ -69,7 +69,7 @@ bool GameMain :: init()
         showUI();
 		initMap();
 
-		//Label* pName = Label::createWithSystemFont(GameFunctions::getInstance()->g_sChineseName,"Arial",30.f);
+//		Label* pName = Label::createWithSystemFont(GameFunctions::getInstance()->g_sChineseName,"Arial",30.f);
 // 		string text = StringUtils::format( "%d",GameUIData::getInstance()->vec_Role.at(20)->m_aUnlockCondition.at(2) );
 // 		Label* pName = Label::createWithSystemFont(text,"Arial",30.f);
 // 		pName->setPosition(Vec2(GLB_SIZE.width*0.5,GLB_SIZE.height*0.5));

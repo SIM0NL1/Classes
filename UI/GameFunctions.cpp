@@ -49,7 +49,7 @@ const char* GameFunctions::readResourcesPathTest(int fileName)
 {
 	if(GameUIData::getInstance()->getCurNormalMission()%2)
 	{
-		return __String::createWithFormat("map01_00%d.png",fileName)->getCString();
+		return __String::createWithFormat("xmap01_00%d.png",fileName)->getCString();
 	}
 	else
 	{

@@ -25,7 +25,7 @@ const int ci_HP_MAX = 60;		//最大体力上限;
 const int ci_MapNum = 5;		//地图张数;
 const int ci_NormalMissionNum = 40;		//普通关卡总关数;
 const int ci_ChallengeMissionNum = 20;	//特殊关卡总关数;
-const long ci_HpSecond = 360;	//6*60seconds回复一点体力;
+const unsigned int ci_HpSecond = 360;	//6*60seconds回复一点体力;
 
 //取到屏幕大小;
 //const Size WIN_SIZE = Director::getInstance()->getWinSize();	//不知道为什么，总是0
