@@ -10,7 +10,7 @@ Special::Special()
 
 bool Special::createGemSprite(Node *layer, Point point,bool visible)
 {
-    Gem::createGemSpriteByName(layer, point, visible, "scale.png");
+    Gem::createGemSpriteByName(layer, point, visible, "shirenhua.png");
     
     return true;
 }

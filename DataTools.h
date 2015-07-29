@@ -502,7 +502,14 @@ typedef enum
     SkillAround3,
     SkillAround4,
     SkillCross,
-    SkillThreeCross
+    SkillThreeCross,
+    SkillCha,
+    SkillTenTen,
+    SkillLeftTen,
+    SkillRightTen,
+    SkillXieTurnTen,
+    SkillTenTurnTen,
+    SkillTurnTenTurnTen,
 }GemSkill;
 
 typedef enum //教程

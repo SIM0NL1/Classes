@@ -774,8 +774,11 @@ void Gem::dealWithSkill()
         case SkillVerticl:
         case SkillCross:
         case SkillThreeCross:
+        case SkillCha:
         case SkillLeft:
         case SkillRight:
+        case SkillLeftTen:
+        case SkillRightTen:
         case SkillTen:
             str = __String::create("hengxiao_effect");
             break;
@@ -797,11 +800,11 @@ void Gem::dealWithSkill()
     {
         arm->setRotation(90);
     }
-    if (_skill == SkillLeft)
+    if (_skill == SkillLeft || SkillLeftTen)
     {
         arm->setRotation(45);
     }
-    if (_skill == SkillRight)
+    if (_skill == SkillRight || SkillRightTen)
     {
         arm->setRotation(135);
     }
@@ -815,6 +818,39 @@ void Gem::dealWithSkill()
         
         arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
     }
+    
+    if (_skill == SkillLeftTen || _skill == SkillRightTen)
+    {
+        Armature *arm1 = Armature::create("hengxiao_effect");
+        arm1->getAnimation()->playWithIndex(0);
+        _particleNode->addChild(arm1);
+        arm1->setRotation(90);
+        arm1->setPosition(this->getPosition());
+        
+        arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
+        
+        Armature *arm2 = Armature::create("hengxiao_effect");
+        arm2->getAnimation()->playWithIndex(0);
+        _particleNode->addChild(arm2);
+        arm2->setPosition(this->getPosition());
+        
+        arm2->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
+    }
+
+    
+    if (_skill == SkillCha)
+    {
+        arm->setRotation(45);
+        
+        Armature *arm1 = Armature::create("hengxiao_effect");
+        arm1->getAnimation()->playWithIndex(0);
+        _particleNode->addChild(arm1);
+        arm1->setRotation(135);
+        arm1->setPosition(this->getPosition());
+        
+        arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
+    }
+
     
     if (_skill == SkillThreeCross)
     {
@@ -1029,7 +1065,7 @@ void Gem::dealWithGem()
         }
     }
     
-    if (_skill == SkillLeft)
+    if (_skill == SkillLeft || _skill == SkillCha || _skill == SkillLeftTen)
     {
         for (int i = 1; i < kMatrixWidth; i++)
         {
@@ -1061,7 +1097,7 @@ void Gem::dealWithGem()
         
     }
 
-    if (_skill == SkillRight)
+    if (_skill == SkillRight || _skill == SkillCha || _skill == SkillRightTen)
     {
         for (int i = 1; i < kMatrixWidth; i++)
         {
@@ -1092,7 +1128,7 @@ void Gem::dealWithGem()
         }
     }
     
-    if (_skill == SkillTen)
+    if (_skill == SkillTen || _skill == SkillLeftTen || _skill == SkillRightTen)
     {
         for (int i = 1; i < 3; i++)
         {
@@ -2045,64 +2081,6 @@ void Gem::aroundAnimation(Node *pSender)
         }
     }
     
-    if (_skill == SkillTen)
-    {
-        for (int i = 1; i < 3; i++)
-        {
-            if (mp.x - i >= 0)
-            {
-                if (_gemStoneMatrix[mp.x - i][mp.y])
-                {
-                    Armature *arm1 = Armature::create("jiugong04_effect");
-                    arm1->getAnimation()->playWithIndex(0);
-                    _particleNode->addChild(arm1);
-                    arm1->setPosition(_gemStoneMatrix[mp.x - i][mp.y]->getPosition());
-                    arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
-                }
-            }
-            
-            if (mp.x + i < kMatrixWidth)
-            {
-                
-                if (_gemStoneMatrix[mp.x + i][mp.y])
-                {
-                    Armature *arm1 = Armature::create("jiugong04_effect");
-                    arm1->getAnimation()->playWithIndex(0);
-                    _particleNode->addChild(arm1);
-                    arm1->setPosition(_gemStoneMatrix[mp.x + i][mp.y]->getPosition());
-                    arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
-                }
-            }
-        }
-        
-        for (int i = 1; i < 3; i++)
-        {
-            if (mp.y - i >= 0)
-            {
-                if (_gemStoneMatrix[mp.x][mp.y - i])
-                {
-                    Armature *arm1 = Armature::create("jiugong04_effect");
-                    arm1->getAnimation()->playWithIndex(0);
-                    _particleNode->addChild(arm1);
-                    arm1->setPosition(_gemStoneMatrix[mp.x][mp.y - i]->getPosition());
-                    arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
-                }
-            }
-            if (mp.y + i < kMatrixWidth)
-            {
-                
-                if (_gemStoneMatrix[mp.x][mp.y + i])
-                {
-                    Armature *arm1 = Armature::create("jiugong04_effect");
-                    arm1->getAnimation()->playWithIndex(0);
-                    _particleNode->addChild(arm1);
-                    arm1->setPosition(_gemStoneMatrix[mp.x][mp.y + i]->getPosition());
-                    arm1->getAnimation()->setMovementEventCallFunc(CC_CALLBACK_1(Gem::showSkillAnimation, this));
-                }
-            }
-        }
-    }
-    
     if (_skill == SkillTurnTen)
     {
         for(int i=0;i<kMatrixWidth ;i++)
@@ -2244,7 +2222,7 @@ void Gem::gemBright(Node *pSender)
         }
     }
     
-    if (_skill == SkillLeft)
+    if (_skill == SkillLeft  || _skill == SkillCha || _skill == SkillLeftTen)
     {
         for (int i = 0; i < kMatrixWidth; i++)
         {
@@ -2267,7 +2245,7 @@ void Gem::gemBright(Node *pSender)
 
     }
     
-    if (_skill == SkillRight)
+    if (_skill == SkillRight  || _skill == SkillCha || _skill == SkillRightTen)
     {
         for (int i = 0; i < kMatrixWidth; i++)
         {
@@ -2290,7 +2268,7 @@ void Gem::gemBright(Node *pSender)
         
     }
 
-    if (_skill == SkillTen)
+    if (_skill == SkillTen || _skill == SkillLeftTen || _skill == SkillRightTen)
     {
         for (int i = 0; i < 3; i++)
         {

@@ -2475,7 +2475,34 @@ void GameLayer::skillGemChange()
     }
     else
     {
-        if ((firstSkill < SkillAround1 && secondSkill < SkillAround1))
+        if ((firstSkill < SkillTen && secondSkill < SkillTen))
+        {
+            _gemMatrix[_selectPoint.x][_selectPoint.y]->setGemSkill(SkillNull);
+            _gemMatrix[_nextPoint.x][_nextPoint.y]->setGemSkill(SkillCha);
+            
+            beforeMatch();
+            return;
+        }
+
+        if((firstSkill == SkillLeft && secondSkill == SkillTen) || (firstSkill == SkillTen && secondSkill == SkillLeft))
+        {
+            _gemMatrix[_selectPoint.x][_selectPoint.y]->setGemSkill(SkillNull);
+            _gemMatrix[_nextPoint.x][_nextPoint.y]->setGemSkill(SkillLeftTen);
+            
+            beforeMatch();
+            return;
+        }
+
+        if((firstSkill == SkillRight && secondSkill == SkillTen) || (firstSkill == SkillTen && secondSkill == SkillRight))
+        {
+            _gemMatrix[_selectPoint.x][_selectPoint.y]->setGemSkill(SkillNull);
+            _gemMatrix[_nextPoint.x][_nextPoint.y]->setGemSkill(SkillRightTen);
+            
+            beforeMatch();
+            return;
+        }
+        
+        if ((firstSkill > 0 && firstSkill < SkillAround1 && secondSkill < SkillAround1))
         {
             _gemMatrix[_selectPoint.x][_selectPoint.y]->setGemSkill(SkillNull);
             _gemMatrix[_nextPoint.x][_nextPoint.y]->setGemSkill(SkillCross);

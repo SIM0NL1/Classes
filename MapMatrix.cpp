@@ -85,7 +85,7 @@ void MapMatrix::findConnection()
             {
                 continue;
             }
-            else if(_gemMatrix[i][j]->getGemSkill() == SkillCross || _gemMatrix[i][j]->getGemSkill() == SkillThreeCross || _gemMatrix[i][j]->getGemSkill() == SkillAround4)
+            else if(_gemMatrix[i][j]->getGemSkill() == SkillCross || _gemMatrix[i][j]->getGemSkill() == SkillThreeCross || _gemMatrix[i][j]->getGemSkill() == SkillAround4 || _gemMatrix[i][j]->getGemSkill() == SkillCha || _gemMatrix[i][j]->getGemSkill() == SkillLeftTen || _gemMatrix[i][j]->getGemSkill() == SkillRightTen)
             {
                 ConnectionArea ca;
                 ca.startPoint.x = i;
