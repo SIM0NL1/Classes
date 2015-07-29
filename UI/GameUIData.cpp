@@ -276,8 +276,7 @@ void GameUIData::readRoleData()
         pData->m_sIcon = temp[++j].GetString();
 
         vec_Role.push_back(pData);
-        delete(pData);
-        pData = nullptr;
+
     }
 }
 

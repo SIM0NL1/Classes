@@ -23,6 +23,13 @@
 //场景创建函数;
 #define CREATE_SCENE(_CLASS_NAME_) _CLASS_NAME_::createScene();
 
+//内联函数-计算坐标;
+inline cocos2d::Vec2 vecSub (const cocos2d::Vec2& v1,const cocos2d::Vec2& v2,float scale) {return Vec2(v1.x-scale*v2.x,v1.y-scale*v2.y);}
+inline cocos2d::Vec2 vecSub (const cocos2d::Vec2& v1,const cocos2d::Vec2& v2) {return Vec2(v1.x-v2.x,v1.y-v2.y);}
+inline cocos2d::Vec2 vecAdd (const cocos2d::Vec2& v1,const cocos2d::Vec2& v2) {return Vec2(v1.x+v2.x,v1.y+v2.y);}
+inline cocos2d::Vec2 vecMid (const cocos2d::Vec2& v1) {return Vec2(v1.x*0.5f,v1.y*0.5f);}
+inline cocos2d::Vec2 vecMid (const cocos2d::Vec2& v1,const cocos2d::Vec2& v2) {return Vec2(v1.x*0.5f+v2.x*0.5f,v1.y*0.5f+v2.y*0.5f);}
+
 class GameFunctions : public Ref
 {
 public:
@@ -37,6 +44,8 @@ public:
 	void initSoldierType();
 	//大地图界面按钮与关卡按钮回调屏蔽;
 	CC_SYNTHESIZE(bool ,isUIBtnCallBack,IsUIBtnCallBack);
+
+	
 
 private:
 	GameFunctions();

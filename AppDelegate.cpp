@@ -37,6 +37,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     freopen("CONOUT$", "w", stdout);
     freopen("CONOUT$", "w", stderr);
     //FreeConsole();
+    //std::vector<std::string> paths;//创建一个string型的容器;
+    //paths.push_back("fonts");//往容器中添加图片目录所在的路径;
+    //paths.push_back("image");
+    //paths.push_back("sounds");
+    //FileUtils::getInstance()->setSearchResolutionsOrder(paths);//在这里设置路径，我们要做的就是把创建好的容器放进去;
 #endif
 	glview->setDesignResolutionSize(640, 1136, ResolutionPolicy::SHOW_ALL);
     // turn on display FPS
