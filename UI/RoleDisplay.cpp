@@ -5,12 +5,40 @@
 //@功能描述②: 用于角色展示，选择，升级，查看等功能;
 //@功能描述③: 场景类，提供切换、调用接口,支持弹窗;
 //**************************************************************
+/*
+角色功能设计;
+按钮状态判断;
+1、选中按钮时，用对号显示;
+2、选择出战的按钮显示出战中;
+3、未解锁的按钮，用锁头显示;
+4、解锁状态：满足解锁条件的显示600水晶召唤;
+未满足解锁条件的显示一键召唤;
 
+切换按钮时，显示不同的角色形象，通过不同的角色Id;
+1、到user_role表（对应的cache）中读取 等级和当前喂养值;
+2、到roledata表（对应的cache）中读取 当前级别满级喂养值，单次喂养值，一键满级喂养值，级别说明文字;
+
+单次喂养设计;
+需要获取当前宠物Id，然后到user_role表中读取当前等级和喂养值;
+1、计算当前水晶币是否充足，更新之;
+2、刷新进度条进度和数值显示，并且保存;
+3、刷新一键满级剩余值;
+4、如果当前级别满了则更新级别、单次喂养值、一键满级喂养值、进度条进度和显示数值;
+
+一键满级喂养设计;
+1、计算水晶币是否充足;
+2、刷新进度条进度和数值显示;
+3、刷新新级别的喂养值和一键满级值;
+
+水晶币设计;
+1、每次水晶币消耗都要判断是否充足，否则显示充值界面并回调统一的充值接口;
+2、数值变化之后要更新存储、更新显示;
+*/
 #include "RoleDisplay.h"
 #include "GameMusicControl.h"
 
 //控件类;
-RoleWidget::RoleWidget():m_roleBg(nullptr),m_roleBtn(nullptr),m_roleChoice(nullptr),m_roleFightSpr(nullptr),m_roleLock(nullptr)
+RoleWidget::RoleWidget():m_roleBg(nullptr),m_roleBtn(nullptr),m_roleChoice(nullptr),m_roleFightSpr(nullptr),m_roleLock(nullptr),m_nId(-1)
 {
 }
 
@@ -30,25 +58,25 @@ bool RoleWidget::init()
 		m_roleBtn->setPosition(Vec2(m_roleBg->getContentSize().width*0.5,m_roleBg->getContentSize().height*0.5));
 		this->addChild(m_roleBtn,Z_First);
 		m_roleBtn->addTouchEventListener(CC_CALLBACK_2(RoleWidget::BtnCall,this));
-		m_roleBtn->setTag(RoleWidgetBtnRole);
 		m_roleBtn->setVisible(true);
 		//选中对号;
 		m_roleChoice = Sprite::create(RESOURCE("role/ui_xuanzhong.png"));
 		m_roleChoice->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 		m_roleChoice->setPosition(Vec2(m_roleBg->getContentSize().width-15,30));
 		this->addChild(m_roleChoice,Z_Second);
+		m_roleChoice->setVisible(false);
 		//表示当前已出战的图片;
 		m_roleFightSpr = Sprite::create(RESOURCE("role/ui_inwar.png"));
 		m_roleFightSpr->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 		m_roleFightSpr->setPosition(Vec2(m_roleBg->getContentSize().width*0.5,m_roleBg->getContentSize().height-10));
 		this->addChild(m_roleFightSpr,Z_Second);
-		m_roleFightSpr->setVisible(true);
+		m_roleFightSpr->setVisible(false);
 		//未开启;
 		m_roleLock = Sprite::create(RESOURCE("role/ui_suo.png"));
 		m_roleLock->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 		m_roleLock->setPosition( vecSub(m_roleBg->getContentSize(),Vec2(10.f,10.f)) );
 		this->addChild(m_roleLock,Z_Second);
-
+		m_roleLock->setVisible(true);
 
 		return true;
 	} while (false);
@@ -57,34 +85,25 @@ bool RoleWidget::init()
 
 void RoleWidget::BtnCall(Ref* pSender,Widget::TouchEventType type)
 {
-	int tag = ((Button*)pSender)->getTag();
 	switch (type)
 	{
 	case Widget::TouchEventType::ENDED:
-		switch (tag)
-		{
-		case RoleWidgetBtnRole:onBtnRole();break;
-		default:break;
-		}
+		onBtnRole(CC_CALLBACK_1(RoleDisplay::widgetBtnCallBack,g_pRoleDisplay),m_nId);
 		break;
 	default:break;
 	}
 }
 
-void RoleWidget::onBtnRole()
+void RoleWidget::onBtnRole(parameter_1_int callback,int& id)
 {
-
-}
-
-void RoleWidget::onBtnFight()
-{
-
+	callback(id);
 }
 
 ////////////////////////////////////////////////
 
 
 //角色;
+extern RoleDisplay* g_pRoleDisplay = nullptr;
 RoleDisplay::RoleDisplay():m_btnExit(nullptr),
 	m_labCrystal(nullptr),
 	m_btnBig(nullptr),
@@ -100,9 +119,17 @@ RoleDisplay::RoleDisplay():m_btnExit(nullptr),
 	m_labProgress(nullptr),
 	m_roleArmature(nullptr),
 	m_labPreviousText(nullptr),
-	m_labTargetText(nullptr)
+	m_labTargetText(nullptr),
+	m_spriteBigbtn(nullptr)
 {
-	m_vecRoleWidget.clear();	
+	m_vecRoleWidget.clear();
+	g_pRoleDisplay = this;
+}
+
+RoleDisplay::~RoleDisplay()
+{
+	m_vecRoleWidget.clear();
+	g_pRoleDisplay = nullptr;
 }
 
 Scene* RoleDisplay::createScene()
@@ -127,9 +154,7 @@ bool RoleDisplay::init()
 	do 
 	{
 		CC_BREAK_IF(!Layer::init());
-
 		showUI();
-
 		return true;
 	} while (false);
 	return false;
@@ -181,15 +206,29 @@ void RoleDisplay::showUI()
 	this->addChild(m_btnBig,Z_First);
 	m_btnBig->addTouchEventListener(CC_CALLBACK_2(RoleDisplay::BtnCall,this));
 	m_btnBig->setTag(RoleDisplayBtnBig);
+	m_spriteBigbtn = Sprite::create(RESOURCE("role/ui_gowar.png"));
+	m_spriteBigbtn->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	m_spriteBigbtn->setPosition(vecMid(m_btnBig));
+	m_btnBig->addChild(m_spriteBigbtn,Z_First);
+
 	//五种角色控件;
 	m_vecRoleWidget.clear();
 	for (unsigned int i=0;i<3;i++)
 	{
 		RoleWidget* cache = RoleWidget::create();
-		//cache->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+		cache->m_nId = i+1;
+		//对号,默认第一个为选中;
+		if (i == GameUIData::getInstance()->getIntegerForKey("role_choice",1)-1)
+		{
+			cache->m_roleChoice->setVisible(true);
+		}
+		//出战;
+		if (i+1 == GameUIData::getInstance()->getIntegerForKey("role_fight",0))
+		{
+			cache->m_roleFightSpr->setVisible(true);
+		}
 		this->addChild(cache,Z_First);
 		m_vecRoleWidget.push_back(cache);
-		//CC_SAFE_DELETE(cache);
 	}
 	m_vecRoleWidget.at(0)->setPosition(Vec2(GLB_SIZE.width*0.5-200.f-66.f,GLB_SIZE.height*0.5+320.f));
 	m_vecRoleWidget.at(1)->setPosition(Vec2(GLB_SIZE.width*0.5-66.f,GLB_SIZE.height*0.5+320.f));
@@ -278,7 +317,7 @@ void RoleDisplay::showUI()
 	paiB->addChild(m_labLvTarget,Z_First);
 	m_labLvTarget->setString("2");
 	//目前等级说明文本;
-	string text = (GameUIData::getInstance()->vec_Role.back())->m_sDescribe;
+	string text = GameUIData::getInstance()->getDragonData(4,3)->m_sDescribe;//(GameUIData::getInstance()->vec_Role.back())->m_sDescribe;
 	//系统字;
 	m_labPreviousText = Label::createWithSystemFont(text.c_str(),"Arial",30);
 	//方正姚体常规;
@@ -308,6 +347,8 @@ void RoleDisplay::showUI()
 	m_roleFeed->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	m_roleFeed->setPosition( vecMid(middleBack->getContentSize(),Vec2(330.f,330.f)));
 	middleBack->addChild(m_roleFeed,Z_First);
+	m_roleFeed->setTag(RoleDisplayBtnFeed);
+	m_roleFeed->addTouchEventListener(CC_CALLBACK_2(RoleDisplay::BtnCall,this));
 	//“喂养”;
 	Sprite* feed = Sprite::create(RESOURCE("role/ui_wy.png"));
 	feed->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -329,6 +370,8 @@ void RoleDisplay::showUI()
 	m_roleFullGrade->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	m_roleFullGrade->setPosition( vecMid(middleBack->getContentSize(),Vec2(330.f,-0.f)) );
 	middleBack->addChild(m_roleFullGrade,Z_First);
+	m_roleFullGrade->setTag(RoleDisplayBtnFullGrade);
+	m_roleFullGrade->addTouchEventListener(CC_CALLBACK_2(RoleDisplay::BtnCall,this));
 	//“一键满级”;
 	Sprite* fullGrade = Sprite::create(RESOURCE("role/ui_yjmj.png"));
 	fullGrade->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -357,6 +400,8 @@ void RoleDisplay::BtnCall(Ref* pSender,Widget::TouchEventType type)
 		{
 		case RoleDisplayBtnExit:onBtnExit();break;
 		case RoleDisplayBtnBig:onBtnBig();break;
+		case RoleDisplayBtnFeed:onBtnFeed();break;
+		case RoleDisplayBtnFullGrade:onBtnFullGrade();break;
 		default:break;
 		}
 		break;
@@ -373,4 +418,84 @@ void RoleDisplay::onBtnExit()
 void RoleDisplay::onBtnBig()
 {
 	CCLOG(" RoleDisplay::onBtnBig ");
+	//当前选中的角色id;
+	int index = GameUIData::getInstance()->getIntegerForKey("role_choice");
+	if (1 == index)
+	{
+		//出战中;
+		BIGBTN_FIGHTING;
+		for (int i = 0;i<m_vecRoleWidget.size();++i)
+		{
+			if (i == index-1)
+			{
+				m_vecRoleWidget.at(index-1)->m_roleFightSpr->setVisible(true);
+				m_vecRoleWidget.at(index-1)->m_roleLock->setVisible(false);
+			}
+			else
+			{
+				m_vecRoleWidget.at(i)->m_roleFightSpr->setVisible(false);
+				m_vecRoleWidget.at(i)->m_roleLock->setVisible(true);
+			}
+		}
+		
+		GameUIData::getInstance()->setIntegerForKey("role_fight",index);
+		
+	}
+	
+}
+
+void RoleDisplay::onBtnFeed()
+{
+	CCLOG(" RoleDisplay::onBtnFeed ");
+	//当前选中的角色id;
+	int index = GameUIData::getInstance()->getIntegerForKey("role_choice");
+	UserRole temp = GameUIData::getInstance()->getUserRoleData(index);
+	if (temp.roleLevel>0)
+	{
+		GameDragonBase* pDragon = GameUIData::getInstance()->getDragonData(index,temp.roleLevel);//注意,级别值要防范小于1;
+	}
+}
+
+void RoleDisplay::onBtnFullGrade()
+{
+	CCLOG(" RoleDisplay::onBtnFullGrade ");
+}
+
+void RoleDisplay::widgetBtnCallBack(int& id)
+{
+	CCLOG("RoleDisplay::widgetBtnCallBack  %d ",id);
+	//对号;
+	for (unsigned int i=0;i<m_vecRoleWidget.size();++i)
+	{
+		if (i == id-1)
+		{
+			m_vecRoleWidget.at(i)->m_roleChoice->setVisible(true);
+			GameUIData::getInstance()->setIntegerForKey("role_choice",id);
+		}
+		else
+		{
+			m_vecRoleWidget.at(i)->m_roleChoice->setVisible(false);
+		}
+	}
+	//出战;
+	if (id == 1)
+	{
+		BIGBTN_FIGHT;
+		m_vecRoleWidget.at(id-1)->m_roleFightSpr->setVisible(false);
+		m_vecRoleWidget.at(id-1)->m_roleLock->setVisible(true);
+	}
+	else if (id == 2)	//600yuan;
+	{
+		//600钻;
+		BIGBTN_Zuan600;
+		m_vecRoleWidget.at(id-1)->m_roleFightSpr->setVisible(false);
+		m_vecRoleWidget.at(id-1)->m_roleLock->setVisible(true);
+	}
+	else if (id == 3)
+	{
+		//12yuan；
+		BIGBTN_Yuan12;
+		m_vecRoleWidget.at(id-1)->m_roleFightSpr->setVisible(false);
+		m_vecRoleWidget.at(id-1)->m_roleLock->setVisible(true);
+	}
 }

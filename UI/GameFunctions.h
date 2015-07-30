@@ -29,6 +29,11 @@ inline cocos2d::Vec2 vecSub (const cocos2d::Vec2& v1,const cocos2d::Vec2& v2) {r
 inline cocos2d::Vec2 vecAdd (const cocos2d::Vec2& v1,const cocos2d::Vec2& v2) {return Vec2(v1.x+v2.x,v1.y+v2.y);}
 inline cocos2d::Vec2 vecMid (const cocos2d::Vec2& v1) {return Vec2(v1.x*0.5f,v1.y*0.5f);}
 inline cocos2d::Vec2 vecMid (const cocos2d::Vec2& v1,const cocos2d::Vec2& v2) {return Vec2(v1.x*0.5f+v2.x*0.5f,v1.y*0.5f+v2.y*0.5f);}
+inline cocos2d::Vec2 vecMid (const Node* sender) {return Vec2(sender->getContentSize().width*0.5f,sender->getContentSize().height*0.5f);}
+
+//函数接收调用的函数指针宏;
+typedef std::function<void()> parameter_0_type;
+typedef std::function<void(int&)> parameter_1_int;
 
 class GameFunctions : public Ref
 {
@@ -44,8 +49,6 @@ public:
 	void initSoldierType();
 	//大地图界面按钮与关卡按钮回调屏蔽;
 	CC_SYNTHESIZE(bool ,isUIBtnCallBack,IsUIBtnCallBack);
-
-	
 
 private:
 	GameFunctions();

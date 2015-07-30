@@ -19,7 +19,6 @@ GameUIData::GameUIData()
     challengeMissionProgress = 1;
     curNormalMission = 1;
     curChallengeMission = 1;
-    vec_Role.clear();
     challengepos.clear();
     horizontalGps = 0;
     verticalGps = -1;
@@ -31,10 +30,23 @@ GameUIData::GameUIData()
 	_vecSingleBoss.clear();
 	_mapAllBoss.clear();
 	_mapShield.clear();
+	_mapAllRole.clear();
+	_mapUserRole.clear();
 }
 
 GameUIData::~GameUIData()
 {
+	missionpos.clear();
+	challengepos.clear();
+	_vecNormalPro.clear();
+	_vecChallengePro.clear();
+	_mapSingleSoldier.clear();
+	_mapAllSoldier.clear();
+	_vecSingleBoss.clear();
+	_mapAllBoss.clear();
+	_mapShield.clear();
+	_mapAllRole.clear();
+	_mapUserRole.clear();
 }
 
 GameUIData* GameUIData::getInstance()
@@ -54,7 +66,7 @@ void GameUIData::deleteInstance()
     }
     m_self = nullptr;
 }
-
+//读取关卡坐标;
 void GameUIData::readPosData(JsonFileType fileType)
 {
     rapidjson::Document readdoc;
@@ -94,7 +106,7 @@ void GameUIData::readPosData(JsonFileType fileType)
     }
     return;
 }
-
+//读取关卡进度;
 void GameUIData::readMissionProgressData(JsonFileType fileType)
 {
     rapidjson::Document readdoc;
@@ -136,7 +148,7 @@ void GameUIData::readMissionProgressData(JsonFileType fileType)
     }
     return;
 }
-
+//更新关卡进度;
 void GameUIData::writeMissionProgressData(JsonFileType fileType,int id,MissionPro& progress)
 {
     rapidjson::Document readdoc;
@@ -192,17 +204,17 @@ void GameUIData::writeMissionProgressData(JsonFileType fileType,int id,MissionPr
     
     return;
 }
-
+//获取普通关卡坐标;
 cocos2d::Vec2 GameUIData::getNormalMissionPos(int id)
 {
     return missionpos.at(id-1);
 }
-
+//获取特殊关卡坐标;
 cocos2d::Vec2 GameUIData::getChallengeMissionPos(int id)
 {
     return challengepos.at(id-1);
 }
-
+//读取角色静态数据表;
 void GameUIData::readRoleData()
 {
     string filename = RESOURCE("uidata/roledata.json");
@@ -221,15 +233,16 @@ void GameUIData::readRoleData()
         CCLOG("GetParseError%s\n",doc.GetParseError());
         return;
     }
-    
+    _mapAllRole.clear();
     //刨除第一行;
     for (unsigned int i=1;i<doc.Size();++i)
     {
+		GameDragonBase* pData = new GameDragonBase();
         //每一行是一个value;
         rapidjson::Value &temp = doc[i];
         int j=0;		//
-        GameDragonBase* pData = new GameDragonBase();
-        pData->m_nDragonId = temp[j].GetInt();
+		int roleId = temp[j].GetInt();
+        pData->m_nDragonId = roleId;
         pData->m_sDragonChineseName = temp[++j].GetString();
         
         GameFunctions::getInstance()->g_sChineseName = pData->m_sDragonChineseName;
@@ -238,7 +251,6 @@ void GameUIData::readRoleData()
         
         //GameFunctions::getInstance()->g_sChineseName = pData->m_sEnglishName;
         
-        pData->m_nDragonType = temp[++j].GetInt();
         pData->m_nUnlockType = temp[++j].GetInt();
         
         if (temp[++j].IsInt())
@@ -259,25 +271,98 @@ void GameUIData::readRoleData()
         pData->m_nTrial = temp[++j].GetInt();
         pData->m_aPrice[0] = temp[++j].GetInt();
         pData->m_aPrice[1] = temp[++j].GetInt();
-        pData->m_sAttribute = temp[++j].GetString();
-        pData->m_nDragonLevel = temp[++j].GetInt();
-        pData->m_sSkill	= temp[++j].GetString();
+		int roleLevel = temp[++j].GetInt();
+        pData->m_nDragonLevel = roleLevel;
         pData->m_fImpair = temp[++j].GetDouble();
         pData->m_nSkillId = temp[++j].GetInt();
-        pData->m_nSkillType = temp[++j].GetInt();
         pData->m_nCollect = temp[++j].GetInt();
         pData->m_sDescribe = temp[++j].GetString();
         pData->m_nSkillNum = temp[++j].GetInt();
-        pData->m_nFeed = temp[++j].GetInt();
         pData->m_nUpGradeTotal = temp[++j].GetInt();
         pData->m_fDiscount = temp[++j].GetDouble();
-        pData->m_sAnimate = temp[++j].GetString();
-        pData->m_sImage = temp[++j].GetString();
-        pData->m_sIcon = temp[++j].GetString();
 
-        vec_Role.push_back(pData);
-
+		_mapAllRole[roleId][roleLevel] = pData;
     }
+}
+
+void GameUIData::readUserRoleData()
+{
+	string filename = RESOURCE("uidata/user_role.json");
+	rapidjson::Document doc;
+	//判断文件是否存在;
+	if (!FileUtils::getInstance()->isFileExist(filename))
+	{
+		CCLOG("user_role json file is not find [%s]",filename.c_str());
+		return;
+	}
+	string data = FileUtils::getInstance()->getStringFromFile(filename);
+	doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+	//
+	if (doc.HasParseError() || !doc.IsArray())
+	{
+		CCLOG("GetParseError%s\n",doc.GetParseError());
+		return;
+	}
+	_mapUserRole.clear();
+	//刨除第一行;
+	for (unsigned int i=1;i<doc.Size();++i)
+	{
+		//每一行是一个value;
+		rapidjson::Value &temp = doc[i];
+		int j=0;
+		UserRole userRole;
+		userRole.roleId = temp[j].GetInt();
+		userRole.roleLevel = temp[++j].GetInt();
+		userRole.curFeed = temp[++j].GetInt();
+		_mapUserRole[i] = userRole;
+	}
+}
+
+void GameUIData::writeUserRoleData(int roleId,int roleLevel,int feed)
+{
+	string filename = RESOURCE("uidata/user_role.json");
+	rapidjson::Document doc;
+	//判断文件是否存在;
+	if (!FileUtils::getInstance()->isFileExist(filename))
+	{
+		CCLOG("roledata json file is not find [%s]",filename.c_str());
+		return;
+	}
+	string data = FileUtils::getInstance()->getStringFromFile(filename);
+	doc.Parse<rapidjson::kParseDefaultFlags>(data.c_str());
+	if (doc.HasParseError() || !doc.IsArray())
+	{
+		CCLOG("GetParseError%s\n",doc.GetParseError());
+		return;
+	}
+	_mapUserRole[roleId].roleLevel = roleLevel;
+	_mapUserRole[roleId].curFeed = feed;
+	rapidjson::Value &temp = doc[roleId];
+	int j = 1;
+	temp[j] = roleLevel;
+	temp[++j] = feed;
+
+	StringBuffer buffer;
+	rapidjson::PrettyWriter<StringBuffer> writer(buffer);  
+	doc.Accept(writer);
+	FILE* file;
+	file = fopen(RESOURCE("uidata/user_role.json"), "wb");
+	if (file)
+	{
+		fputs(buffer.GetString(), file);  
+		fclose(file);
+	}
+	//CCLOG("%s",buffer.GetString()); 
+}
+
+GameDragonBase* GameUIData::getDragonData(int roleType,int level)
+{
+	return _mapAllRole.at(roleType).at(level);
+}
+
+UserRole GameUIData::getUserRoleData(int roleId)
+{
+	return _mapUserRole.at(roleId);
 }
 
 //截取字符串;

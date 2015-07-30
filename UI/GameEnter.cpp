@@ -98,6 +98,7 @@ void GameEnter::loadJsonData()
 	}
 	log("* >->->D * >->->D * >->->D * >->->D * >->->D *");
 	GameUIData::getInstance()->readRoleData();
+    GameUIData::getInstance()->readUserRoleData();
     GameUIData::getInstance()->initGPS();
 }
 

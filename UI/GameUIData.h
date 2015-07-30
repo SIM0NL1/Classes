@@ -47,7 +47,7 @@ USING_NS_CC;
 #define Json_Check_value_ptr(value, strKey) (((value).HasMember(strKey)) ? &((value)[strKey]) : nullptr)
 
 #include "GameDefine.h"
-
+//关卡Id,星星,得分,状态;
 struct MissionPro
 {
     int id;
@@ -55,7 +55,6 @@ struct MissionPro
     int score;
     int state;
 };
-
 //soldierData;
 struct SoldierData
 {
@@ -64,7 +63,6 @@ struct SoldierData
 	int dps;
 	int rate;
 };
-
 //bossData;
 struct BossData
 {
@@ -82,14 +80,20 @@ struct BossData
 	int reward;
 
 };
-
-//
+//护盾;
 struct ShieldData
 {
 	int id;		//情况Id;
 	int type;	//元素,障碍物;
 	int elementId;	//元素Id;
 	int num;	//数量;
+};
+//玩家角色升级喂养数据;
+struct UserRole
+{
+	int roleId;
+	int roleLevel;
+	int curFeed;
 };
 
 class GameDragonBase;
@@ -111,6 +115,10 @@ public:
     void writeMissionProgressData(JsonFileType fileType,int id,MissionPro& progress);
     //读取角色数据;
     void readRoleData();
+	//读取玩家更新的角色数据;
+	void readUserRoleData();
+	//刷新角色等级数据;
+	void writeUserRoleData(int roleId,int roleLevel,int feed);
 	//读取塔防士兵表;
 	void readTDSoldierData();
 	//读取塔防Boss表;
@@ -118,6 +126,7 @@ public:
 	//读取塔防盾表;
 	void readTDShieldData();
 
+	//-----------UserData-Begin-----------;
 	void writeData();
     void setIntegerForKey(const char* key,int value);
 	void setLongIntegerForKey(const char* key,unsigned int value);
@@ -135,6 +144,7 @@ public:
 	float getFloatForKey(const char* key);
 	float getFloatForKey(const char* key,float defaultValue);
     void removeDataForKey(const char* key);
+	//--------------End-------------
 
     Vec2 getNormalMissionPos(int id);
     Vec2 getChallengeMissionPos(int id);
@@ -156,13 +166,17 @@ public:
     CC_SYNTHESIZE(float,verticalGps,VerticalGps);	//场景切换时地图坐标定位;
     CC_SYNTHESIZE(int,verticalIndex,VerticalIndex);	//场景切换时地图Page定位;
     vector<string> split(string str,string pattern);
-    vector<GameDragonBase*> vec_Role;
     void initGPS();
     float getNormalMissionHeight();
     float getChallengeMissionHeight();
 	SoldierData getSoldierData(int type,int level);
 	vector<BossData> getBossData(int missionId);
 	ShieldData getShieldData(int id);
+	//获取龙宠物数据;
+	GameDragonBase* getDragonData(int roleType,int level);
+	UserRole getUserRoleData(int roleId);	//返回结构体;
+
+	map<int,map<int,GameDragonBase*>> _mapAllRole;		//不同等级的不同角色;
 
 private:
     vector<Vec2> missionpos;	//普通关卡坐标;
@@ -174,7 +188,9 @@ private:
 	map<int,map<int,SoldierData>> _mapAllSoldier;
 	vector<BossData> _vecSingleBoss;	//没关的Boss,数量不固定;
 	map<int,vector<BossData>> _mapAllBoss;	//所有关卡Boss;
-	map<int,ShieldData> _mapShield;		//盾数据;		
+	map<int,ShieldData> _mapShield;		//盾数据;
+	map<int,UserRole> _mapUserRole;	//玩家角色数据更新;
+	
 };
 
 #endif
