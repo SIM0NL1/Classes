@@ -383,7 +383,7 @@ void GameUILayer::initBG()
     cloud->setPosition(VisibleRect::top() - Vec2(0 , 160));
     if (GameUIData::getInstance()->getCurNormalMission()%2)
     {
-        this->addChild(cloud,6);
+        this->addChild(cloud,4);
     }
     
     if (!DataCenter::getInstance()->getTimeLimit())

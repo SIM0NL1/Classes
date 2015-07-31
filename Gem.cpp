@@ -800,11 +800,11 @@ void Gem::dealWithSkill()
     {
         arm->setRotation(90);
     }
-    if (_skill == SkillLeft || SkillLeftTen)
+    if (_skill == SkillLeft || _skill == SkillLeftTen)
     {
         arm->setRotation(45);
     }
-    if (_skill == SkillRight || SkillRightTen)
+    if (_skill == SkillRight || _skill == SkillRightTen)
     {
         arm->setRotation(135);
     }
@@ -2228,7 +2228,7 @@ void Gem::gemBright(Node *pSender)
         {
             if (mp.x - i >= 0 && mp.y + i < kMatrixWidth)
             {
-                if (_gemStoneMatrix[mp.x - i][mp.y + i])
+                if (_gemStoneMatrix[mp.x - i][mp.y + i] && _gemStoneMatrix[mp.x - i][mp.y + i]->getGemSkill() != SkillTurnTen)
                 {
                     _gemStoneMatrix[mp.x - i][mp.y + i]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x - i][mp.y + i])), NULL));
                 }
@@ -2236,7 +2236,7 @@ void Gem::gemBright(Node *pSender)
             
             if (mp.x + i < kMatrixWidth && mp.y - i >= 0)
             {
-                if (_gemStoneMatrix[mp.x + i][mp.y - i])
+                if (_gemStoneMatrix[mp.x + i][mp.y - i] && _gemStoneMatrix[mp.x + i][mp.y - i]->getGemSkill() != SkillTurnTen)
                 {
                     _gemStoneMatrix[mp.x + i][mp.y - i]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x + i][mp.y - i])), NULL));
                 }
@@ -2251,7 +2251,7 @@ void Gem::gemBright(Node *pSender)
         {
             if (mp.x - i >= 0 && mp.y - i >= 0)
             {
-                if (_gemStoneMatrix[mp.x - i][mp.y - i])
+                if (_gemStoneMatrix[mp.x - i][mp.y - i] && _gemStoneMatrix[mp.x - i][mp.y - i]->getGemSkill() != SkillTurnTen)
                 {
                     _gemStoneMatrix[mp.x - i][mp.y - i]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x - i][mp.y - i])), NULL));
                 }
@@ -2259,7 +2259,7 @@ void Gem::gemBright(Node *pSender)
             
             if (mp.x + i < kMatrixWidth && mp.y + i < kMatrixWidth)
             {
-                if (_gemStoneMatrix[mp.x + i][mp.y + i])
+                if (_gemStoneMatrix[mp.x + i][mp.y + i] && _gemStoneMatrix[mp.x + i][mp.y + i]->getGemSkill() != SkillTurnTen)
                 {
                     _gemStoneMatrix[mp.x + i][mp.y + i]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x + i][mp.y + i])), NULL));
                 }
@@ -2276,7 +2276,7 @@ void Gem::gemBright(Node *pSender)
             {
                 if (_gemStoneMatrix[mp.x - i][mp.y])
                 {
-                    if (_gemStoneMatrix[mp.x - i][mp.y])
+                    if (_gemStoneMatrix[mp.x - i][mp.y] && _gemStoneMatrix[mp.x - i][mp.y]->getGemSkill() != SkillTurnTen)
                     {
                         _gemStoneMatrix[mp.x - i][mp.y]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x - i][mp.y])), NULL));
                     }
@@ -2288,9 +2288,9 @@ void Gem::gemBright(Node *pSender)
                 
                 if (_gemStoneMatrix[mp.x + i][mp.y])
                 {
-                    if (_gemStoneMatrix[mp.x + i][mp.y])
+                    if (_gemStoneMatrix[mp.x + i][mp.y] && _gemStoneMatrix[mp.x + i][mp.y]->getGemSkill() != SkillTurnTen)
                     {
-                        _gemStoneMatrix[mp.x + i][mp.y]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x - i][mp.y])), NULL));
+                        _gemStoneMatrix[mp.x + i][mp.y]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x + i][mp.y])), NULL));
                     }
                 }
             }
@@ -2302,7 +2302,7 @@ void Gem::gemBright(Node *pSender)
             {
                 if (_gemStoneMatrix[mp.x][mp.y - i])
                 {
-                    if (_gemStoneMatrix[mp.x][mp.y - i])
+                    if (_gemStoneMatrix[mp.x][mp.y - i] && _gemStoneMatrix[mp.x][mp.y - i]->getGemSkill() != SkillTurnTen)
                     {
                         _gemStoneMatrix[mp.x][mp.y - i]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x][mp.y - i])), NULL));
                     }
@@ -2313,7 +2313,7 @@ void Gem::gemBright(Node *pSender)
                 
                 if (_gemStoneMatrix[mp.x][mp.y + i])
                 {
-                    if (_gemStoneMatrix[mp.x][mp.y + i])
+                    if (_gemStoneMatrix[mp.x][mp.y + i] && _gemStoneMatrix[mp.x][mp.y + i]->getGemSkill() != SkillTurnTen)
                     {
                         _gemStoneMatrix[mp.x][mp.y + i]->runAction(Sequence::create(DelayTime::create(0.05 * i),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x][mp.y + i])), NULL));
                     }
@@ -2333,14 +2333,14 @@ void Gem::gemBright(Node *pSender)
                     continue;
                 }
                 
-                if ((i >= mp.x-2)&&(i <= mp.x+2)&&(j >= mp.y-2)&&(j <= mp.y+2)&& _gemStoneMatrix[i][j] )
+                if ((i >= mp.x-2)&&(i <= mp.x+2)&&(j >= mp.y-2)&&(j <= mp.y+2)&& _gemStoneMatrix[i][j] && _gemStoneMatrix[i][j]->getGemSkill() != SkillTurnTen )
                 {
                     int times = abs(i - mp.x) + abs(j - mp.y) - 1;
                     _gemStoneMatrix[i][j]->runAction(Sequence::create(DelayTime::create(0.05 * times),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[i][j])), NULL));
                 }
             }
         }
-
+         _gemStoneMatrix[mp.x][mp.y]->runAction(Sequence::create(DelayTime::create(0),CallFuncN::create(CC_CALLBACK_1(Gem::gemBrightStar, _gemStoneMatrix[mp.x][mp.y])), NULL));
     }
 
 }
