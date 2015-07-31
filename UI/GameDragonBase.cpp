@@ -15,6 +15,7 @@ GameDragonBase::GameDragonBase()
 	m_sEnglishName = "";
 	m_nUnlockType = -1;
 	m_aUnlockCondition.clear();
+	m_sUnlockText = "";
 	m_nTrial = -1;
 	m_nDragonLevel = -1;
 	m_fImpair = -1;

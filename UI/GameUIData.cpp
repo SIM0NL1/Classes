@@ -256,7 +256,7 @@ void GameUIData::readRoleData()
         if (temp[++j].IsInt())
         {
             pData->m_aUnlockCondition.push_back(temp[j].GetInt());
-            pData->m_aUnlockCondition.push_back(-7);
+            //pData->m_aUnlockCondition.push_back(-7);
         }
         else if (temp[j].IsString())
         {
@@ -268,6 +268,7 @@ void GameUIData::readRoleData()
                 pData->m_aUnlockCondition.push_back( atoi(str_temp.at(i).c_str()) );
             }
         }
+		pData->m_sUnlockText = temp[++j].GetString();
         pData->m_nTrial = temp[++j].GetInt();
         pData->m_aPrice[0] = temp[++j].GetInt();
         pData->m_aPrice[1] = temp[++j].GetInt();
@@ -599,7 +600,7 @@ void GameUIData::writeData()
 		writedoc.AddMember("CurNormalMissionPlay",2,allocator);			//正在游戏的普通关卡;
 		writedoc.AddMember("CurChallengeMissionPlay",0,allocator);		//正在游戏的副本关卡;
 		writedoc.AddMember("CurLongBiNum",100,allocator);		//当前龙币数值;
-		writedoc.AddMember("CurDiamondsNum",100,allocator);		//当前钻石数值;
+		writedoc.AddMember("CurDiamondsNum",10000,allocator);		//当前钻石数值;
 		//数组里面包着对象;
 //		rapidjson::Value array(rapidjson::kArrayType);
 //		rapidjson::Value object(rapidjson::kObjectType);                

@@ -60,7 +60,10 @@ public:
 	Button *m_roleFeed,*m_roleFullGrade;	//喂养,一键满级;
 	Label *m_labFeedCost,*m_labFullGradeCost;	//喂养花费,一键满级花费;
 	Label *m_labLvPrevious,*m_labLvTarget;	//目前等级和目标等级;
+	Sprite* progressBack;	//进度条底板;
 	ProgressTimer* m_cwProgress;
+	Sprite* m_sprRoleLockBack;	//角色未解锁底板;
+	Label* m_labRoleLock;		//角色解锁条件说明;
 	Label* m_level;	//等级;
 	Label* m_labProgress;	//等级进度;
 	Armature* m_roleArmature;	//角色形象;
@@ -69,12 +72,17 @@ public:
 	static Scene* createScene();
 	CREATE_FUNC(RoleDisplay);
 	void showUI();
+	//初始化角色控件,包括是否解锁,是否出战,当前选项;
+	void initRoleWidget();
+	//初始化所有界面控件;
+	void initAllWidget(int& id);
 	void BtnCall(Ref* pSender,Widget::TouchEventType type);
 	void onBtnExit();
 	void onBtnBig();
 	void onBtnFeed();
 	void onBtnFullGrade();
 	void widgetBtnCallBack(int& id);
+	void btnBright(Button* pSender,bool flag);
 
 private:
 	RoleDisplay();

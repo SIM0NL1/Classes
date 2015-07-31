@@ -46,6 +46,14 @@ USING_NS_CC;
 //得到Value指针;
 #define Json_Check_value_ptr(value, strKey) (((value).HasMember(strKey)) ? &((value)[strKey]) : nullptr)
 
+//常用数据获取宏;
+#define Get_Diamonds GameUIData::getInstance()->getIntegerForKey("CurDiamondsNum")
+#define Set_Diamonds(_Num_) GameUIData::getInstance()->setIntegerForKey("CurDiamondsNum",_Num_)
+#define Get_Role_Choice GameUIData::getInstance()->getIntegerForKey("role_choice")
+#define Set_Role_Choice(_Num_) GameUIData::getInstance()->setIntegerForKey("role_choice",_Num_)
+#define Get_Role_Fight GameUIData::getInstance()->getIntegerForKey("role_fight")
+#define Set_Role_Fight(_Num_) GameUIData::getInstance()->setIntegerForKey("role_fight",_Num_)
+
 #include "GameDefine.h"
 //关卡Id,星星,得分,状态;
 struct MissionPro
@@ -148,9 +156,8 @@ public:
 
     Vec2 getNormalMissionPos(int id);
     Vec2 getChallengeMissionPos(int id);
-    //获取当前关卡进度;
+    //获取当前关卡游戏情况,星级和得分;
     MissionPro getMissionProgress(int id,JsonFileType fileType);
-
 	int normalMissionProgress,curNormalMission,challengeMissionProgress,curChallengeMission;
 	void setNormalMissionProgress(int num);	//普通关卡总进度;
 	int getNormalMissionProgress()const;
