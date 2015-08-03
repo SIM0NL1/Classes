@@ -129,7 +129,14 @@ RoleDisplay::RoleDisplay():m_btnExit(nullptr),
 	m_roleArmature(nullptr),
 	m_labPreviousText(nullptr),
 	m_labTargetText(nullptr),
-	m_spriteBigbtn(nullptr)
+	m_spriteBigbtn(nullptr),
+	callBackEnable(false),
+	middleBack(nullptr),
+	feedCrystal(nullptr),
+	fullCrystal(nullptr),
+	m_sprArrow(nullptr),
+	paiA(nullptr),
+	paiB(nullptr)
 {
 	m_vecRoleWidget.clear();
 	g_pRoleDisplay = this;
@@ -204,7 +211,7 @@ void RoleDisplay::showUI()
 	this->addChild(m_labCrystal,Z_Third);
 	m_labCrystal->setString(__String::createWithFormat("%d",Get_Diamonds)->getCString());
 	//中间底板;
-	Sprite* middleBack = Sprite::create(RESOURCE("role/ui_cwbg02.png"));
+	middleBack = Sprite::create(RESOURCE("role/ui_cwbg02.png"));
 	middleBack->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	middleBack->setPosition( vecMid(GLB_SIZE,Vec2(0,-60)) );
 	this->addChild(middleBack,Z_First);
@@ -290,11 +297,11 @@ void RoleDisplay::showUI()
 	m_labRoleLock->setPosition(Vec2(40.f,20.f));
 	m_sprRoleLockBack->addChild(m_labRoleLock,Z_First);
 	//文字说明牌;
-	Sprite* paiA = Sprite::create(RESOURCE("role/ui_cwbg03.png"));
+	paiA = Sprite::create(RESOURCE("role/ui_cwbg03.png"));
 	paiA->setAnchorPoint(Vec2::ZERO);
 	paiA->setPosition(40.f,40.f);
 	middleBack->addChild(paiA,Z_First);
-	Sprite* paiB = Sprite::create(RESOURCE("role/ui_cwbg03.png"));
+	paiB = Sprite::create(RESOURCE("role/ui_cwbg03.png"));
 	paiB->setAnchorPoint(Vec2::ANCHOR_BOTTOM_RIGHT);
 	paiB->setPosition( Vec2(middleBack->getContentSize().width-40.f,40.f) );
 	middleBack->addChild(paiB,Z_First);
@@ -319,7 +326,8 @@ void RoleDisplay::showUI()
 	paiB->addChild(m_labLvTarget,Z_First);
 	m_labLvTarget->setString("2");
 	//目前等级说明文本;
-	string text = GameUIData::getInstance()->getDragonData(4,3)->m_sDescribe;//(GameUIData::getInstance()->vec_Role.back())->m_sDescribe;
+	//string text = GameUIData::getInstance()->getDragonData(4,3)->m_sDescribe;//(GameUIData::getInstance()->vec_Role.back())->m_sDescribe;
+	string text = "";
 	//系统字;
 	m_labPreviousText = Label::createWithSystemFont(text.c_str(),"Arial",30);
 	//方正姚体常规;
@@ -327,23 +335,23 @@ void RoleDisplay::showUI()
 // 	m_labPreviousText = Label::createWithTTF(temp,text,TextHAlignment::LEFT,180.f);
 // 	m_labPreviousText->enableOutline(Color4B(255,0,0,0));
 // 	m_labPreviousText->enableGlow(Color4B::GREEN);//荧光颜色为绿色;
-	m_labPreviousText->setWidth(190.f);
+	m_labPreviousText->setWidth(200.f);
 	m_labPreviousText->setColor(Color3B::BLACK);
-	m_labPreviousText->setAnchorPoint(Vec2::ZERO);
-	m_labPreviousText->setPosition(Vec2(40.f,80.f));
+	m_labPreviousText->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	m_labPreviousText->setPosition(Vec2(40.f,165.f));
 	paiA->addChild(m_labPreviousText,Z_First);
 	//目标等级说明文本;
 	m_labTargetText = Label::createWithSystemFont(text.c_str(),"Arial",30);
-	m_labTargetText->setWidth(190.f);
+	m_labTargetText->setWidth(200.f);
 	m_labTargetText->setColor(Color3B::BLACK);
-	m_labTargetText->setAnchorPoint(Vec2::ZERO);
-	m_labTargetText->setPosition(Vec2(40.f,80.f));
+	m_labTargetText->setAnchorPoint(Vec2::ANCHOR_TOP_LEFT);
+	m_labTargetText->setPosition(Vec2(40.f,165.f));
 	paiB->addChild(m_labTargetText,Z_First);
 	//箭头;
-	Sprite* jiantou = Sprite::create(RESOURCE("role/ui_jt01.png"));
-	jiantou->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-	jiantou->setPosition( vecMid(middleBack->getContentSize(),Vec2(0,-380.f)) );
-	middleBack->addChild(jiantou,Z_First);
+	m_sprArrow = Sprite::create(RESOURCE("role/ui_jt01.png"));
+	m_sprArrow->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+	m_sprArrow->setPosition( vecMid(middleBack->getContentSize(),Vec2(0,-380.f)) );
+	middleBack->addChild(m_sprArrow,Z_First);
 	//喂养button;
 	m_roleFeed = Button::create(RESOURCE("role/ui_sjniu01.png"),RESOURCE("role/ui_sjniu02.png"),RESOURCE("role/ui_sjniu03.png"));
 	m_roleFeed->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -363,7 +371,7 @@ void RoleDisplay::showUI()
 	m_roleFeed->addChild(m_labFeedCost,Z_First);
 	m_labFeedCost->setString("20");
 	//sprite;
-	Sprite* feedCrystal = Sprite::create(RESOURCE("role/ui_zuanshi02.png"));
+	feedCrystal = Sprite::create(RESOURCE("role/ui_zuanshi02.png"));
 	feedCrystal->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	feedCrystal->setPosition(Vec2(m_roleFeed->getContentSize().width*0.5f-40.f,m_roleFeed->getContentSize().height+30.f));
 	m_roleFeed->addChild(feedCrystal,Z_First);
@@ -386,7 +394,7 @@ void RoleDisplay::showUI()
 	m_roleFullGrade->addChild(m_labFullGradeCost,Z_First);
 	m_labFullGradeCost->setString("654");
 	//sprite;
-	Sprite* fullCrystal = Sprite::create(RESOURCE("role/ui_zuanshi02.png"));
+	fullCrystal = Sprite::create(RESOURCE("role/ui_zuanshi02.png"));
 	fullCrystal->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 	fullCrystal->setPosition(Vec2(m_roleFeed->getContentSize().width*0.5f-40.f,m_roleFeed->getContentSize().height+30.f));
 	m_roleFullGrade->addChild(fullCrystal,Z_First);
@@ -422,6 +430,10 @@ void RoleDisplay::onBtnExit()
 void RoleDisplay::onBtnBig()
 {
 	CCLOG(" RoleDisplay::onBtnBig ");
+	if (callBackEnable)//用于关闭界面按钮响应事件;
+	{
+		return;
+	}
 	//当前选中的角色id;
 	int index = Get_Role_Choice;
 	if (GameUIData::getInstance()->getUserRoleData(index).roleLevel)
@@ -430,6 +442,7 @@ void RoleDisplay::onBtnBig()
 		GameUIData::getInstance()->setIntegerForKey("role_fight",index);
 		//出战中;
 		BIGBTN_FIGHTING;
+		btnBright(m_btnBig,false);
 		for (int i = 0;i<m_vecRoleWidget.size();++i)
 		{
 			if (i == index-1)
@@ -462,24 +475,152 @@ void RoleDisplay::onBtnBig()
 
 void RoleDisplay::onBtnFeed()
 {
-	CCLOG(" RoleDisplay::onBtnFeed ");
+	if (callBackEnable)//用于关闭界面按钮响应事件;
+	{
+		return;
+	}
 	//当前选中的角色id;
 	int index = Get_Role_Choice;
 	UserRole temp = GameUIData::getInstance()->getUserRoleData(index);
-	if (temp.roleLevel>0)
+	if (temp.roleLevel<1)//级别值要防范小于1;
 	{
-		GameDragonBase* pDragon = GameUIData::getInstance()->getDragonData(index,temp.roleLevel);//注意,级别值要防范小于1;
+		CCLOG(" RoleDisplay::onBtnFeed ERROR");
+		return;
+	}
+	GameDragonBase* pDragon = GameUIData::getInstance()->getDragonData(index,temp.roleLevel);
+	//需要刷新的值:经验值,一键满级值,水晶值,进度条.如果升级了,还需刷新级别,级别说明,级别图标,经验总值;
+	int nowCrystal = Get_Diamonds;
+	int perFeed = pDragon->m_nUpGradeTotal/10;
+	if ( nowCrystal >= perFeed )//水晶够用;
+	{
+		//水晶扣减;
+		extractReduceCrystal(nowCrystal-perFeed);
+		//总共需要喂养值;
+		int total = pDragon->m_nUpGradeTotal;
+		//封装进度条进度和百分比;
+		extractProgressPercent(temp.curFeed+perFeed,total);
+		//保存喂养数据;
+		GameUIData::getInstance()->writeUserRoleData(index,temp.roleLevel,temp.curFeed+perFeed);
+		//封装一键满级和喂养的文字显示;
+		extractFullGradeAndFeeded(index, temp, total);
+
+		//计算如果刚好满级的情况;
+		if (temp.curFeed+perFeed==total)
+		{
+			if (temp.roleLevel<3)
+			{
+				//进度条缓慢降到0;
+				setCallBackEnable(true);
+				m_cwProgress->runAction(Sequence::create(
+					DelayTime::create(0.5f),
+					ProgressTo::create(1.f,0.f),
+					CallFunc::create(CC_CALLBACK_0(RoleDisplay::setCallBackEnable,this,false)),
+					nullptr));
+				//重新获取数据;
+				pDragon = GameUIData::getInstance()->getDragonData(index,temp.roleLevel+1);
+				perFeed = pDragon->m_nUpGradeTotal/10;
+				total = pDragon->m_nUpGradeTotal;
+				//进度条进度显示;
+				m_labProgress->setString(__String::createWithFormat("%d:%d",0,total)->getCString());
+				//级别Icon等级;
+				m_level->setString(__String::createWithFormat("%d",temp.roleLevel+1)->getCString());
+				//文字牌等级和文字说明;
+				extractLevelAndLvText(index,temp.roleLevel+1);
+				//保存喂养数据;
+				GameUIData::getInstance()->writeUserRoleData(index,temp.roleLevel+1,0);
+				//一键满级和喂养的文字显示;
+				temp = GameUIData::getInstance()->getUserRoleData(index);
+				extractFullGradeAndFeeded(index, temp, total);
+			}
+			else//满级了;
+			{
+				//级别Icon等级;
+				m_level->setString(__String::createWithFormat("%d",temp.roleLevel+1)->getCString());
+				m_cwProgress->setPercentage(100.f);	//进度条显示百分百;
+				m_labProgress->setVisible(false);	//进度值隐藏;
+				paiA->setPosition( Vec2(middleBack->getContentSize().width*0.5f-paiA->getContentSize().width*0.5f,40.f) );	//牌A位置居中;
+				paiB->setVisible(false);	//牌B消失;
+				m_sprArrow->setVisible(false);
+				m_labLvPrevious->setString(__String::createWithFormat("%d",temp.roleLevel+1)->getCString());	//最高级数字;
+				m_labPreviousText->setString(GameUIData::getInstance()->getDragonData(index,temp.roleLevel+1)->m_sDescribe);	//最高级描述;
+				btnBright(m_roleFeed,false);
+				btnBright(m_roleFullGrade,false);
+				feedCrystal->setVisible(false);
+				fullCrystal->setVisible(false);
+				m_labFeedCost->setVisible(false);
+				m_labFullGradeCost->setVisible(false);
+				GameUIData::getInstance()->writeUserRoleData(index,temp.roleLevel+1,0);
+			}
+		}
+	}
+	else
+	{
+		MessageBox("主公，水晶不足......","提示");
+		//RMB接口;
 	}
 }
 
 void RoleDisplay::onBtnFullGrade()
 {
-	CCLOG(" RoleDisplay::onBtnFullGrade ");
+	if (callBackEnable)//用于关闭界面按钮响应事件;
+	{
+		return;
+	}
+	int index = Get_Role_Choice;
+	UserRole temp = GameUIData::getInstance()->getUserRoleData(index);
+	if (temp.roleLevel<1)//级别值要防范小于1;
+	{
+		CCLOG(" RoleDisplay::onBtnFullGrade ERROR");
+		return;
+	}
+	GameDragonBase* pDragon = GameUIData::getInstance()->getDragonData(index,temp.roleLevel);
+	//需要刷新的值:经验值,一键满级值,水晶值,进度条.如果升级了,还需刷新级别,级别说明,级别图标,经验总值;
+	int nowCrystal = Get_Diamonds;
+	int sum = 0;
+	for (int i=1;i<=GameUIData::getInstance()->_mapAllRole.at(index).size();i++)
+	{
+		sum += GameUIData::getInstance()->_mapAllRole.at(index).at(i)->m_nUpGradeTotal;
+	}
+	int feeded = 0;
+	for (int j=1;j<temp.roleLevel;j++)
+	{
+		feeded += GameUIData::getInstance()->_mapAllRole.at(index).at(j)->m_nUpGradeTotal;
+	}
+	if ( nowCrystal >= sum-feeded-temp.curFeed )//水晶够用;
+	{
+		//水晶扣减;
+		extractReduceCrystal(nowCrystal - (sum-feeded-temp.curFeed));
+		//级别Icon等级;
+		m_level->setString(__String::createWithFormat("%d",MAX)->getCString());
+		m_cwProgress->setPercentage(100.f);	//进度条显示百分百;
+		m_labProgress->setVisible(false);	//进度值隐藏;
+		paiA->setPosition( Vec2(middleBack->getContentSize().width*0.5f-paiA->getContentSize().width*0.5f,40.f) );	//牌A位置居中;
+		paiB->setVisible(false);	//牌B消失;
+		m_sprArrow->setVisible(false);
+		m_labLvPrevious->setString(__String::createWithFormat("%d",MAX)->getCString());	//最高级数字;
+		m_labPreviousText->setString(GameUIData::getInstance()->getDragonData(index,MAX)->m_sDescribe);	//最高级描述;
+		btnBright(m_roleFeed,false);
+		btnBright(m_roleFullGrade,false);
+		feedCrystal->setVisible(false);
+		fullCrystal->setVisible(false);
+		m_labFeedCost->setVisible(false);
+		m_labFullGradeCost->setVisible(false);
+		GameUIData::getInstance()->writeUserRoleData(index,MAX,0);
+	}
+	else
+	{
+		MessageBox("主公，水晶不足......","提示");
+		//RMB接口;
+	}
 }
 
 void RoleDisplay::widgetBtnCallBack(int& id)
 {
 	CCLOG("RoleDisplay::widgetBtnCallBack  %d ",id);
+	if (callBackEnable)//用于关闭界面按钮响应事件;
+	{
+		return;
+	}
 	//对号;
 	for (unsigned int i=0;i<m_vecRoleWidget.size();++i)
 	{
@@ -553,6 +694,7 @@ void RoleDisplay::initAllWidget(int& id)
 {
 	UserRole temp = GameUIData::getInstance()->getUserRoleData(id);
 	GameDragonBase* pDragon = GameUIData::getInstance()->getDragonData(id,1);
+
 	//不同角色不同形象;
 	switch (id)
 	{
@@ -584,9 +726,18 @@ void RoleDisplay::initAllWidget(int& id)
 
 		break;
 	}
-
-	if (temp.roleLevel)//已经解锁,判断是出战还是出战中;
+	
+	if (temp.roleLevel && temp.roleLevel<MAX)//已经解锁,判断是出战还是出战中;
 	{
+		//还原;
+		feedCrystal->setVisible(true);
+		fullCrystal->setVisible(true);
+		m_labFeedCost->setVisible(true);
+		m_labFullGradeCost->setVisible(true);
+		m_labProgress->setVisible(true);
+		paiA->setPosition( Vec2(40,40.f) );
+		paiB->setVisible(true);
+		m_sprArrow->setVisible(true);
 		//锁头;
 		m_vecRoleWidget.at(id-1)->m_roleLock->setVisible(false);
 		//进度条及进度;
@@ -596,40 +747,52 @@ void RoleDisplay::initAllWidget(int& id)
 		m_level->setString(__String::createWithFormat("%d",temp.roleLevel)->getCString());
 		//总共需要喂养值;
 		int total = GameUIData::getInstance()->getDragonData(id,temp.roleLevel)->m_nUpGradeTotal;
-		m_labProgress->setString(__String::createWithFormat("%d:%d",temp.curFeed,total)->getCString());
-		m_cwProgress->setPercentage(temp.curFeed*100.f/total);
-		//喂养和一键满级按钮禁用;
+		//封装进度条进度和百分比;
+		extractProgressPercent(temp.curFeed,total);
+		//一键满级和喂养的文字显示;
+		extractFullGradeAndFeeded(id, temp, total);
+		//喂养和一键满级按钮;
 		btnBright(m_roleFeed,true);
 		btnBright(m_roleFullGrade,true);
+		//级别和级别说明文字;
+		extractLevelAndLvText(id,temp.roleLevel);
 		//判断是出战还是出战中;
-		if (id == Get_Role_Fight)
-		{
-			//出战中;
-			BIGBTN_FIGHTING;
-			for (int i = 0;i<m_vecRoleWidget.size();++i)
-			{
-				if (i == id-1)
-				{
-					m_vecRoleWidget.at(i)->m_roleFightSpr->setVisible(true);
-				}
-				else
-				{
-					m_vecRoleWidget.at(i)->m_roleFightSpr->setVisible(false);
-				}
-			}
-			btnBright(m_btnBig,false);
-		}
-		else
-		{
-			//出战;
-			BIGBTN_FIGHT;
-			m_vecRoleWidget.at(id-1)->m_roleFightSpr->setVisible(false);
-			btnBright(m_btnBig,true);
-		}
-		
+		extractFighting(id);	
 	}
-	else
+	else if (temp.roleLevel == MAX)	//满级;
 	{
+		//级别Icon等级;
+		m_level->setString(__String::createWithFormat("%d",temp.roleLevel)->getCString());
+		progressBack->setVisible(true);
+		m_sprRoleLockBack->setVisible(false);
+		m_cwProgress->setPercentage(100.f);	//进度条显示百分百;
+		m_labProgress->setVisible(false);	//进度值隐藏;
+		paiA->setPosition( Vec2(middleBack->getContentSize().width*0.5f-paiA->getContentSize().width*0.5f,40.f) );	//牌A位置居中;
+		paiB->setVisible(false);	//牌B消失;
+		m_sprArrow->setVisible(false);
+		m_labLvPrevious->setString(__String::createWithFormat("%d",temp.roleLevel)->getCString());	//最高级数字;
+		m_labPreviousText->setString(GameUIData::getInstance()->getDragonData(id,temp.roleLevel)->m_sDescribe);	//最高级描述;
+		btnBright(m_roleFeed,false);
+		btnBright(m_roleFullGrade,false);
+		feedCrystal->setVisible(false);
+		fullCrystal->setVisible(false);
+		m_labFeedCost->setVisible(false);
+		m_labFullGradeCost->setVisible(false);
+		//判断出战还是出战中;
+		extractFighting(id);
+	}
+	else//尚未解锁;
+	{
+		//还原;
+		feedCrystal->setVisible(true);
+		fullCrystal->setVisible(true);
+		m_labFeedCost->setVisible(true);
+		m_labFullGradeCost->setVisible(true);
+		m_labProgress->setVisible(true);
+		paiA->setPosition( Vec2(40,40.f) );
+		paiB->setVisible(true);
+		m_sprArrow->setVisible(true);
+
 		//锁头;
 		m_vecRoleWidget.at(id-1)->m_roleLock->setVisible(true);
 		//解锁说明;
@@ -641,7 +804,12 @@ void RoleDisplay::initAllWidget(int& id)
 		//喂养和一键满级按钮禁用;
 		btnBright(m_roleFeed,false);
 		btnBright(m_roleFullGrade,false);
-
+		//级别和级别说明文字;
+		extractLevelAndLvText(id,1);
+		//总共需要喂养值;
+		int total = GameUIData::getInstance()->getDragonData(id,1)->m_nUpGradeTotal;
+		//一键满级和喂养;
+		extractFullGradeAndFeeded(id,temp,total);
 		//判断是600钻石解锁还是人民币解锁;
 		if (GameUIData::getInstance()->getNormalMissionProgress() >= pDragon->m_aUnlockCondition.at(0))
 		{
@@ -660,4 +828,70 @@ void RoleDisplay::btnBright(Button* pSender,bool flag)
 {
 	pSender->setBright(flag);
 	pSender->setEnabled(flag);
+}
+
+void RoleDisplay::extractLevelAndLvText( int& id,int level )
+{
+	m_labLvPrevious->setString(__String::createWithFormat("%d",level)->getCString());
+	m_labLvTarget->setString(__String::createWithFormat("%d",level+1)->getCString());
+	m_labPreviousText->setString(GameUIData::getInstance()->getDragonData(id,level)->m_sDescribe);
+	m_labTargetText->setString(GameUIData::getInstance()->getDragonData(id,level+1)->m_sDescribe);
+}
+
+void RoleDisplay::extractReduceCrystal(int crystal)
+{
+	Set_Diamonds(crystal);
+	m_labCrystal->setString(__String::createWithFormat("%d",crystal)->getCString());
+}
+
+void RoleDisplay::extractProgressPercent(int cur,int total)
+{
+	m_labProgress->setString(__String::createWithFormat("%d:%d",cur,total)->getCString());
+	m_cwProgress->setPercentage(cur*100.f/total);
+}
+
+void RoleDisplay::extractFullGradeAndFeeded(int& id, UserRole &temp, int total)
+{
+	//一键满级和喂养的文字显示;
+	int sum = 0;
+	for (int i=1;i<=GameUIData::getInstance()->_mapAllRole.at(id).size();i++)
+	{
+		sum += GameUIData::getInstance()->_mapAllRole.at(id).at(i)->m_nUpGradeTotal;
+	}
+	int feeded = 0;
+	for (int j=1;j<temp.roleLevel;j++)
+	{
+		feeded += GameUIData::getInstance()->_mapAllRole.at(id).at(j)->m_nUpGradeTotal;
+	}
+	m_labFullGradeCost->setString(__String::createWithFormat("%d",sum-temp.curFeed-feeded)->getCString());
+	m_labFeedCost->setString(__String::createWithFormat("%d",total/10)->getCString());
+}
+
+void RoleDisplay::extractFighting(int& id)
+{
+	//判断是出战还是出战中;
+	if (id == Get_Role_Fight)
+	{
+		//出战中;
+		BIGBTN_FIGHTING;
+		for (int i = 0;i<m_vecRoleWidget.size();++i)
+		{
+			if (i == id-1)
+			{
+				m_vecRoleWidget.at(i)->m_roleFightSpr->setVisible(true);
+			}
+			else
+			{
+				m_vecRoleWidget.at(i)->m_roleFightSpr->setVisible(false);
+			}
+		}
+		btnBright(m_btnBig,false);
+	}
+	else
+	{
+		//出战;
+		BIGBTN_FIGHT;
+		m_vecRoleWidget.at(id-1)->m_roleFightSpr->setVisible(false);
+		btnBright(m_btnBig,true);
+	}
 }

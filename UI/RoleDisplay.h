@@ -48,6 +48,8 @@ enum RoleDisplayBtnTag
 #define BIGBTN_Zuan600		m_spriteBigbtn->setTexture(RESOURCE("role/ui_600zuan.png"))
 #define BIGBTN_Yuan12		m_spriteBigbtn->setTexture(RESOURCE("role/ui_12yuan.png"))
 
+const int MAX = 4;
+
 class RoleDisplay : public Layer
 {
 public:
@@ -68,6 +70,9 @@ public:
 	Label* m_labProgress;	//等级进度;
 	Armature* m_roleArmature;	//角色形象;
 	Label *m_labPreviousText,*m_labTargetText;	//目前等级说明和目标等级说明;
+	Sprite *paiA,*paiB,*m_sprArrow;
+	Sprite* middleBack;
+	Sprite *feedCrystal,*fullCrystal;
 public:
 	static Scene* createScene();
 	CREATE_FUNC(RoleDisplay);
@@ -76,6 +81,9 @@ public:
 	void initRoleWidget();
 	//初始化所有界面控件;
 	void initAllWidget(int& id);
+
+	void extractFighting(int& id);
+
 	void BtnCall(Ref* pSender,Widget::TouchEventType type);
 	void onBtnExit();
 	void onBtnBig();
@@ -83,6 +91,15 @@ public:
 	void onBtnFullGrade();
 	void widgetBtnCallBack(int& id);
 	void btnBright(Button* pSender,bool flag);
+	//封装级别和级别说明文本;
+	void extractLevelAndLvText( int& id,int level );
+	//封装水晶总数削减;
+	void extractReduceCrystal(int crystal);
+	//封装进度条进度和百分比;
+	void extractProgressPercent(int cur,int total);
+	//封装一键满级和喂养的文字显示;
+	void extractFullGradeAndFeeded(int& id, UserRole &temp, int total);
+	CC_SYNTHESIZE(bool ,callBackEnable,CallBackEnable);
 
 private:
 	RoleDisplay();
